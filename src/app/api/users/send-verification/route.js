@@ -30,7 +30,7 @@ export async function POST(req, res) {
     from: process.env.EMAIL_USER,
     to: email,
     subject: 'Email Verification',
-    text: `Please verify your email by clicking the following link: http://your-domain.com/verify-email?token=${verificationToken}`,
+    text: `Please verify your email by clicking the following link: ${process.env.YOUR_DOMAIN}/verify-email?token=${verificationToken}`,
   };
 
   try {
