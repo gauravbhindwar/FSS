@@ -1,10 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./Homepage.css";
-import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Mail, LockKeyhole } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const HomePage = () => {
   const [email, setEmail] = useState("");
@@ -13,42 +14,6 @@ const HomePage = () => {
   const [isPasswordEmpty, setIsPasswordEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-
-  const onContinue = async (event) => {
-    event.preventDefault();
-    togglePassword;
-    setIsLoading(true);
-    try {
-      console.log(isPasswordEmpty);
-      if (isPasswordEmpty) {
-        await sendEmailVerification();
-      } else {
-        await togglePassword();
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  async function togglePassword() {
-    try {
-      const response = await axios.post("/api/users/", {
-        email,
-        action: "check",
-      });
-      if (response.data.password === false) {
-        setIsPasswordEmpty(true);
-        console.log(response.data.password);
-      } else {
-        setIsPasswordEmpty(false);
-        router.push("/form");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -65,69 +30,123 @@ const HomePage = () => {
       });
       setMessage(response.data.message);
     } catch (error) {
-      console.log(error);
+      console.log("Error sending email verification:", error);
     }
+  };
+
+  const handleContinue = async () => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post("/api/users/check-password", { email });
+      setIsPasswordEmpty(response.data.isPasswordEmpty);
+
+      if (response.data.isPasswordEmpty) {
+        await sendEmailVerification();
+      }
+    } catch (error) {
+      console.log("Error checking password status:", error);
+      setMessage("Error checking password status");
+    }
+
+    setIsLoading(false);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const loginResponse = await axios.post("/api/users/login", {
+        email,
+        password,
+      });
+      if (loginResponse.data.success) {
+        router.push("/dashboard"); // Redirect to dashboard or other page upon successful login
+      } else {
+        setMessage("Invalid email or password");
+      }
+    } catch (error) {
+      console.log("Error logging in:", error);
+      setMessage("Error logging in");
+    }
+
+    setIsLoading(false);
   };
 
   return (
     <div className="Body">
       <div className="form-body ">
         <div className="icon-body">
-          {/* <img src={`./login-icon.svg`} alt="Logo" className="login-icon" /> */}
+          <Image
+            src="/login-icon.svg"
+            alt="Logo"
+            className="login-icon w-screen"
+            width={500}
+            height={300}
+          />
         </div>
         <div className="form-box">
-          {/* handle form submit */}
-          <form>
+          <div className="mb-4">
+            <div className="relative">
+              <Input
+                className="pl-10 focus-visible:ring-1"
+                type="email"
+                placeholder="Email"
+                name="email"
+                value={email}
+                onChange={handleEmailChange}
+                required
+              />
+              <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+            </div>
+          </div>
+
+          {!isPasswordEmpty && (
             <div className="mb-4">
               <div className="relative">
                 <Input
-                  className="pl-10 focus-visible:ring-1 "
-                  type="email"
-                  placeholder="Email"
-                  name="email"
-                  value={email}
-                  onChange={handleEmailChange}
+                  className="focus-visible:ring-1 !pl-10"
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={password}
+                  onChange={handlePasswordChange}
                   required
-                  disabled={!isPasswordEmpty}
                 />
-                <Mail className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+                <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
               </div>
             </div>
+          )}
 
-            {!isPasswordEmpty && (
-              <div className="mb-4">
-                <div className="relative">
-                  <Input
-                    className="focus-visible:ring-1 !pl-10"
-                    type="password"
-                    placeholder="Password"
-                    name="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                  />
-                  <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
-                </div>
-              </div>
-            )}
-
+          {isPasswordEmpty ? (
             <button
               className="bg-blue-700 rounded-xl p-2"
-              type="submit"
+              onClick={handleContinue}
               disabled={isLoading}
-              onClick={onContinue}
             >
-              {isLoading
-                ? "Loading..."
-                : isPasswordEmpty
-                ? "Continue" // if password is empty then show continue else set password
-                : "Set Password"}
+              {isLoading ? "Loading..." : "Continue"}
             </button>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit}>
+              <button
+                className="bg-blue-700 rounded-xl p-2"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? "Loading..." : "Login"}
+              </button>
+            </form>
+          )}
         </div>
       </div>
       <div className="image-cover">
-        {/* <img src="./MUJ-homeCover.jpg" alt="image-muj" /> */}
+        <Image
+          src="/MUJ-homeCover.jpg"
+          alt="image-muj"
+          width={500}
+          height={300}
+        />
       </div>
       {message && <p className="message">{message}</p>}
     </div>

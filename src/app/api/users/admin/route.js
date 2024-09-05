@@ -1,7 +1,8 @@
 import { connect } from "@/app/dbConfig/dbConfig";
-import { User, Admin } from "@/lib/dbModels/dbModels";
+import { User } from "@/lib/dbModels/dbModels";
 import { NextRequest, NextResponse } from 'next/server';
 import Joi from 'joi';
+import bcrypt from 'bcrypt';
 
 // Connect to the database
 await connect();
@@ -34,19 +35,20 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Admin user already exists' }, { status: 400 });
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Create a new admin user
     const newAdmin = new User({ 
       email, 
-      password, 
+      password: hashedPassword, 
       name, 
-      isAdmin:true, 
+      isAdmin: true, 
       mujid, 
       isPasswordEmpty: !password,
     });
     await newAdmin.save();
 
-    // Update isPasswordEmpty in the database
-  
     console.log('Admin user added successfully:', email);
     return NextResponse.json({ message: 'Admin user added successfully' }, { status: 201 });
   } catch (err) {
@@ -81,8 +83,11 @@ export async function PUT(req) {
       return NextResponse.json({ error: 'Admin user not found' }, { status: 404 });
     }
 
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Update the admin user
-    existingAdmin.password = password;
+    existingAdmin.password = hashedPassword;
     existingAdmin.name = name;
     existingAdmin.mujid = mujid;
     existingAdmin.isPasswordEmpty = !password; // Update isPasswordEmpty based on the presence of the password
