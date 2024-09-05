@@ -1,0 +1,23 @@
+/* Header.css */
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    position: absolute;
+    /* background-color: #f8f9fa; */
+  }
+  
+  .header-icon {
+    margin-right: 10px;
+  }
+  
+  .svg-icon {
+    width: 530px;
+    height: 160px;
+  }
+  
+  .header-title {
+    font-size: 1.5em;
+    color: #333;
+  }
+  

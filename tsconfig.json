@@ -21,6 +21,16 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+      "next-env.d.ts",
+      "**/*.ts",
+      "**/*.tsx",
+      ".next/types/**/*.ts",
+      "src/lib/dbModels/dbModels.ts",
+      "src/app/api/users/",
+      "src/lib/dbModels/dbModels.js",
+      "route.ts"
+, "src/components/Base/HomePage/HomePage.jsx"    ],
+  "exclude": ["node_modules"],
 }
+
