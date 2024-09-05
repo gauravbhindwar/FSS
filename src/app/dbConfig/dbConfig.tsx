@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 export async function connect() {
+  if (mongoose.connection.readyState === 1) {
+    console.log("MongoDB is already connected");
+    return;
+  }
   try {
     await mongoose.connect(process.env.MONGODB_URI!);
     const connection = mongoose.connection;

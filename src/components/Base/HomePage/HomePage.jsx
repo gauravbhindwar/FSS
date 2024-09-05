@@ -5,18 +5,21 @@ import "./Homepage.css";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Mail, LockKeyhole } from "lucide-react";
+
 const HomePage = () => {
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState(null);
+  const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isPasswordEmpty, setIsPasswordEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const onContinue = async (event) => {
     event.preventDefault();
     togglePassword;
     setIsLoading(true);
     try {
+      console.log(isPasswordEmpty);
       if (isPasswordEmpty) {
         await sendEmailVerification();
       } else {
@@ -28,6 +31,7 @@ const HomePage = () => {
       setIsLoading(false);
     }
   };
+
   async function togglePassword() {
     try {
       const response = await axios.post("/api/users/", {
@@ -36,14 +40,16 @@ const HomePage = () => {
       });
       if (response.data.password === false) {
         setIsPasswordEmpty(true);
+        console.log(response.data.password);
       } else {
         setIsPasswordEmpty(false);
-        router.push("/invalidUser");
+        router.push("/form");
       }
     } catch (error) {
       console.log(error);
     }
   }
+
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
   };

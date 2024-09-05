@@ -62,16 +62,28 @@ const userSchema = new Schema({
         type: String,
         // required: true
     },
-    role: {
-        type: String,
-        // required: true,
-        enum: ['user', 'admin'],
-        default: 'user'
+    // isPasswordEmpty: {
+    //     type: Boolean,
+    //     default: true
+    // },
+    isAdmin:{
+        type: Boolean,
+        default: false,
     },
     courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
 }, { timestamps: true });
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);
+
+
+let Admin;
+if (mongoose.models.Admin) {
+  Admin = mongoose.models.Admin;
+} else {
+  Admin = User.discriminator('Admin', new Schema({
+    // Admin specific fields
+  }));
+}
 
 const courseSchema = new Schema({
     title: {
@@ -108,4 +120,4 @@ const courseSchema = new Schema({
 
 const Course = mongoose.models.Course || mongoose.model('Course', courseSchema);
 
-export { User, Course };
+export { User, Admin, Course };
