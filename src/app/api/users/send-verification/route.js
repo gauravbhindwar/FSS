@@ -3,19 +3,22 @@
 import nodemailer from 'nodemailer';
 import { v4 as uuidv4 } from 'uuid';
 
-export default async function handler(req, res) {
+export async function POST(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  const { email } = req.body;
+  const { email } = await req.json();
 
   // Generate a verification token
   const verificationToken = uuidv4();
 
   // Configure your email transporter
   const transporter = nodemailer.createTransport({
-    service: 'Gmail', // or another email service
+    service: 'gmail', // or another email service
+    host:"smtp.gmail.com",
+    port:587,
+    secure:false, 
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
