@@ -31,6 +31,8 @@ const HomePage = () => {
       setMessage(response.data.message);
     } catch (error) {
       console.log("Error sending email verification:", error);
+      // add logic to display error*
+      setMessage("Error sending email verification");
     }
   };
 
@@ -40,13 +42,21 @@ const HomePage = () => {
     try {
       const response = await axios.post("/api/users/check-password", { email });
       setIsPasswordEmpty(response.data.isPasswordEmpty);
-
+      console.log(response.data.isPasswordEmpty);
       if (response.data.isPasswordEmpty) {
         await sendEmailVerification();
       }
     } catch (error) {
       console.log("Error checking password status:", error);
       setMessage("Error checking password status");
+
+      // Attempt to send email verification even if there's an error
+      try {
+        await sendEmailVerification();
+      } catch (emailError) {
+        console.log("Error sending email verification:", emailError);
+        setMessage("Error sending email verification");
+      }
     }
 
     setIsLoading(false);

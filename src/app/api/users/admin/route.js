@@ -10,9 +10,15 @@ await connect();
 // Define the schema for admin user validation
 const adminSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
+//   password: Joi.string().min(6).optional().default(null).custom((value, helpers) => {
+//     if (value === "") {
+//         return null;
+//     }
+//     return value;
+// }, 'Store null if password not provided'),
+password: Joi.string().min(6).optional(),
   name: Joi.string().required(),
-  isAdmin: Joi.boolean().required(),
+  isAdmin: Joi.boolean().optional(),
   mujid: Joi.string().required() // Add mujid to the validation schema
 });
 
@@ -34,16 +40,18 @@ export async function POST(req) {
       console.error('Admin user already exists:', email);
       return NextResponse.json({ error: 'Admin user already exists' }, { status: 400 });
     }
-
-    // Hash the password
-    const hashedPassword = await bcrypt.hash(password, 10);
+ // Hash the password if it exists
+ let hashedPassword;
+ if (password) {
+   hashedPassword = await bcrypt.hash(password, 10);
+ }
 
     // Create a new admin user
     const newAdmin = new User({ 
       email, 
-      password: hashedPassword, 
+      password: password ? hashedPassword : undefined, 
       name, 
-      isAdmin: true, 
+      isAdmin: isAdmin === true, 
       mujid, 
       isPasswordEmpty: !password,
     });
@@ -64,7 +72,8 @@ export async function GET(req) {
 
     // Fetch all admin users
     const admins = await User.find({ isAdmin: true });
-    return NextResponse.json(admins, { status: 200 });
+    const users = await User.find({isAdmin:false});
+    return NextResponse.json({admins,users}, { status: 200 });
   } catch (err) {
     console.error('Error details:', err);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
