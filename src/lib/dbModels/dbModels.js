@@ -47,6 +47,7 @@ const userSchema = new Schema({
     phone: {
         type: String,
         required: false,
+        unique:true,
         validate: {
             validator: async function (value) {
                 const user = await this.constructor.findOne({ phone: value });

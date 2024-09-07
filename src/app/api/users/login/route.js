@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { connect } from '@/app/dbConfig/dbConfig';
-import {User} from '@/lib/dbModels/dbModels';
+import { User } from '@/lib/dbModels/dbModels';
 import bcrypt from 'bcrypt';
+import { serialize } from 'cookie';
 
 export async function POST(request) {
   const { email, password } = await request.json();
@@ -13,7 +14,18 @@ export async function POST(request) {
     if (user && user.password) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        return NextResponse.json({ success: true });
+        // Set a cookie
+        const cookie = serialize('user', 'true', {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== 'development',
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          sameSite: 'strict',
+          path: '/',
+        });
+
+        const response = NextResponse.json({ success: true });
+        response.headers.set('Set-Cookie', cookie);
+        return response;
       } else {
         return NextResponse.json({ success: false }, { status: 401 });
       }
