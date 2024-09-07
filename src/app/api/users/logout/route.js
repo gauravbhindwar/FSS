@@ -1,8 +1,14 @@
 import { NextResponse } from 'next/server';
 
 export async function POST() {
-  // Clear server-side session or cookies if applicable
+  // Clear the cookie by setting 'Max-Age=0' and 'path=/'
   const response = NextResponse.json({ success: true });
-  response.headers.set('Set-Cookie', 'user=; Max-Age=0; path=/');
+
+  // Use NextResponse's cookie API to clear the 'user' cookie
+  response.cookies.set('user', '', {
+    maxAge: 0, // Clear the cookie immediately
+    path: '/', // Make sure the cookie is cleared site-wide
+  });
+
   return response;
 }

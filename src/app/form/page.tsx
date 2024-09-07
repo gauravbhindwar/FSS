@@ -5,8 +5,9 @@ import {SelectForm} from "@/components/Base/SelectForm";
 const FormPage: React.FC = () => {
 
     return (
-        <div className="p-10 bg-slate-400 w-[100vw] h-screen">
+        <div className="sm:p-10 bg-slate-400 w-[100vw] h-screen">
             <Tabs defaultValue="Third Year" className="w-[100%] bg-slate-300 p-4 rounded-lg">
+                
                 <TabsList className="w-[100%]">
                     <TabsTrigger value="Third Year" className="w-1/3">Third Year</TabsTrigger>
                     <TabsTrigger value="Fifth Year" className="w-1/3">Fifth Year</TabsTrigger>

@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
+import { useRouter } from "next/navigation";
 
 export default function SidebarDemo() {
   const links = [
@@ -45,6 +46,7 @@ export default function SidebarDemo() {
     },
   ];
   const [open, setOpen] = useState(false);
+  const router = useRouter();
   return (
     <div
       className={cn(
@@ -58,7 +60,36 @@ export default function SidebarDemo() {
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <div
+                key={idx}
+                onClick={() => {
+                  
+                  if (link.label === "Logout") {
+                    fetch('/api/users/logout', {
+                      method: 'POST',
+                    })
+                      .then(response => {
+                        if (response.ok) {
+                          // console.log('Logged out successfully', response);
+                          router.push("/"); 
+                          router.refresh(); // Force refresh cause doesnot work in second and subsequent instances
+                        } else {
+                          console.error('Failed to log out');
+                        }
+                      })
+                      .catch(error => {
+                        console.error('Error during logout:', error);
+                      });
+                  }
+                }}
+                
+                >
+                <SidebarLink
+                  key={idx}
+                  link={link}
+                  
+                />
+                </div>
               ))}
             </div>
           </div>
