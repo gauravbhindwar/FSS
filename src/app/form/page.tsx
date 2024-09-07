@@ -1,6 +1,6 @@
-'use client';
+"use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {SelectForm} from "@/components/Base/SelectForm";
+import { SelectForm } from "@/components/Base/SelectForm";
 
 const FormPage: React.FC = () => {
 
@@ -23,11 +23,3 @@ const FormPage: React.FC = () => {
 };
 
 export default FormPage;
-// const FormPage = () => {
-//     return(
-//         <div>
-//             This is form page
-//         </div>
-//     );
-// }
-// export default FormPage;

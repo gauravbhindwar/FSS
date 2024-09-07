@@ -70,9 +70,7 @@ export function SelectForm() {
               ref={ref}
               className="w-[92vw] max-sm:rounded-2xl sm:w-full max-w-[500px]  sm:h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
-              <motion.div layoutId={`image-${active.title}-${id}`}>
-                
-              </motion.div>
+              <motion.div layoutId={`image-${active.title}-${id}`}></motion.div>
 
               <div>
                 <div className="flex justify-between items-start p-4">
@@ -240,8 +238,7 @@ const cards = [
     description: "Lana Del Rey",
     title: "Summertime Sadness",
     src: "https://assets.aceternity.com/demos/lana-del-rey.jpeg",
-    ctaText: "View",
-    ctaLink: "https://ui.aceternity.com/templates",
+    ctaText: "Select",
     content: () => {
       return (
         <p>

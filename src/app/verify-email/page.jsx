@@ -1,12 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function VerifyEmail() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const router = useRouter();
 
   // console.log(token);
 
@@ -32,7 +33,7 @@ export default function VerifyEmail() {
         },
         body: JSON.stringify({ token, password }),
       });
-
+      router.push("/");
       const data = await res.json();
       setMessage(data.message);
     } catch (error) {
@@ -50,6 +51,7 @@ export default function VerifyEmail() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+
         <button type="submit">Set Password</button>
       </form>
       {message && <p>{message}</p>}

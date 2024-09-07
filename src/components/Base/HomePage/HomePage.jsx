@@ -94,7 +94,7 @@ const HomePage = () => {
         setMessage("Invalid email or password");
       }
     } catch (error) {
-      console.log("Error logging in:", error);
+      // console.log("Error logging in:", error);
       setMessage("Error logging in");
     }
 
