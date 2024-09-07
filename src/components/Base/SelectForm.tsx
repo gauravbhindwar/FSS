@@ -3,6 +3,8 @@ import Image from "next/image";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { METHODS } from "http";
+import { GET } from "@/app/api/users/admin/route";
 
 export function SelectForm() {
   const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
@@ -10,6 +12,7 @@ export function SelectForm() {
   );
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
+  console.log(cardsCSE);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -345,75 +348,91 @@ const cards = [
     },
   },
 ];
-const cardsCSE = [
-  {
-    description: "Data Structures and Algorithms",
-    title: "Foundations of Computer Science",
-    src: "https://example.com/images/data-structures.jpeg",
-    ctaText: "View",
-    ctaLink: "https://example.com/data-structures",
-    content: () => {
-      return (
-        <p>
-          Data Structures and Algorithms (DSA) form the backbone of computer science. This fundamental course covers the various ways of organizing and managing data efficiently. Key topics include arrays, linked lists, trees, graphs, hash tables, and sorting algorithms. <br /> <br /> Mastery of DSA is crucial for problem-solving and developing efficient software. It prepares students for technical interviews and real-world programming challenges by providing the skills needed to design optimized algorithms.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Operating Systems",
-    title: "Managing Computer Resources",
-    src: "https://example.com/images/operating-systems.jpeg",
-    ctaText: "View",
-    ctaLink: "https://example.com/operating-systems",
-    content: () => {
-      return (
-        <p>
-          Operating Systems (OS) are critical for managing computer hardware and software resources. This course explores OS concepts such as process management, memory management, file systems, and device management. <br /> <br /> Understanding OS is essential for developing system-level applications and ensuring efficient resource utilization. Students will gain insights into the inner workings of modern operating systems and their role in computer systems.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Database Management Systems",
-    title: "Storing and Managing Data",
-    src: "https://example.com/images/databases.jpeg",
-    ctaText: "View",
-    ctaLink: "https://example.com/databases",
-    content: () => {
-      return (
-        <p>
-          Database Management Systems (DBMS) are vital for storing, retrieving, and managing data. This course covers relational databases, SQL, normalization, indexing, and transaction management. <br /> <br /> Knowledge of DBMS is crucial for developing robust applications that require persistent data storage and efficient data retrieval. Students will learn to design and interact with databases, which is a key skill in many software development roles.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Computer Networks",
-    title: "Connecting Computers",
-    src: "https://example.com/images/computer-networks.jpeg",
-    ctaText: "View",
-    ctaLink: "https://example.com/computer-networks",
-    content: () => {
-      return (
-        <p>
-          Computer Networks involve the design, implementation, and management of network systems. This course includes topics such as network protocols, network topologies, IP addressing, and network security. <br /> <br /> Understanding networking principles is essential for building and maintaining networked systems, ensuring secure communication, and optimizing network performance. This knowledge is crucial for roles in network administration and cybersecurity.
-        </p>
-      );
-    },
-  },
-  {
-    description: "Software Engineering",
-    title: "Building Reliable Software",
-    src: "https://example.com/images/software-engineering.jpeg",
-    ctaText: "View",
-    ctaLink: "https://example.com/software-engineering",
-    content: () => {
-      return (
-        <p>
-          Software Engineering focuses on the methodologies and tools for developing high-quality software. The course covers software development life cycles, project management, software design patterns, and testing techniques. <br /> <br /> Mastery of software engineering principles is crucial for delivering reliable and maintainable software products. Students will learn to apply best practices in software development, project management, and quality assurance.
-        </p>
-      );
-    },
-  },
-];
+fetch('/api/courses/addCourse', {
+  method: 'GET',
+  body: JSON.stringify({
+    courseClassification : "LAB"
+  }),
+}).then(response => {
+    if (response.ok) {
+      console.log('DATA GET SUCCESSFULLY', response);
+      const cardsCSE = response.json();
+    } else {
+      console.error('Failed to add data');
+    }
+  })
+  .catch(error => {
+    console.error('Error in adding course', error);
+  });
+// const cardsCSE = [
+//   {
+//     description: "Data Structures and Algorithms",
+//     title: "Foundations of Computer Science",
+//     src: "https://example.com/images/data-structures.jpeg",
+//     ctaText: "View",
+//     ctaLink: "https://example.com/data-structures",
+//     content: () => {
+//       return (
+//         <p>
+//           Data Structures and Algorithms (DSA) form the backbone of computer science. This fundamental course covers the various ways of organizing and managing data efficiently. Key topics include arrays, linked lists, trees, graphs, hash tables, and sorting algorithms. <br /> <br /> Mastery of DSA is crucial for problem-solving and developing efficient software. It prepares students for technical interviews and real-world programming challenges by providing the skills needed to design optimized algorithms.
+//         </p>
+//       );
+//     },
+//   },
+//   {
+//     description: "Operating Systems",
+//     title: "Managing Computer Resources",
+//     src: "https://example.com/images/operating-systems.jpeg",
+//     ctaText: "View",
+//     ctaLink: "https://example.com/operating-systems",
+//     content: () => {
+//       return (
+//         <p>
+//           Operating Systems (OS) are critical for managing computer hardware and software resources. This course explores OS concepts such as process management, memory management, file systems, and device management. <br /> <br /> Understanding OS is essential for developing system-level applications and ensuring efficient resource utilization. Students will gain insights into the inner workings of modern operating systems and their role in computer systems.
+//         </p>
+//       );
+//     },
+//   },
+//   {
+//     description: "Database Management Systems",
+//     title: "Storing and Managing Data",
+//     src: "https://example.com/images/databases.jpeg",
+//     ctaText: "View",
+//     ctaLink: "https://example.com/databases",
+//     content: () => {
+//       return (
+//         <p>
+//           Database Management Systems (DBMS) are vital for storing, retrieving, and managing data. This course covers relational databases, SQL, normalization, indexing, and transaction management. <br /> <br /> Knowledge of DBMS is crucial for developing robust applications that require persistent data storage and efficient data retrieval. Students will learn to design and interact with databases, which is a key skill in many software development roles.
+//         </p>
+//       );
+//     },
+//   },
+//   {
+//     description: "Computer Networks",
+//     title: "Connecting Computers",
+//     src: "https://example.com/images/computer-networks.jpeg",
+//     ctaText: "View",
+//     ctaLink: "https://example.com/computer-networks",
+//     content: () => {
+//       return (
+//         <p>
+//           Computer Networks involve the design, implementation, and management of network systems. This course includes topics such as network protocols, network topologies, IP addressing, and network security. <br /> <br /> Understanding networking principles is essential for building and maintaining networked systems, ensuring secure communication, and optimizing network performance. This knowledge is crucial for roles in network administration and cybersecurity.
+//         </p>
+//       );
+//     },
+//   },
+//   {
+//     description: "Software Engineering",
+//     title: "Building Reliable Software",
+//     src: "https://example.com/images/software-engineering.jpeg",
+//     ctaText: "View",
+//     ctaLink: "https://example.com/software-engineering",
+//     content: () => {
+//       return (
+//         <p>
+//           Software Engineering focuses on the methodologies and tools for developing high-quality software. The course covers software development life cycles, project management, software design patterns, and testing techniques. <br /> <br /> Mastery of software engineering principles is crucial for delivering reliable and maintainable software products. Students will learn to apply best practices in software development, project management, and quality assurance.
+//         </p>
+//       );
+//     },
+//   },
+// ];
