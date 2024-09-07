@@ -63,14 +63,13 @@ const userSchema = new Schema({
         type: String,
         // required: true
     },
-    // isPasswordEmpty: {
-    //     type: Boolean,
-    //     default: true
-    // },
     isAdmin:{
         type: Boolean,
         default: false,
     },
+    verficationToken:String,
+    tokenExpiryTime:Date,
+    
     courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
 }, { timestamps: true });
 
