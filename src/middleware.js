@@ -9,7 +9,10 @@ export function middleware(req) {
     // // console.log(isLoggedIn);
     // if (!isLoggedIn && pathname !== '/') {
     //     // User is not logged in and trying to access a protected route
-    //     return NextResponse.redirect(new URL('/', req.url));
+    //     const loginUrl = new URL('/', req.url);
+    //     console.log('Please login first');
+    //     loginUrl.searchParams.set('loginAlert', 'true');
+    //     return NextResponse.redirect(loginUrl);
     // }
 
     // if (isLoggedIn && pathname === '/') {

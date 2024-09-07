@@ -1,22 +1,32 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+// import { useRouter } from 'next/dist/client/router';
 import axios from "axios";
 import "./Homepage.css";
 import { Input } from "@/components/ui/input";
 import { Mail, LockKeyhole } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
+import { set } from "mongoose";
 
 const HomePage = () => {
+  const [errorVisible, setErrorVisible] = useState(false);
+  const [loginPop, setLoginPop] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isPasswordEmpty, setIsPasswordEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
+  };
+
+  const closePopup = () => {
+    setLoginPop(false);
+    router.replace('/');
   };
 
   const handlePasswordChange = (event) => {
@@ -35,6 +45,20 @@ const HomePage = () => {
       setMessage("Error sending email verification");
     }
   };
+  useEffect(() => {
+    if (searchParams.get('loginAlert') === 'true') {
+      setLoginPop(true);
+      // router.replace('/');
+    }
+  }, [searchParams, router]);
+  useEffect(() => {
+    setErrorVisible(true);
+    const timer = setTimeout(() => {
+      setErrorVisible(false);
+    }, 4000); 
+
+    return () => clearTimeout(timer); 
+  }, [message]);
 
   const handleContinue = async () => {
     setIsLoading(true);
@@ -85,7 +109,7 @@ const HomePage = () => {
   };
 
   return (
-    <div className="Body">
+    <div className="Body overflow-hidden">
       <div className="form-body ">
         <div className="icon-body">
           <Image
@@ -135,7 +159,11 @@ const HomePage = () => {
               onClick={handleContinue}
               disabled={isLoading}
             >
-              {isLoading ? "Loading..." : "Continue"}
+              {isLoading ? 
+                <div className="flex justify-center items-center">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
+                </div>
+                : "Continue"}
             </button>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -144,7 +172,11 @@ const HomePage = () => {
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ? "Loading..." : "Login"}
+                {isLoading ?
+                  <div className="flex justify-center items-center">
+                    <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
+                  </div>
+                 : "Login"}
               </button>
             </form>
           )}
@@ -158,7 +190,27 @@ const HomePage = () => {
           height={300}
         />
       </div>
-      {message && <p className="message">{message}</p>}
+      {message && <p className={`absolute bg-white text-slate-700 border bottom-4 left-[50%] translate-x-[-50%] text-2xl shadow-lg shadow-red-500 rounded-lg px-4 py-2 transition-opacity duration-1000 ${
+        errorVisible ? "opacity-100" : "opacity-0"
+      }`}>{message}</p>}
+      {
+        loginPop && (
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <h2 className="text-2xl font-semibold mb-4">PLEASE LOGIN FIRST!</h2>
+              <p className="text-gray-700 mb-6">
+                Please login first to access any page
+              </p>
+              <button
+                onClick={closePopup}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )
+      }
     </div>
   );
 };
