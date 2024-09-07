@@ -26,7 +26,7 @@ const HomePage = () => {
 
   const closePopup = () => {
     setLoginPop(false);
-    router.replace('/');
+    router.replace("/");
   };
 
   const handlePasswordChange = (event) => {
@@ -46,7 +46,7 @@ const HomePage = () => {
     }
   };
   useEffect(() => {
-    if (searchParams.get('loginAlert') === 'true') {
+    if (searchParams.get("loginAlert") === "true") {
       setLoginPop(true);
       // router.replace('/');
     }
@@ -55,9 +55,9 @@ const HomePage = () => {
     setErrorVisible(true);
     const timer = setTimeout(() => {
       setErrorVisible(false);
-    }, 4000); 
+    }, 4000);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, [message]);
 
   const handleContinue = async () => {
@@ -65,22 +65,15 @@ const HomePage = () => {
 
     try {
       const response = await axios.post("/api/users/check-password", { email });
+
       setIsPasswordEmpty(response.data.isPasswordEmpty);
       console.log(response.data.isPasswordEmpty);
       if (response.data.isPasswordEmpty) {
         await sendEmailVerification();
       }
     } catch (error) {
-      console.log("Error checking password status:", error);
-      setMessage("Error checking password status");
-
-      // Attempt to send email verification even if there's an error
-      try {
-        await sendEmailVerification();
-      } catch (emailError) {
-        console.log("Error sending email verification:", emailError);
-        setMessage("Error sending email verification");
-      }
+      // console.log("Error checking password status:", error);
+      setMessage("Please Contact Your Admin");
     }
 
     setIsLoading(false);
@@ -159,11 +152,13 @@ const HomePage = () => {
               onClick={handleContinue}
               disabled={isLoading}
             >
-              {isLoading ? 
+              {isLoading ? (
                 <div className="flex justify-center items-center">
                   <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
                 </div>
-                : "Continue"}
+              ) : (
+                "Continue"
+              )}
             </button>
           ) : (
             <form onSubmit={handleSubmit}>
@@ -172,11 +167,13 @@ const HomePage = () => {
                 type="submit"
                 disabled={isLoading}
               >
-                {isLoading ?
+                {isLoading ? (
                   <div className="flex justify-center items-center">
                     <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
                   </div>
-                 : "Login"}
+                ) : (
+                  "Login"
+                )}
               </button>
             </form>
           )}
@@ -190,27 +187,31 @@ const HomePage = () => {
           height={300}
         />
       </div>
-      {message && <p className={`absolute bg-white text-slate-700 border bottom-4 left-[50%] translate-x-[-50%] text-2xl shadow-lg shadow-red-500 rounded-lg px-4 py-2 transition-opacity duration-1000 ${
-        errorVisible ? "opacity-100" : "opacity-0"
-      }`}>{message}</p>}
-      {
-        loginPop && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <h2 className="text-2xl font-semibold mb-4">PLEASE LOGIN FIRST!</h2>
-              <p className="text-gray-700 mb-6">
-                Please login first to access any page
-              </p>
-              <button
-                onClick={closePopup}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-              >
-                Close
-              </button>
-            </div>
+      {message && (
+        <p
+          className={`absolute bg-white text-slate-700 border bottom-4 left-[50%] translate-x-[-50%] text-2xl shadow-lg shadow-red-500 rounded-lg px-4 py-2 transition-opacity duration-1000 ${
+            errorVisible ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {message}
+        </p>
+      )}
+      {loginPop && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl font-semibold mb-4">PLEASE LOGIN FIRST!</h2>
+            <p className="text-gray-700 mb-6">
+              Please login first to access any page
+            </p>
+            <button
+              onClick={closePopup}
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              Close
+            </button>
           </div>
-        )
-      }
+        </div>
+      )}
     </div>
   );
 };
