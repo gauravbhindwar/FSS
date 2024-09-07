@@ -106,9 +106,16 @@ const HomePage = () => {
       <div className="form-body ">
         <div className="icon-body">
           <Image
+            src="/login-icon-m-site.svg"
+            alt="Logo"
+            className="login-icon w-screen hidden max-lg:block"
+            width={500}
+            height={300}
+          />
+          <Image
             src="/login-icon.svg"
             alt="Logo"
-            className="login-icon w-screen"
+            className="login-icon w-screen block max-lg:hidden"
             width={500}
             height={300}
           />
@@ -148,7 +155,7 @@ const HomePage = () => {
 
           {isPasswordEmpty ? (
             <button
-              className="bg-blue-700 rounded-xl p-2"
+              className="bg-blue-700 max-lg:bg-[#f06543] rounded-xl p-2"
               onClick={handleContinue}
               disabled={isLoading}
             >
@@ -163,7 +170,7 @@ const HomePage = () => {
           ) : (
             <form onSubmit={handleSubmit}>
               <button
-                className="bg-blue-700 rounded-xl p-2"
+                className="bg-blue-700 max-lg:bg-[#f06543] rounded-xl p-2"
                 type="submit"
                 disabled={isLoading}
               >
@@ -199,13 +206,13 @@ const HomePage = () => {
       {loginPop && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-semibold mb-4">PLEASE LOGIN FIRST!</h2>
+            <h2 className="text-2xl text-red-600 font-bold mb-4">PLEASE LOGIN FIRST!</h2>
             <p className="text-gray-700 mb-6">
               Please login first to access any page
             </p>
             <button
               onClick={closePopup}
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+              className="bg-blue-500 max-lg:bg-[#f06543] text-white px-4 py-2 rounded hover:bg-blue-600 transition"
             >
               Close
             </button>
