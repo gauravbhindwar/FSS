@@ -2,122 +2,136 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
+const userSchema = new Schema(
+  {
     mujid: {
-        type: String,
-        required: true,
-        unique: true,
-        validate: {
-            validator: async function (value) {
-                const user = await this.constructor.findOne({ mujid: value });
-                if (user && user.id !== this.id) {
-                    throw new Error('mujid already exists');
-                }
-                return true;
-            },
-            message: props => 'The specified mujid is already in use'
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: async function (value) {
+          const user = await this.constructor.findOne({ mujid: value });
+          if (user && user.id !== this.id) {
+            throw new Error("mujid already exists");
+          }
+          return true;
         },
+        message: (props) => "The specified mujid is already in use",
+      },
     },
     name: {
-        type: String,
-        // required: true
+      type: String,
+      // required: true
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        validate: {
-            validator: async function (value) {
-                const user = await this.constructor.findOne({ email: value });
-                if (user && user.id !== this.id) {
-                    throw new Error('email already exists');
-                }
-                return true;
-            },
-            message: props => 'The specified email address is already in use'
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: async function (value) {
+          const user = await this.constructor.findOne({ email: value });
+          if (user && user.id !== this.id) {
+            throw new Error("email already exists");
+          }
+          return true;
         },
+        message: (props) => "The specified email address is already in use",
+      },
     },
     password: {
-        type: String
+      type: String,
     },
     ext: {
-        type: String,
-        required: false
+      type: String,
+      required: false,
     },
     phone: {
-        type: String,
-        required: false,
-        unique:true,
-        validate: {
-            validator: async function (value) {
-                const user = await this.constructor.findOne({ phone: value });
-                if (user && user.id !== this.id) {
-                    throw new Error('phone already exists');
-                }
-                return true;
-            },
-            message: props => 'The specified phone number is already in use'
-        }
+      type: String,
+      required: false,
+      unique: true,
+      validate: {
+        validator: async function (value) {
+          const user = await this.constructor.findOne({ phone: value });
+          if (user && user.id !== this.id) {
+            throw new Error("phone already exists");
+          }
+          return true;
+        },
+        message: (props) => "The specified phone number is already in use",
+      },
     },
     designation: {
-        type: String,
-        // required: true
+      type: String,
+      // required: true
     },
-    isAdmin:{
-        type: Boolean,
-        default: false,
+    isAdmin: {
+      type: Boolean,
+      default: false,
     },
-    verficationToken:String,
-    tokenExpiryTime:Date,
-    
-    courses: [{ type: Schema.Types.ObjectId, ref: 'Course' }]
-}, { timestamps: true });
+    jwtSecretKey: {
+      type: String,
+      required: false,
+    },
+    tokenUsed: {
+      type: Boolean,
+      default: false,
+    },
 
-const User = mongoose.models.User || mongoose.model('User', userSchema);
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
+  },
+  { timestamps: true }
+);
 
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 
 let Admin;
 if (mongoose.models.Admin) {
   Admin = mongoose.models.Admin;
 } else {
-  Admin = User.discriminator('Admin', new Schema({
-    // Admin specific fields
-  }));
+  Admin = User.discriminator(
+    "Admin",
+    new Schema({
+      // Admin specific fields
+    })
+  );
 }
 
-const courseSchema = new Schema({
+const courseSchema = new Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     forSemester: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     program: {
-        type: String,
+      type: String,
     },
     courseClassification: {
-        type: String,
-        enum: ['THEORY', 'LAB', 'THEROY-LAB', 'PROJECT', 'SEMINAR']
-        // required: true
+      type: String,
+      enum: ["THEORY", "LAB", "THEROY-LAB", "PROJECT", "SEMINAR"],
+      // required: true
     },
     courseCode: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     courseCredit: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     courseType: {
-        type: String,
-        enum: ['CORE', 'ELECTIVE']
-        // required: true
+      type: String,
+      enum: ["CORE", "ELECTIVE"],
+      // required: true
     },
-    user: { type: Schema.Types.ObjectId, ref: 'User' }
-}, { timestamps: true });
+    user: { type: Schema.Types.ObjectId, ref: "User" },
+  },
+  { timestamps: true }
+);
 
-const Course = mongoose.models.Course || mongoose.model('Course', courseSchema);
+const Course = mongoose.models.Course || mongoose.model("Course", courseSchema);
 
 export { User, Admin, Course };

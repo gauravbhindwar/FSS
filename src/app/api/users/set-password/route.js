@@ -1,40 +1,56 @@
-import { NextResponse } from 'next/server';
-import bcrypt from 'bcrypt';
-import { connect } from '@/app/dbConfig/dbConfig'; // Adjust the import based on your project structure
-import { User } from '@/lib/dbModels/dbModels'; // Adjust the import based on your project structure
+import { NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { connect } from "@/app/dbConfig/dbConfig";
+import { User } from "@/lib/dbModels/dbModels";
 
 export async function POST(req) {
   const body = await req.json();
   const { token, password } = body;
 
   if (!token || !password) {
-    return NextResponse.json({ message: 'Token and password are required' }, { status: 400 });
+    return NextResponse.json(
+      { message: "Token and password are required" },
+      { status: 400 }
+    );
   }
 
   try {
     // Connect to the database
     await connect();
-    const verificationToken = token;
-    console.log(verificationToken);
 
-    // Find the user by verification token
-    const user = await User.findOne({ verificationToken: token });
+    // Decode the token to get the email
+    const decoded = jwt.decode(token);
+    const { email } = decoded;
+
+    // Find the user by email
+    const user = await User.findOne({ email });
 
     if (!user) {
-      return NextResponse.json({ message: 'Invalid token' }, { status: 400 });
+      console.log("Invalid token:", token);
+      return NextResponse.json({ message: "Invalid token" }, { status: 400 });
     }
+
+    // Verify the JWT token with the user's unique secret key
+    jwt.verify(token, user.jwtSecretKey);
 
     // Hash the new password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Update the user's password and remove the verification token
+    // Update the user's password and set tokenUsed to true
+    user.tokenUsed = true;
     user.password = hashedPassword;
-    user.verificationToken = undefined;
     await user.save();
 
-    return NextResponse.json({ message: 'Password set successfully' }, { status: 200 });
+    return NextResponse.json(
+      { message: "Password updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.log('Error setting password:', error);
-    return NextResponse.json({ message: 'Error setting password' }, { status: 500 });
+    console.log("Error verifying token:", error);
+    return NextResponse.json(
+      { message: "Invalid or expired token" },
+      { status: 400 }
+    );
   }
 }
