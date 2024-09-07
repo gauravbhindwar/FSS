@@ -1,4 +1,4 @@
-import { connect } from "@/app/dbConfig/dbConfig";
+import { connect } from "@/app/helper/dbConfig";
 import { User } from "@/lib/dbModels/dbModels";
 import { NextResponse } from "next/server";
 

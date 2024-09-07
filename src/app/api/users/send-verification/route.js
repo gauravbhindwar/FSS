@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 import jwt from "jsonwebtoken";
-import { connect } from "@/app/dbConfig/dbConfig";
+import { connect } from "@/app/helper/dbConfig";
 import { User } from "@/lib/dbModels/dbModels";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";

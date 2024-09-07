@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { type } from "os";
 
 const { Schema } = mongoose;
 
@@ -102,17 +103,22 @@ const courseSchema = new Schema(
       type: String,
       required: true,
     },
+    description: {
+      type: String,
+      required: true,
+      default: "Description Not Added",
+    },
     forSemester: {
       type: String,
       required: true,
     },
-    program: {
-      type: String,
+    isEven: {
+      type: Boolean,
     },
     courseClassification: {
       type: String,
-      enum: ["THEORY", "LAB", "THEROY-LAB", "PROJECT", "SEMINAR"],
-      // required: true
+      enum: ["THEORY", "LAB"],
+      required: true,
     },
     courseCode: {
       type: String,
@@ -125,9 +131,12 @@ const courseSchema = new Schema(
     courseType: {
       type: String,
       enum: ["CORE", "ELECTIVE"],
-      // required: true
+      required: true,
     },
-    user: { type: Schema.Types.ObjectId, ref: "User" },
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
