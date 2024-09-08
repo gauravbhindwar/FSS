@@ -17,7 +17,7 @@ export function SelectForm(props) {
     try {
       const response = await axios.post("/api/courses/labCourse", {
         courseClassification: classification,
-        semester: semester,
+        forSemester: semester,
       });
       console.log("Response data:", response.data);
       if (response.data && response.data.courses) {
@@ -33,7 +33,7 @@ export function SelectForm(props) {
   useEffect(() => {
     getCourses("LAB", semester, setLabCourses);
     getCourses("THEORY", semester, setTheoryCourses);
-  }, []);
+  }, [semester]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -140,7 +140,7 @@ export function SelectForm(props) {
           </div>
         ) : null}
       </AnimatePresence>
-      <div className="sm:flex  items-center justify-between">
+      <div className="sm:flex justify-between">
         <div className="sm:p-8 bg-slate-400 max-sm:mb-4 sm:m-4 rounded-xl ssm:w-[50%]">
           <h1 className="text-4xl font-bold border-b pb-4 drop-shadow-lg max-sm:p-4">
             Theory
