@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useEffect, useId, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useOutsideClick } from "@/hooks/use-outside-click";
+import { useOutsideClick } from "@/lib/dbModels/hooks/use-outside-click";
 import axios from "axios";
 
 export function SelectForm(props) {
@@ -10,6 +10,9 @@ export function SelectForm(props) {
   const [labCourses, setLabCourses] = useState([]);
   const [theoryCourses, setTheoryCourses] = useState([]);
   const [active, setActive] = useState(null);
+  const [semesterData, setSemesterData] = useState([]);
+  const [filteredEvenSemesters, setFilteredEvenSemesters] = useState([]);
+  const [filteredOddSemesters, setFilteredOddSemesters] = useState([]);
   const id = useId();
   const semester = props.semester;
 
@@ -19,7 +22,7 @@ export function SelectForm(props) {
         courseClassification: classification,
         forSemester: semester,
       });
-      console.log("Response data:", response.data);
+      // console.log("Response data:", response.data);
       if (response.data && response.data.courses) {
         setCourses(response.data.courses);
       } else {
@@ -30,10 +33,35 @@ export function SelectForm(props) {
       console.error("Error stack:", error.stack);
     }
   };
+
   useEffect(() => {
-    getCourses("LAB", semester, setLabCourses);
-    getCourses("THEORY", semester, setTheoryCourses);
+    // Fetch courses and store in semesterData
+    getCourses("LAB", semester, (courses) => {
+      setLabCourses(courses);
+      setSemesterData((prevData) => [
+        ...prevData,
+        { type: "LAB", semester, courses },
+      ]);
+    });
+    getCourses("THEORY", semester, (courses) => {
+      setTheoryCourses(courses);
+      setSemesterData((prevData) => [
+        ...prevData,
+        { type: "THEORY", semester, courses },
+      ]);
+    });
   }, [semester]);
+
+  useEffect(() => {
+    // Filter semesters into even and odd
+    const evenSemesters = semesterData.filter(
+      (data) => data.semester % 2 === 0
+    );
+    const oddSemesters = semesterData.filter((data) => data.semester % 2 !== 0);
+
+    setFilteredEvenSemesters(evenSemesters);
+    setFilteredOddSemesters(oddSemesters);
+  }, [semesterData]);
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -183,7 +211,9 @@ export function SelectForm(props) {
           </ul>
         </div>
         <div className="sm:p-8 bg-slate-400 sm:m-4 rounded-xl ssm:w-[50%]">
-          <h1 className="text-4xl font-bold border-b pb-4 max-sm:p-4">Practical</h1>
+          <h1 className="text-4xl font-bold border-b pb-4 max-sm:p-4">
+            Practical
+          </h1>
           <ul className="max-w-2xl mx-auto w-full gap-4">
             {labCourses.map((card, index) => (
               <motion.div

@@ -8,18 +8,18 @@ export async function POST(req) {
     const body = await req.json();
     const { courseClassification, forSemester } = body;
 
-    console.log(courseClassification);
+    // console.log(courseClassification);
 
     const courses = await Course.find({
       courseClassification: courseClassification,
       forSemester: forSemester,
     }); // Fetch data from the database
 
-    console.log(courses);
+    // console.log(courses);
 
     return NextResponse.json({ courses }, { status: 200 });
   } catch (error) {
-    console.error("Error getting Lab Data:", error);
+    // console.error("Error getting Lab Data:", error);
     return NextResponse.json(
       { message: "Error Getting Lab data" },
       { status: 500 }
