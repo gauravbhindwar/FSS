@@ -5,17 +5,19 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import axios from "axios";
 
-export function SelectForm() {
+export function SelectForm(props) {
   const ref = useRef(null);
   const [labCourses, setLabCourses] = useState([]);
   const [theoryCourses, setTheoryCourses] = useState([]);
   const [active, setActive] = useState(null);
   const id = useId();
+  const semester = props.semester;
 
-  const getCourses = async (classification, setCourses) => {
+  const getCourses = async (classification, semester, setCourses) => {
     try {
       const response = await axios.post("/api/courses/labCourse", {
         courseClassification: classification,
+        semester: semester,
       });
       console.log("Response data:", response.data);
       if (response.data && response.data.courses) {
@@ -29,8 +31,8 @@ export function SelectForm() {
     }
   };
   useEffect(() => {
-    getCourses("LAB", setLabCourses);
-    getCourses("THEORY", setTheoryCourses);
+    getCourses("LAB", semester, setLabCourses);
+    getCourses("THEORY", semester, setTheoryCourses);
   }, []);
 
   useEffect(() => {
@@ -90,7 +92,7 @@ export function SelectForm() {
             <motion.div
               layoutId={`card-${active.title}-${id}`}
               ref={ref}
-              className="w-[92vw] max-sm:rounded-2xl sm:w-full max-w-[500px]  sm:h-full md:h-fit md:max-h-[90%]  flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
+              className="w-[92vw] max-sm:rounded-2xl sm:w-full max-w-[500px]  sm:h-full md:h-fit md:max-h-[90%]  flex sm:flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden"
             >
               <motion.div layoutId={`image-${active.title}-${id}`}></motion.div>
 
@@ -117,7 +119,7 @@ export function SelectForm() {
                     target="_blank"
                     className="px-4 py-3 text-sm rounded-full font-bold bg-green-500 text-white"
                   >
-                    {active.ctaText}
+                    Select
                   </motion.a>
                 </div>
                 <div className="pt-4 relative px-4">
@@ -126,7 +128,7 @@ export function SelectForm() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
+                    className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex sm:flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
                     {typeof active.content === "function"
                       ? active.content()
@@ -139,8 +141,8 @@ export function SelectForm() {
         ) : null}
       </AnimatePresence>
       <div className="sm:flex  items-center justify-between">
-        <div className="p-8 bg-slate-400 max-sm:mb-4 sm:m-4 rounded-xl ssm:w-[50%]">
-          <h1 className="text-4xl font-bold border-b pb-4 drop-shadow-lg">
+        <div className="sm:p-8 bg-slate-400 max-sm:mb-4 sm:m-4 rounded-xl ssm:w-[50%]">
+          <h1 className="text-4xl font-bold border-b pb-4 drop-shadow-lg max-sm:p-4">
             Theory
           </h1>
           <ul className="max-w-2xl mx-auto w-full gap-4">
@@ -149,24 +151,24 @@ export function SelectForm() {
                 layoutId={`card-${card.title}-${id}`}
                 key={`card-${card.title}-${id}`}
                 onClick={() => setActive(card)}
-                className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+                className="p-4 flex sm:flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
               >
-                <div className="flex gap-4 flex-col md:flex-row ">
+                <div className="flex gap-4 sm:flex-col md:flex-row ">
                   <motion.div
                     layoutId={`image-${card.title}-${id}`}
                   ></motion.div>
                   <div className="">
                     <motion.h3
                       layoutId={`title-${card.title}-${id}`}
-                      className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
+                      className="font-medium text-neutral-800 dark:text-neutral-200 sm:text-center text-left"
                     >
                       {card.title}
                     </motion.h3>
                     <motion.p
                       layoutId={`description-${card.description}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                      className="text-neutral-600 dark:text-neutral-400 sm:text-center text-left max-sm:w-[90%]"
                     >
-                      {card.description}
+                      {card.description}aa
                     </motion.p>
                   </div>
                 </div>
@@ -174,36 +176,36 @@ export function SelectForm() {
                   layoutId={`button-${card.title}-${id}`}
                   className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
                 >
-                  {card.ctaText}
+                  View
                 </motion.button>
               </motion.div>
             ))}
           </ul>
         </div>
-        <div className="p-8 bg-slate-400 sm:m-4 rounded-xl ssm:w-[50%]">
-          <h1 className="text-4xl font-bold border-b pb-4">Practical</h1>
+        <div className="sm:p-8 bg-slate-400 sm:m-4 rounded-xl ssm:w-[50%]">
+          <h1 className="text-4xl font-bold border-b pb-4 max-sm:p-4">Practical</h1>
           <ul className="max-w-2xl mx-auto w-full gap-4">
             {labCourses.map((card, index) => (
               <motion.div
                 layoutId={`card-${card}-${id}`}
                 key={`card-${index}`}
                 onClick={() => setActive(card)}
-                className="p-4 flex flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
+                className="p-4 flex sm:flex-col md:flex-row justify-between items-center hover:bg-neutral-50 dark:hover:bg-neutral-800 rounded-xl cursor-pointer"
               >
-                <div className="flex gap-4 flex-col md:flex-row ">
+                <div className="flex gap-4 sm:flex-col md:flex-row ">
                   <motion.div
                     layoutId={`image-${card?.title}-${id}`}
                   ></motion.div>
                   <div className="">
                     <motion.h3
                       layoutId={`title-${card}-${id}`}
-                      className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left"
+                      className="font-medium text-neutral-800 dark:text-neutral-200 sm:text-center max-sm:text-left"
                     >
                       {card.title}
                     </motion.h3>
                     <motion.p
                       layoutId={`description-${card.description}-${id}`}
-                      className="text-neutral-600 dark:text-neutral-400 text-center md:text-left"
+                      className="text-neutral-600 dark:text-neutral-400 sm:text-center max-sm:text-left max-sm:w-[90%]"
                     >
                       {card.description}
                     </motion.p>
@@ -213,7 +215,7 @@ export function SelectForm() {
                   layoutId={`button-${card.title}-${id}`}
                   className="px-4 py-2 text-sm rounded-full font-bold bg-gray-100 hover:bg-green-500 hover:text-white text-black mt-4 md:mt-0"
                 >
-                  {card.ctaText}
+                  View
                 </motion.button>
               </motion.div>
             ))}

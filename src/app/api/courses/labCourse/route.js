@@ -6,12 +6,13 @@ export async function POST(req) {
   await connect();
   try {
     const body = await req.json();
-    const { courseClassification } = body;
+    const { courseClassification, semester } = body;
 
     console.log(courseClassification);
 
     const courses = await Course.find({
       courseClassification: courseClassification,
+      forSemester: semester,
     }); // Fetch data from the database
 
     console.log(courses);
