@@ -30,7 +30,7 @@
       "src/app/api/users/",
       "src/lib/dbModels/dbModels.js",
       "route.ts"
-, "src/components/Base/HomePage/HomePage.jsx", "send-verification"    ],
+, "src/components/Base/HomePage/HomePage.jsx", "send-verification", "src/components/Base/SelectForm.jsx"    ],
   "exclude": ["node_modules"],
 }
 
