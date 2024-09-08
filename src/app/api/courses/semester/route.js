@@ -1,0 +1,35 @@
+import { connect } from "../../../helper/dbConfig";
+import { Course } from "../../../../lib/dbModels/dbModels";
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  try {
+    await connect();
+    const evenSemesterSet = new Set();
+    const oddSemesterSet = new Set();
+
+    const courses = await Course.find({});
+    courses.forEach((course) => {
+      if (course.isEven) {
+        evenSemesterSet.add(course.forSemester);
+      } else {
+        oddSemesterSet.add(course.forSemester);
+      }
+    });
+
+    const evenSemester = Array.from(evenSemesterSet);
+    const oddSemester = Array.from(oddSemesterSet);
+
+    return NextResponse.json(
+      { evenSemester, oddSemester },
+      { message: "Courses retrieved successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
+  }
+}

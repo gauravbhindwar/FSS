@@ -206,7 +206,9 @@ const HomePage = () => {
       {loginPop && (
         <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl text-red-600 font-bold mb-4">PLEASE LOGIN FIRST!</h2>
+            <h2 className="text-2xl text-red-600 font-bold mb-4">
+              PLEASE LOGIN FIRST!
+            </h2>
             <p className="text-gray-700 mb-6">
               Please login first to access any page
             </p>

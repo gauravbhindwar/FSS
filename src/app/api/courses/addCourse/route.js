@@ -7,7 +7,7 @@ export async function POST(req) {
 
   try {
     const body = await req.json();
-    console.log("Received body:", body); // Log received data
+    // console.log("Received body:", body); // Log received data
 
     if (!Array.isArray(body)) {
       return NextResponse.json(
