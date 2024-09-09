@@ -12,6 +12,7 @@ import { set } from "mongoose";
 const HomePage = () => {
   const [errorVisible, setErrorVisible] = useState(false);
   const [loginPop, setLoginPop] = useState(false);
+  const [tokenPop, setTokenPop] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -26,6 +27,7 @@ const HomePage = () => {
 
   const closePopup = () => {
     setLoginPop(false);
+    setTokenPop(false);
     router.replace("/");
   };
 
@@ -49,6 +51,9 @@ const HomePage = () => {
     if (searchParams.get("loginAlert") === "true") {
       setLoginPop(true);
       // router.replace('/');
+    }
+    else if(searchParams.get("tokenAlert") === "true"){
+      setTokenPop(true);
     }
   }, [searchParams, router]);
   useEffect(() => {
@@ -211,6 +216,24 @@ const HomePage = () => {
             </h2>
             <p className="text-gray-700 mb-6">
               Please login first to access any page
+            </p>
+            <button
+              onClick={closePopup}
+              className="bg-blue-500 max-lg:bg-[#f06543] text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+      {tokenPop && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-2xl text-red-600 font-bold mb-4">
+              INVALID TOKEN
+            </h2>
+            <p className="text-gray-700 mb-6">
+              a token works only one time
             </p>
             <button
               onClick={closePopup}

@@ -7,8 +7,30 @@ import { User } from "@/lib/dbModels/dbModels";
 export async function POST(req) {
   const body = await req.json();
   const { token, password } = body;
+  if(token && !password){
+    try{
+        await connect();
+        const decoded = jwt.decode(token);
+        const { email } = decoded;
+        const user = await User.findOne({ email });
 
-  if (!token || !password) {
+        if (!user) {
+          console.log("Invalid token:", token);
+          return NextResponse.json({ message: "Invalid token" }, { status: 400 });
+        }
+
+        if(user.tokenUsed){
+          return NextResponse.json({ message: "token_used" }, { status: 200 });
+        }
+    }catch(error){
+      console.log("Error verifying token:", error);
+      return NextResponse.json(
+        { message: "Invalid or expired token" },
+        { status: 400 }
+      );
+    }
+  }
+  else if (!token || !password) {
     return NextResponse.json(
       { message: "Token and password are required" },
       { status: 400 }
@@ -54,3 +76,5 @@ export async function POST(req) {
     );
   }
 }
+
+
