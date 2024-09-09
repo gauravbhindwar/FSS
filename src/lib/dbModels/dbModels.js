@@ -69,14 +69,19 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    jwtSecretKey: {
-      type: String,
-      required: false,
+    lastLogin: {
+      type: Date,
+      default: Date.now,
     },
-    tokenUsed: {
+    isVerfied: {
       type: Boolean,
       default: false,
     },
+    jwtSecretKey: {
+      type: String,
+    },
+    tokenUsed: { type: Boolean, default: false },
+    tokenExpiry: { type: Date },
 
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
