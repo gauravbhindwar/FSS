@@ -54,8 +54,64 @@ export async function POST(req) {
       from: process.env.EMAIL_USER,
       to: email,
       subject: "Email Verification",
-      text: `Please verify your email by clicking the following link: ${process.env.BASE_URL}/verify-email?token=${verificationToken}`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Set Password</title>
+          <style>
+            body {
+              margin: 0;
+              padding: 0;
+              background-color: #f5a623; /* Orange background */
+              font-family: Arial, sans-serif;
+            }
+            .container {
+              width: 100%;
+              max-width: 600px;
+              margin: 0 auto;
+              background-color: white;
+              padding: 20px;
+              border-radius: 8px;
+              text-align: center;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            .button {
+              display: inline-block;
+              margin-top: 20px;
+              padding: 15px 30px;
+              font-size: 18px;
+              color: white;
+              background-color: #e67e22;
+              text-decoration: none;
+              border-radius: 5px;
+              font-weight: bold;
+              transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            }
+            .button:hover {
+              background-color: #d35400; /* Darker orange on hover */
+              box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            }
+            .button:active {
+              background-color: #c0392b; /* Red on click */
+              box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>Set Password</h1>
+            <p>Please set your password by clicking the button below:</p>
+            <a href="${process.env.BASE_URL}/verify-email?token=${verificationToken}" class="button">Set Password</a>
+          </div>
+        </body>
+        </html>
+      `,
     };
+    
+    
 
     await transporter.sendMail(mailOptions);
     return NextResponse.json(
