@@ -75,6 +75,7 @@ export async function POST(req) {
 export async function GET() {
   await connect();
   const course = await Course.find({});
+  // const course = await Course.find({courseCode});
 
   return NextResponse.json({ course }, { status: 200 });
 }

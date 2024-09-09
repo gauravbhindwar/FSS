@@ -5,15 +5,14 @@ export default function AdminForm() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [mujid, setMujid] = useState("");
-  const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/admin/add-admin", {
+    const res = await fetch("/api/admin/manageUser", {
       method: "POST",
-      body: JSON.stringify({ email, name, mujid, password, isAdmin }),
+      body: JSON.stringify({ email, name, mujid, isAdmin }),
       headers: { "Content-Type": "application/json" },
     });
     const data = await res.json();
@@ -43,12 +42,6 @@ export default function AdminForm() {
         value={mujid}
         onChange={(e) => setMujid(e.target.value)}
         required
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
       />
       <label>
         <input
