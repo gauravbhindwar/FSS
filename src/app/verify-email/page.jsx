@@ -1,8 +1,11 @@
 "use client";
 import { useState, useEffect, use } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import SVGShuffle from "./loader";
 
 export default function VerifyEmail() {
+  const [loading, setLoading] = useState(true);
+  const [tokenUsed, setTokenUsed] = useState(true);
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
@@ -95,22 +98,30 @@ export default function VerifyEmail() {
 
         if (data.message === 'token_used') {
           console.log('Token Used');
+          setTokenUsed(true);
           const redirectUrl = new URL("/", window.location.href);
           redirectUrl.searchParams.set("tokenAlert", "true");
           router.push(redirectUrl.href); // Redirect to homepage with tokenAlert
         } else {
           setMessage('Token is valid'); // You can handle success here
+          setTokenUsed(false);
           console.dir(data);
         }
-
       } catch (error) {
         console.error('Error during API call:', error);
         setMessage('Error verifying token');
+      } finally {
+        setLoading(false);
       }
     };
 
     tokenCheck();
   }, [token, router]);
+
+  if (loading) {
+    return <SVGShuffle />;// Display loading state while token is being checked
+  }
+  else if(!tokenUsed){
   return (
     <div className="flex items-center justify-center h-screen bg-cover bg-center relative"
       style={{ backgroundImage: "url('/MUJ-homeCover.jpg')" }}>
@@ -155,4 +166,5 @@ export default function VerifyEmail() {
       </div>
     </div>
   );
+  }
 }
