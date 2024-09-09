@@ -1,15 +1,9 @@
 import React from "react";
-import Image from "next/image";
+// import Image from "next/image";
+import SVGShuffle from "../app/verify-email/loader";
 
 export default function Loading() {
   return <div>
-    <Image
-            src="/LoadingPage.svg"
-            alt="Logo"
-            className="login-icon w-screen hidden max-lg:block"
-            width={500}
-            height={300}
-          />
-        Loading ...
+    <SVGShuffle />
   </div>;
 };

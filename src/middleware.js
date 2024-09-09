@@ -4,23 +4,19 @@ export function middleware(req) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = req.cookies.get("user");
   if (pathname === "/verify-email") {
-    if (isLoggedIn) {
-      return NextResponse.redirect(new URL("/dashboard", req.url));
-    } else {
-      return NextResponse.redirect(new URL("/"));
-    }
+    return NextResponse.next();
   }
 
-  // if (!isLoggedIn && pathname !== "/") {
-  //   const loginUrl = new URL("/", req.url);
-  //   console.log("Please login first");
-  //   loginUrl.searchParams.set("loginAlert", "true");
-  //   return NextResponse.redirect(loginUrl);
+  if (!isLoggedIn && pathname !== "/") {
+    const loginUrl = new URL("/", req.url);
+    console.log("Please login first");
+    loginUrl.searchParams.set("loginAlert", "true");
+    return NextResponse.redirect(loginUrl);
+  }
+
+  // if (isLoggedIn && pathname === "/") {
+  //   return NextResponse.redirect(new URL("/dashboard", req.url));
   // }
-
-  if (isLoggedIn && pathname === "/") {
-    return NextResponse.redirect(new URL("/dashboard", req.url));
-  }
   if (!isLoggedIn && pathname.startsWith("/api")) {
     return NextResponse.json(
       { message: "Unauthorized Access" },
