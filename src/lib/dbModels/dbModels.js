@@ -143,4 +143,8 @@ const courseSchema = new Schema(
 
 const Course = mongoose.models.Course || mongoose.model("Course", courseSchema);
 
+const formSchema = new Schema(
+  
+);
+
 export { User, Admin, Course };
