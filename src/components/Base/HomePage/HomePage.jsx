@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Homepage.css";
 import { Input } from "@/components/ui/input";
-import { Mail, LockKeyhole } from "lucide-react";
+import { Mail, LockKeyhole, Eye, EyeOff } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
@@ -24,12 +24,17 @@ const EmailInput = ({ email, handleEmailChange }) => (
   </div>
 );
 
-const PasswordInput = ({ password, handlePasswordChange }) => (
+const PasswordInput = ({
+  password,
+  handlePasswordChange,
+  showPassword,
+  toggleShowPassword,
+}) => (
   <div className="mb-4">
     <div className="relative">
       <Input
         className="focus-visible:ring-1 !pl-10"
-        type="password"
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
         name="password"
         value={password}
@@ -37,6 +42,13 @@ const PasswordInput = ({ password, handlePasswordChange }) => (
         required
       />
       <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
+      <button
+        type="button"
+        className="absolute inset-y-1 h-0 w-2 right-2 text-gray-500"
+        onClick={toggleShowPassword}
+      >
+        {showPassword ? <EyeOff /> : <Eye />}
+      </button>
     </div>
   </div>
 );
@@ -81,6 +93,7 @@ const HomePage = () => {
   const [message, setMessage] = useState("");
   const [isPasswordEmpty, setIsPasswordEmpty] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -90,6 +103,10 @@ const HomePage = () => {
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const closePopup = () => {
@@ -154,24 +171,39 @@ const HomePage = () => {
       if (adminVerifyResponse.data.success) {
         router.push("/admin");
       } else {
-      
-      const loginResponse = await axios.post("/api/users/login", {
-        email,
-        password,
-      });
-      if (loginResponse.data.success) {
-        router.push("/dashboard");
-      } else {
-        setMessage("Invalid email or password");
+        const loginResponse = await axios.post("/api/users/login", {
+          email,
+          password,
+        });
+        if (loginResponse.data.success) {
+          router.push("/dashboard");
+        } else {
+          setMessage("Invalid email or password");
+        }
       }
-    }
     } catch (error) {
       setMessage("Error logging in");
     }
 
     setIsLoading(false);
   };
-  
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "Enter") {
+        if (isPasswordEmpty) {
+          handleContinue();
+        } else {
+          handleSubmit(event); // Trigger login if the password field is visible and filled
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [email, password, isPasswordEmpty]);
 
   return (
     <div className="Body overflow-hidden">
@@ -198,6 +230,8 @@ const HomePage = () => {
             <PasswordInput
               password={password}
               handlePasswordChange={handlePasswordChange}
+              showPassword={showPassword}
+              toggleShowPassword={toggleShowPassword}
             />
           )}
           {isPasswordEmpty ? (

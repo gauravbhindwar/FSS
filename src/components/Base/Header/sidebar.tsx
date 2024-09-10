@@ -31,13 +31,6 @@ export default function SidebarDemo() {
       ),
     },
     {
-      label: "Settings",
-      href: "/",
-      icon: (
-        <IconSettings className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
-      ),
-    },
-    {
       label: "Logout",
       href: "/",
       icon: (
@@ -61,34 +54,28 @@ export default function SidebarDemo() {
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <div
-                key={idx}
-                onClick={() => {
-                  
-                  if (link.label === "Logout") {
-                    fetch('/api/users/logout', {
-                      method: 'POST',
-                    })
-                      .then(response => {
-                        if (response.ok) {
-                          // console.log('Logged out successfully', response);
-                          router.push("/"); 
-                          router.refresh(); // Force refresh cause doesnot work in second and subsequent instances
-                        } else {
-                          console.error('Failed to log out');
-                        }
-                      })
-                      .catch(error => {
-                        console.error('Error during logout:', error);
-                      });
-                  }
-                }}
-                
-                >
-                <SidebarLink
                   key={idx}
-                  link={link}
-                  
-                />
+                  onClick={() => {
+                    if (link.label === "Logout") {
+                      fetch("/api/users/logout", {
+                        method: "POST",
+                      })
+                        .then((response) => {
+                          if (response.ok) {
+                            // console.log('Logged out successfully', response);
+                            router.push("/");
+                            router.refresh(); // Force refresh cause doesnot work in second and subsequent instances
+                          } else {
+                            console.error("Failed to log out");
+                          }
+                        })
+                        .catch((error) => {
+                          console.error("Error during logout:", error);
+                        });
+                    }
+                  }}
+                >
+                  <SidebarLink key={idx} link={link} />
                 </div>
               ))}
             </div>
@@ -96,7 +83,7 @@ export default function SidebarDemo() {
           <div>
             <SidebarLink
               link={{
-                label: "Manu Arora",
+                label: "MUJ",
                 href: "#",
                 icon: (
                   <Image
@@ -149,8 +136,8 @@ const Dashboard = () => {
   return (
     <div className="flex flex-1">
       <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-[rgb(255,78,80)] via-[rgb(255,140,50)] to-[rgb(249,212,35)] dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-      <div className="max-w-5xl mx-auto xs:px-8">
-        <HoverEffect items={Functions} />
+        <div className="max-w-5xl mx-auto xs:px-8">
+          <HoverEffect items={Functions} />
         </div>
       </div>
     </div>
@@ -158,40 +145,39 @@ const Dashboard = () => {
 };
 
 export const Functions = [
-    {
-      title: "Form",
-      description:
-        "Fill the form for selecting the subjects",
-      link: "/form",
-    },
-    {
-      title: "Netflix",
-      description:
-        "A streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.",
-      link: "https://netflix.com",
-    },
-    {
-      title: "Google",
-      description:
-        "A multinational technology company that specializes in Internet-related services and products.",
-      link: "https://google.com",
-    },
-    {
-      title: "Meta",
-      description:
-        "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
-      link: "https://meta.com",
-    },
-    {
-      title: "Amazon",
-      description:
-        "A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.",
-      link: "https://amazon.com",
-    },
-    {
-      title: "Microsoft",
-      description:
-        "A multinational technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.",
-      link: "https://microsoft.com",
-    },
-  ];
+  {
+    title: "Form",
+    description: "Fill the form for selecting the subjects",
+    link: "/form",
+  },
+  {
+    title: "Netflix",
+    description:
+      "A streaming service that offers a wide variety of award-winning TV shows, movies, anime, documentaries, and more on thousands of internet-connected devices.",
+    link: "https://netflix.com",
+  },
+  {
+    title: "Google",
+    description:
+      "A multinational technology company that specializes in Internet-related services and products.",
+    link: "https://google.com",
+  },
+  {
+    title: "Meta",
+    description:
+      "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
+    link: "https://meta.com",
+  },
+  {
+    title: "Amazon",
+    description:
+      "A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.",
+    link: "https://amazon.com",
+  },
+  {
+    title: "Microsoft",
+    description:
+      "A multinational technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.",
+    link: "https://microsoft.com",
+  },
+];
