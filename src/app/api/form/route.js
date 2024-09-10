@@ -1,17 +1,9 @@
 import { connect } from "../../helper/dbConfig";
-import { Form } from "../../../lib/dbModels/dbModels";
+import { Form, User } from "../../../lib/dbModels/dbModels";
 import { NextResponse } from "next/server";
 
 export async function POST(req) {
-  const { allSelectedCourses } = await req.json();
-  //   const { allSelectedCourses, mujid } = await req.json();
-
-  //   if (!allSelectedCourses || !mujid) {
-  //     return NextResponse.json(
-  //       { message: "allSelectedCourses and mujid are required" },
-  //       { status: 400 }
-  //     );
-  //   }
+  const { allSelectedCourses, isEven } = await req.json();
 
   if (!allSelectedCourses) {
     return NextResponse.json(
@@ -20,16 +12,33 @@ export async function POST(req) {
     );
   }
 
+  const MUJid = req.cookies.get("MUJid")?.value;
+  if (!MUJid) {
+    return NextResponse.json(
+      { message: "MUJid is required in cookies" },
+      { status: 400 }
+    );
+  }
+
   try {
     await connect();
 
-    // Create a new form entry
+    const user = await User.findOne({ mujid: MUJid });
+    if (!user) {
+      return NextResponse.json(
+        { message: "User not found" },
+        { status: 404 }
+      );
+    }
+
     const formEntry = new Form({
       allSelectedCourses,
-      //   mujid,
+      mujid: MUJid,
+      Name: user.name,
+      email: user.email,
+      isEven,
     });
 
-    // Save the form entry to the database
     await formEntry.save();
 
     return NextResponse.json(

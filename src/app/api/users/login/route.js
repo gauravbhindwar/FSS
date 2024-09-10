@@ -14,7 +14,7 @@ export async function POST(request) {
     if (user && user.password) {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-        // Set a cookie
+        // Set cookies
         const cookie = serialize("user", "true", {
           httpOnly: true,
           secure: process.env.NODE_ENV !== "development",
@@ -23,8 +23,17 @@ export async function POST(request) {
           path: "/",
         });
 
+        const cookie2 = serialize("MUJid", user.mujid, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV !== "development",
+          maxAge: 60 * 60 * 24 * 7, // 1 week
+          sameSite: "strict",
+          path: "/",
+        });
+
         const response = NextResponse.json({ success: true });
-        response.headers.set("Set-Cookie", cookie);
+        response.headers.append("Set-Cookie", cookie);
+        response.headers.append("Set-Cookie", cookie2);
         return response;
       } else {
         return NextResponse.json({ success: false }, { status: 401 });

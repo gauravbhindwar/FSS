@@ -7,6 +7,7 @@ import Loader from "../verify-email/loader";
 
 const FormPage = () => {
   const [loading, setLoading] = useState(true);
+  const [isSemesterEven, setIsSemesterEven] = useState(true);
   const [allCourses, setAllCourses] = useState({
     3: { labCourses: [], theoryCourses: [] },
     5: { labCourses: [], theoryCourses: [] },
@@ -34,6 +35,12 @@ const FormPage = () => {
           }),
         ])
       );
+      if(semesters[0]%2===0){
+        setIsSemesterEven(true);
+      }
+      else{
+        setIsSemesterEven(false);
+      }
 
       const coursesBySemester = semesters.reduce((acc, semester, index) => {
         const labCourses = courseData[index * 2]?.data?.courses || [];
@@ -68,6 +75,7 @@ const FormPage = () => {
     try {
       const response = await axios.post("/api/form", {
         allSelectedCourses,
+        isEven: isSemesterEven,
       });
       console.log(response.data.message);
     } catch (error) {
