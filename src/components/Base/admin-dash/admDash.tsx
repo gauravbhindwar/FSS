@@ -13,6 +13,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { HoverEffect } from "@/components/ui/card-hover-effect";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 export default function AdminDash() {
   const links = [
@@ -39,7 +40,7 @@ export default function AdminDash() {
     },
     {
       label: "Logout",
-      href: "/",
+      href: "#",
       icon: (
         <IconArrowLeft className="text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
       ),
@@ -61,34 +62,28 @@ export default function AdminDash() {
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
                 <div
-                key={idx}
-                onClick={() => {
-                  
-                  if (link.label === "Logout") {
-                    fetch('/api/users/logout', {
-                      method: 'POST',
-                    })
-                      .then(response => {
-                        if (response.ok) {
-                          // console.log('Logged out successfully', response);
-                          router.push("/"); 
-                          router.refresh(); // Force refresh cause doesnot work in second and subsequent instances
-                        } else {
-                          console.error('Failed to log out');
-                        }
-                      })
-                      .catch(error => {
-                        console.error('Error during logout:', error);
-                      });
-                  }
-                }}
-                
-                >
-                <SidebarLink
                   key={idx}
-                  link={link}
-                  
-                />
+                  onClick={() => {
+                    if (link.label === "Logout") {
+                      fetch("/api/admin/adminLogout", {
+                        method: "POST",
+                      })
+                        .then((response) => {
+                          if (response.ok) {
+                            console.log("Logged out successfully", response);
+                            router.push("/");
+                            router.refresh(); // Force refresh cause doesnot work in second and subsequent instances
+                          } else {
+                            console.error("Failed to log out");
+                          }
+                        })
+                        .catch((error) => {
+                          console.error("Error during logout:", error);
+                        });
+                    }
+                  }}
+                >
+                  <SidebarLink key={idx} link={link} />
                 </div>
               ))}
             </div>
@@ -96,7 +91,7 @@ export default function AdminDash() {
           <div>
             <SidebarLink
               link={{
-                label: "Manu Arora",
+                label: "Gaurav",
                 href: "#",
                 icon: (
                   <Image
@@ -116,6 +111,7 @@ export default function AdminDash() {
     </div>
   );
 }
+
 export const Logo = () => {
   return (
     <Link
@@ -133,6 +129,7 @@ export const Logo = () => {
     </Link>
   );
 };
+
 export const LogoIcon = () => {
   return (
     <Link
@@ -148,17 +145,17 @@ export const LogoIcon = () => {
 const Dashboard = () => {
   return (
     <div className="flex flex-1">
-    <div
-    className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-[rgb(255,78,80)] via-[rgb(255,140,50)] to-[rgb(249,212,35)] dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full"
-    style={{
-        backgroundImage: "url('./admin-Cover.png')",
-        backgroundSize: 'cover',
-        backgroundPosition: 'right',
-        backgroundRepeat: 'no-repeat',
-    }}
-    >
-      <div className="max-w-5xl mx-auto xs:px-8">
-        <HoverEffect items={Functions} />
+      <div
+        className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-[rgb(255,78,80)] via-[rgb(255,140,50)] to-[rgb(249,212,35)] dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full"
+        style={{
+          backgroundImage: "url('./admin-Cover.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "right",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <div className="max-w-5xl mx-auto xs:px-8">
+          <HoverEffect items={Functions} />
         </div>
       </div>
     </div>
@@ -166,40 +163,38 @@ const Dashboard = () => {
 };
 
 export const Functions = [
-    {
-      title: "Manage Users",
-      description:
-        "Add, Remove or give Admin access to users",
-      link: "/admin/manageUser",
-    },
-    {
-      title: "Manage Courses",
-      description:
-        "Add, Remove or give Admin access to courses",
-      link: "/admin/manageCourse",
-    },
-    {
-      title: "Form Status",
-      description:
-        "Check all the forms filled so far and accept/reject them accordingly",
-      link: "https://google.com",
-    },
-    {
-      title: "Meta",
-      description:
-        "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
-      link: "https://meta.com",
-    },
-    {
-      title: "Amazon",
-      description:
-        "A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.",
-      link: "https://amazon.com",
-    },
-    {
-      title: "Microsoft",
-      description:
-        "A multinational technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.",
-      link: "https://microsoft.com",
-    },
-  ];
+  {
+    title: "Manage Users",
+    description: "Add, Remove or give Admin access to users",
+    link: "/admin/manageUser",
+  },
+  {
+    title: "Manage Courses",
+    description: "Add, Remove or give Admin access to courses",
+    link: "/admin/manageCourse",
+  },
+  {
+    title: "Form Status",
+    description:
+      "Check all the forms filled so far and accept/reject them accordingly",
+    link: "https://google.com",
+  },
+  {
+    title: "Meta",
+    description:
+      "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
+    link: "https://meta.com",
+  },
+  {
+    title: "Amazon",
+    description:
+      "A multinational technology company focusing on e-commerce, cloud computing, digital streaming, and artificial intelligence.",
+    link: "https://amazon.com",
+  },
+  {
+    title: "Microsoft",
+    description:
+      "A multinational technology company that develops, manufactures, licenses, supports, and sells computer software, consumer electronics, personal computers, and related services.",
+    link: "https://microsoft.com",
+  },
+];
