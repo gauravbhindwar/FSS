@@ -28,7 +28,7 @@ export const HoverEffect = ({
         <Link
           href={item?.link}
           key={item?.link}
-          className="relative group  block p-2 h-full xs:w-full w-[265px]"
+          className="relative group  block p-2 h-full"
           onMouseEnter={() => setHoveredIndex(idx)}
           onMouseLeave={() => setHoveredIndex(null)}
         >
@@ -53,7 +53,7 @@ export const HoverEffect = ({
             <CardSpotlight>
                 <CardTitle>{item.title}</CardTitle>
                 <CardDescription>{item.description}</CardDescription>
-                <div className="absolute bottom-[10px] right-[10px] inline-block mx-auto px-4 py-2 text-white rounded-full bg-orange-500 overflow-hidden group">
+                <div className="absolute bottom-[5%] right-[30%] inline-block px-4 py-2 text-white rounded-full bg-orange-500 overflow-hidden group">
 
                     <div className="absolute inset-0 bg-yellow-500 transform -translate-x-full transition-transform duration-300 ease-out group-hover:translate-x-0"></div>
                     <span className="relative z-10">Click &rarr;</span>

@@ -41,7 +41,6 @@ export async function POST(req) {
     name,
     isAdmin,
     mujid,
-    isAdmin,
   });
 
   await newAdmin.save();
