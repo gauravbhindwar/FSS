@@ -148,6 +148,13 @@ const HomePage = () => {
     setIsLoading(true);
 
     try {
+      const adminVerifyResponse = await axios.post("/api/users/check-admin", {
+        email,
+      });
+      if (adminVerifyResponse.data.success) {
+        router.push("/admin");
+      } else {
+      
       const loginResponse = await axios.post("/api/users/login", {
         email,
         password,
@@ -157,12 +164,14 @@ const HomePage = () => {
       } else {
         setMessage("Invalid email or password");
       }
+    }
     } catch (error) {
       setMessage("Error logging in");
     }
 
     setIsLoading(false);
   };
+  
 
   return (
     <div className="Body overflow-hidden">

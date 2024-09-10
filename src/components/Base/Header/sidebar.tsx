@@ -50,7 +50,7 @@ export default function SidebarDemo() {
   return (
     <div
       className={cn(
-        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-[100vw] flex-1 max-w-[100vw]  border border-neutral-200 dark:border-neutral-700 overflow-hidden",
+        "rounded-md flex flex-col md:flex-row bg-gray-100 dark:bg-neutral-800 w-[100vw] flex-1 max-w-[100vw]  border border-neutral-200 dark:border-neutral-700 sm:overflow-hidden",
         "h-screen" // for your use case, use `h-screen` instead of `h-[60vh]`
       )}
     >
@@ -149,7 +149,7 @@ const Dashboard = () => {
   return (
     <div className="flex flex-1">
       <div className="p-2 md:p-10 rounded-tl-2xl border border-neutral-200 dark:border-neutral-700 bg-gradient-to-r from-[rgb(255,78,80)] via-[rgb(255,140,50)] to-[rgb(249,212,35)] dark:bg-neutral-900 flex flex-col gap-2 flex-1 w-full h-full">
-      <div className="max-w-5xl mx-auto px-8">
+      <div className="max-w-5xl mx-auto xs:px-8">
         <HoverEffect items={Functions} />
         </div>
       </div>
