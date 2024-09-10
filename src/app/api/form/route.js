@@ -55,8 +55,22 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
+// export async function GET() {
+//   await connect();
+//   const forms = await Form.find({});
+//   return NextResponse.json({ forms }, { status: 200 });
+// }
+
+export async function GET(req) {
   await connect();
-  const forms = await Form.find({});
-  return NextResponse.json({ forms }, { status: 200 });
+  const { searchParams } = new URL(req.url);
+  const mujid = searchParams.get("mujid");
+
+  if (mujid) {
+    const forms = await Form.find({ mujid });
+    return NextResponse.json({ forms }, { status: 200 });
+  } else {
+    const forms = await Form.find({});
+    return NextResponse.json({ forms }, { status: 200 });
+  }
 }
