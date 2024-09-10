@@ -32,8 +32,15 @@ export async function POST(req) {
         );
       }
 
+      // Determine if the semester is even
+      const semesterNumber = parseInt(course.forSemester, 10);
+      const isEven = semesterNumber % 2 === 0;
+
+      // Add the isEven property to the course object
+      const courseWithEvenFlag = { ...course, isEven };
+
       // Create and save each course
-      const newCourse = new Course(course);
+      const newCourse = new Course(courseWithEvenFlag);
       await newCourse.save();
     }
 

@@ -3,48 +3,35 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SelectForm from "@/components/Base/SelectForm";
-import Loader from "../verify-email/loader"
-import { set } from "mongoose";
+import Loader from "../verify-email/loader";
 
-type Course = {
-  title: string;
-};
-
-type SemesterCourses = {
-  labCourses: Course[];
-  theoryCourses: Course[];
-};
-
-type SelectedCourses = {
-  labCourses: string;
-  theoryCourses: string;
-};
-
-type AllSelectedCourses = {
-  [key: number]: SelectedCourses;
-};
-
-const FormPage: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
-  const [allCourses, setAllCourses] = useState<{ [key: number]: SemesterCourses }>({
+const FormPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [allCourses, setAllCourses] = useState({
     3: { labCourses: [], theoryCourses: [] },
     5: { labCourses: [], theoryCourses: [] },
     7: { labCourses: [], theoryCourses: [] },
   });
-  const [allSelectedCourses, setAllSelectedCourses] = useState<AllSelectedCourses>({
+  const [allSelectedCourses, setAllSelectedCourses] = useState({
     3: { labCourses: "", theoryCourses: "" },
     5: { labCourses: "", theoryCourses: "" },
     7: { labCourses: "", theoryCourses: "" },
   });
-  const [activeSemester, setActiveSemester] = useState<number>(3);
+  const [activeSemester, setActiveSemester] = useState(3);
 
   const fetchCourses = async () => {
     try {
       const semesters = [3, 5, 7];
       const courseData = await Promise.all(
         semesters.flatMap((semester) => [
-          axios.post("/api/courses/labCourse", { courseClassification: "LAB", forSemester: semester }),
-          axios.post("/api/courses/labCourse", { courseClassification: "THEORY", forSemester: semester })
+          axios.post("/api/courses/getCourse", {
+            courseClassification: "LAB",
+            forSemester: semester,
+          }),
+          axios.post("/api/courses/getCourse", {
+            courseClassification: "THEORY",
+            forSemester: semester,
+          }),
         ])
       );
 
@@ -57,7 +44,7 @@ const FormPage: React.FC = () => {
         };
         setLoading(false);
         return acc;
-      }, {} as { [key: number]: SemesterCourses });
+      }, {});
 
       setAllCourses(coursesBySemester);
     } catch (error) {
@@ -69,17 +56,25 @@ const FormPage: React.FC = () => {
     fetchCourses();
   }, []);
 
-  const handleCourseChange = (semester: number, selectedCourses: SelectedCourses) => {
+  const handleCourseChange = (semester, selectedCourses) => {
     setAllSelectedCourses((prevCourses) => ({
       ...prevCourses,
       [semester]: selectedCourses,
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("All Selected Courses:", allSelectedCourses);
+    try {
+      const response = await axios.post("/api/form", {
+        allSelectedCourses,
+      });
+      console.log(response.data.message);
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
+
   if (loading) {
     return <Loader />;
   }

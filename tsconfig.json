@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -18,19 +22,28 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
-      "next-env.d.ts",
-      "**/*.ts",
-      "**/*.tsx",
-      ".next/types/**/*.ts",
-      "src/lib/dbModels/dbModels.ts",
-      "src/app/api/users/",
-      "src/lib/dbModels/dbModels.js",
-      "route.ts"
-, "src/components/Base/HomePage/HomePage.jsx", "send-verification", "src/components/Base/SelectForm.jsx", "src/app/api/admin/admin", "src/app/api/admin/binarouteke"    ],
-  "exclude": ["node_modules"],
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/lib/dbModels/dbModels.ts",
+    "src/app/api/users/",
+    "src/lib/dbModels/dbModels.js",
+    "route.ts",
+    "src/components/Base/HomePage/HomePage.jsx",
+    "send-verification",
+    "src/components/Base/SelectForm.jsx",
+    "src/app/api/admin/admin",
+    "src/app/api/admin/binarouteke",
+    "src/app/form/page.jsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
 }
-

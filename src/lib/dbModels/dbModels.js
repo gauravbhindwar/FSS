@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { type } from "os";
 
 const { Schema } = mongoose;
 
@@ -22,7 +21,6 @@ const userSchema = new Schema(
     },
     name: {
       type: String,
-      // required: true
     },
     email: {
       type: String,
@@ -63,7 +61,6 @@ const userSchema = new Schema(
     },
     designation: {
       type: String,
-      // required: true
     },
     isAdmin: {
       type: Boolean,
@@ -82,7 +79,6 @@ const userSchema = new Schema(
     },
     tokenUsed: { type: Boolean, default: false },
     tokenExpiry: { type: Date },
-
     courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
   { timestamps: true }
@@ -149,7 +145,23 @@ const courseSchema = new Schema(
 const Course = mongoose.models.Course || mongoose.model("Course", courseSchema);
 
 const formSchema = new Schema(
-  
+  {
+    allSelectedCourses: {
+      type: Map,
+      of: {
+        labCourses: String,
+        theoryCourses: String,
+      },
+      required: true,
+    },
+    mujid: {
+      type: String,
+      // required: true,
+    },
+  },
+  { timestamps: true }
 );
 
-export { User, Admin, Course };
+const Form = mongoose.models.Form || mongoose.model("Form", formSchema);
+
+export { User, Admin, Course, Form };

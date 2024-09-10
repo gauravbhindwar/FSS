@@ -20,15 +20,11 @@ export async function GET() {
     const evenSemester = Array.from(evenSemesterSet);
     const oddSemester = Array.from(oddSemesterSet);
 
-    return NextResponse.json(
-      { evenSemester, oddSemester },
-      { message: "Courses retrieved successfully" },
-      { status: 200 }
-    );
+    return NextResponse.json({ evenSemester, oddSemester }, { status: 200 });
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { message: "Error retrieving courses" },
       { status: 500 }
     );
   }
