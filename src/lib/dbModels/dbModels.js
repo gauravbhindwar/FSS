@@ -74,6 +74,11 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    isFormFilled: {
+      type: Boolean,
+      required: true,
+      default: false, // need to reset this every time when admin enable option to fill form (from false to true)
+    },
     jwtSecretKey: {
       type: String,
     },

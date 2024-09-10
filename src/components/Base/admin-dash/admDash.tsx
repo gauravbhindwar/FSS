@@ -180,10 +180,10 @@ export const Functions = [
     link: "https://google.com",
   },
   {
-    title: "Meta",
+    title: "Semester Type",
     description:
-      "A technology company that focuses on building products that advance Facebook's mission of bringing the world closer together.",
-    link: "https://meta.com",
+      "Manage Type of semester (even/odd) for which form will be filled",
+    link: "/admin/manageSemester",
   },
   {
     title: "Amazon",

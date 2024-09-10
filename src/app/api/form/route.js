@@ -25,10 +25,7 @@ export async function POST(req) {
 
     const user = await User.findOne({ mujid: MUJid });
     if (!user) {
-      return NextResponse.json(
-        { message: "User not found" },
-        { status: 404 }
-      );
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
     }
 
     const formEntry = new Form({
@@ -40,6 +37,10 @@ export async function POST(req) {
     });
 
     await formEntry.save();
+    // want to update in User schema from database to update isFormFilled true
+
+    user.isFormFilled = true;
+    await user.save();
 
     return NextResponse.json(
       { message: "Form submitted successfully" },
@@ -52,4 +53,10 @@ export async function POST(req) {
       { status: 500 }
     );
   }
+}
+
+export async function GET() {
+  await connect();
+  const forms = await Form.find({});
+  return NextResponse.json({ forms }, { status: 200 });
 }

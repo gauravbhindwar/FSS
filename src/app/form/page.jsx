@@ -4,8 +4,21 @@ import axios from "axios";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SelectForm from "@/components/Base/SelectForm";
 import Loader from "../verify-email/loader";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
 const FormPage = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isSemesterEven, setIsSemesterEven] = useState(true);
   const [allCourses, setAllCourses] = useState({
@@ -35,10 +48,9 @@ const FormPage = () => {
           }),
         ])
       );
-      if(semesters[0]%2===0){
+      if (semesters[0] % 2 === 0) {
         setIsSemesterEven(true);
-      }
-      else{
+      } else {
         setIsSemesterEven(false);
       }
 
@@ -72,12 +84,23 @@ const FormPage = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Check if all required fields are filled for all semesters
+    const allFieldsFilled = Object.values(allSelectedCourses).every(
+      (courses) => courses.labCourses !== "" && courses.theoryCourses !== ""
+    );
+
+    if (!allFieldsFilled) {
+      console.error("Please fill all required fields for all semesters.");
+      return;
+    }
+
     try {
       const response = await axios.post("/api/form", {
         allSelectedCourses,
         isEven: isSemesterEven,
       });
-      console.log(response.data.message);
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -136,12 +159,32 @@ const FormPage = () => {
           </TabsContent>
         </Tabs>
 
-        <button
-          type="submit"
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Submit All Courses
-        </button>
+        <AlertDialog>
+          <AlertDialogTrigger
+            type="submit"
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Submit All Courses
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you absolutely sure to submit your form?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className=" bg-red-600 text-white rounded">
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction className=" bg-green-500 text-white rounded">
+                Submit
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </form>
     </div>
   );
