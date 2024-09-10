@@ -15,9 +15,17 @@ export async function POST(req) {
                 maxAge: 60 * 60 * 24 * 7, // 1 week
                 sameSite: "strict",
                 path: "/",
-              });
+            });
+            const cookie2 = serialize("MUJid", user.mujid, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV !== "development",
+                maxAge: 60 * 60 * 24 * 7, // 1 week
+                sameSite: "strict",
+                path: "/",
+            });
             const response = NextResponse.json({ success: true }, { status: 200 });
-            response.headers.set("Set-Cookie", cookie);            
+            response.headers.append("Set-Cookie", cookie);
+            response.headers.append("Set-Cookie", cookie2);
             return response;
         } else {
             return NextResponse.json({ success: false }, { status: 200 });

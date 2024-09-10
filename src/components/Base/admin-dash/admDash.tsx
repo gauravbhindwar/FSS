@@ -65,7 +65,7 @@ export default function AdminDash() {
                 onClick={() => {
                   
                   if (link.label === "Logout") {
-                    fetch('/api/users/logout', {
+                    fetch('/api/admin/adminLogout', {
                       method: 'POST',
                     })
                       .then(response => {

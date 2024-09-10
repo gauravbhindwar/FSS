@@ -154,9 +154,23 @@ const formSchema = new Schema(
       },
       required: true,
     },
+    Name: {
+      type: String,
+      required: true,
+      default: "Name Not Added",
+    },
     mujid: {
       type: String,
-      // required: true,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    isEven: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
   },
   { timestamps: true }
