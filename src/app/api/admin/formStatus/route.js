@@ -45,10 +45,21 @@ export async function GET(req) {
       return acc;
     }, {});
 
-    forms = forms.map((form) => ({
-      ...form,
-      isFormFilled: userStatusMap[form.mujid] || false,
-    }));
+    forms = forms.map((form) => {
+      const allSelectedCourses = Array.from(
+        form.allSelectedCourses.entries()
+      ).map(([key, value]) => ({
+        courseType: key,
+        labCourses: value.labCourses,
+        theoryCourses: value.theoryCourses,
+      }));
+
+      return {
+        ...form,
+        isFormFilled: userStatusMap[form.mujid] || false,
+        allSelectedCourses,
+      };
+    });
 
     return NextResponse.json({ forms }, { status: 200 });
   } catch (error) {

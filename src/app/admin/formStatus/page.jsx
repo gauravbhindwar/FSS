@@ -78,8 +78,7 @@ const FormsTable = () => {
             <tr
               key={user._id}
               className="cursor-pointer"
-              onClick={() => handleRowClick(user.mujid)}
-            >
+              onClick={() => handleRowClick(user.mujid)}>
               <td className="py-2 px-4 border-b">{user.mujid}</td>
               <td className="py-2 px-4 border-b">{user.name}</td>
               <td className="py-2 px-4 border-b">true</td>
@@ -120,7 +119,7 @@ const FormsTable = () => {
                 {selectedUserForms.map((form, index) => (
                   <div key={index} className="mb-4">
                     <p>
-                      <strong>MUJid:</strong> {form.mujid}
+                      <strong>mujId:</strong> {form.mujid}
                     </p>
                     <p>
                       <strong>Name:</strong> {form.Name}
@@ -130,12 +129,35 @@ const FormsTable = () => {
                     </p>
                     <p>
                       <strong>All Selected Courses:</strong>{" "}
-                      {Array.isArray(form.allSelectedCourses)
-                        ? form.allSelectedCourses.join(", ")
-                        : "N/A"}
+                      {form.allSelectedCourses ? (
+                        <ul>
+                          {Object.entries(form.allSelectedCourses).map(
+                            ([key, value], idx) => (
+                              <li key={idx}>
+                                <strong className="text-rose-800">
+                                  For Semester {key}:
+                                </strong>
+                                <ul>
+                                  <li>
+                                    <strong>Lab Courses:</strong>{" "}
+                                    {value.labCourses}
+                                  </li>
+                                  <li>
+                                    <strong>Theory Courses:</strong>{" "}
+                                    {value.theoryCourses}
+                                  </li>
+                                </ul>
+                              </li>
+                            )
+                          )}
+                        </ul>
+                      ) : (
+                        "N/A"
+                      )}
                     </p>
                     <p>
-                      <strong>Is Even:</strong> {form.isEven ? "Yes" : "No"}
+                      <strong>Semester Term:</strong>{" "}
+                      {form.isEven ? "Even Term" : "Odd Term"}
                     </p>
                   </div>
                 ))}

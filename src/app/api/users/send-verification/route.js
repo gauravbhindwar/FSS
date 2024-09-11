@@ -9,7 +9,7 @@ export async function POST(req) {
   const body = await req.json();
   const { email } = body;
 
-  console.log("Received email:", email);
+  // console.log("Received email:", email);
 
   if (!email) {
     return NextResponse.json({ message: "Email is required" }, { status: 400 });
@@ -20,7 +20,7 @@ export async function POST(req) {
 
     const user = await User.findOne({ email });
 
-    console.log("Found user:", user);
+    // console.log("Found user:", user);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -110,8 +110,6 @@ export async function POST(req) {
         </html>
       `,
     };
-    
-    
 
     await transporter.sendMail(mailOptions);
     return NextResponse.json(
@@ -119,7 +117,7 @@ export async function POST(req) {
       { status: 202 }
     );
   } catch (error) {
-    console.log("Error sending email:", error);
+    // console.log("Error sending email:", error);
     return NextResponse.json(
       { message: "Error sending email" },
       { status: 500 }
@@ -147,7 +145,7 @@ export async function PUT(req) {
 
     const user = await User.findOne({ email });
 
-    console.log("Found user:", user);
+    // console.log("Found user:", user);
 
     if (!user) {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
@@ -174,7 +172,7 @@ export async function PUT(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error verifying token:", error);
+    // console.log("Error verifying token:", error);
     return NextResponse.json(
       { message: "Invalid or expired token" },
       { status: 400 }
