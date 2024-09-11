@@ -19,7 +19,6 @@ export function middleware(req) {
   // if (isAdmin && !pathname.startsWith("/admin")) {
   //   return NextResponse.redirect(new URL("/admin", req.url));
   // }
-
   // if (!isLoggedIn && pathname.startsWith("/api")) {
   //   return NextResponse.json(
   //     { message: "Unauthorized Access" },
