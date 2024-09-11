@@ -67,7 +67,7 @@ export async function GET(req) {
   const mujid = searchParams.get("mujid");
 
   if (mujid) {
-    const forms = await Form.find({ mujid });
+    const forms = await Form.findOne({ mujid });
     return NextResponse.json({ forms }, { status: 200 });
   } else {
     const forms = await Form.find({});
