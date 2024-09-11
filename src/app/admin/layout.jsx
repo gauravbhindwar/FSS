@@ -7,7 +7,7 @@ import {
   FiMenu,
   FiUser,
   FiPrinter,
-  FiLogOut,
+  FiLogOut
 } from "react-icons/fi";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { motion, useAnimation } from "framer-motion";
@@ -35,6 +35,20 @@ const AdminDashboard = ({ children }) => {
       console.log(error);
     }
   }
+
+  // async function handleSetSemester() {
+  //   try {
+  //     const res = await axios.post("/api/admin/setSemester");
+  //     if (res.data.success) {
+  //       console.log("Semester Set Successfully");
+  //     }
+  //     console.log(res.data);
+  //     console.log(res.data.message);
+  //     console.log(res.data.error);
+  //   } catch (error) {
+  //     console.log("Error In Setting Semester");
+  //   }
+  // }
 
   // Helper function to get the initials from the user's name
   const getInitials = (name) => {
@@ -77,27 +91,29 @@ const AdminDashboard = ({ children }) => {
           exit={{ opacity: 0 }}
         />
       )}
-      <div className={`w-[5rem] min-h-screen h-[100%] hidden max-md:${isSidebarOpen && `inline-block`} max-md:${textVisible && `inline-block`}`}></div>
+      <div
+        className={`w-[5rem] min-h-screen h-[100%] hidden max-md:${
+          isSidebarOpen && `inline-block`
+        } max-md:${textVisible && `inline-block`}`}></div>
       <motion.div
-        className={`bg-white shadow-lg max-md:z-[11] max-md:${isSidebarOpen && `absolute`} max-md:${textVisible && `absolute`} max-md:min-h-screen`}
+        className={`bg-white shadow-lg max-md:z-[11] max-md:${
+          isSidebarOpen && `absolute`
+        } max-md:${textVisible && `absolute`} max-md:min-h-screen`}
         animate={sidebarAnimation}
         onMouseEnter={() => setIsSidebarOpen(true)}
-        onMouseLeave={() => closeSidebar()}
-      >
+        onMouseLeave={() => closeSidebar()}>
         <div className="flex items-center justify-between p-4">
           <button
             onClick={toggleSidebar}
             className="text-gray-500 hover:text-gray-700 focus:outline-none"
-            aria-label="Toggle Sidebar"
-          >
+            aria-label="Toggle Sidebar">
             <FiMenu size={24} />
           </button>
           {isSidebarOpen && (
             <motion.h2
               className={`text-xl font-semibold transition-opacity duration-300 ${
                 textVisible ? "opacity-100" : "opacity-0"
-              }`}
-            >
+              }`}>
               Admin Panel
             </motion.h2>
           )}
@@ -110,8 +126,7 @@ const AdminDashboard = ({ children }) => {
             <div
               className={`mt-2 text-center transition-opacity duration-300 ${
                 textVisible ? "opacity-100" : "opacity-0"
-              }`}
-            >
+              }`}>
               <h3 className="font-semibold">{userName}</h3>
               <p className="text-sm text-gray-500">{userRole}</p>
             </div>
@@ -123,8 +138,7 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+              transition={{ type: "spring", stiffness: 300 }}>
               <TbLayoutDashboard className="mr-3 " />
               {textVisible && <span>Dashboard</span>}
             </motion.div>
@@ -134,8 +148,7 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiUser className="mr-3" />
               {textVisible && <span>Manage User</span>}
             </motion.div>
@@ -145,8 +158,7 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiBook className="mr-3" />
               {textVisible && <span>Manage Course</span>}
             </motion.div>
@@ -156,8 +168,7 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiFileText className="mr-3" />
               {textVisible && <span>Form Status</span>}
             </motion.div>
@@ -167,20 +178,29 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiPrinter className="mr-3" />
               {textVisible && <span>Print Form</span>}
             </motion.div>
           </Link>
+          {/* <Link href="#">
+            <motion.div
+              className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={handleSetSemester}>
+              <FiLogOut className="mr-3" />
+              {textVisible && <span>Set Semester</span>}
+            </motion.div>
+          </Link> */}
           <Link href="/">
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              onClick={handleLogout}
-            >
+              transition={{ type: "spring", stiffness: 300 }}
+              onClick={handleLogout}>
               <FiLogOut className="mr-3" />
               {textVisible && <span>Logout</span>}
             </motion.div>

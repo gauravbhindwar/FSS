@@ -33,7 +33,7 @@ export async function POST(req) {
       mujid: MUJid,
       Name: user.name,
       email: user.email,
-      isEven,
+      isEven
     });
 
     await formEntry.save();
@@ -54,13 +54,6 @@ export async function POST(req) {
     );
   }
 }
-
-// export async function GET() {
-//   await connect();
-//   const forms = await Form.find({});
-//   return NextResponse.json({ forms }, { status: 200 });
-// }
-
 export async function GET(req) {
   await connect();
   const { searchParams } = new URL(req.url);

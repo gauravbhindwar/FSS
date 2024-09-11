@@ -11,70 +11,81 @@ const courseSchema = Joi.object({
   isEven: Joi.boolean().default(false),
   courseCredit: Joi.string().required(),
   courseClassification: Joi.string().required(), //LAB OR THEORY
-  courseType: Joi.string().required(), //CORE OR ELECTIVE
+  courseType: Joi.string().required() //CORE OR ELECTIVE
 });
 
 export async function POST(req) {
-  await connect();
+  try {
+    await connect();
+    const {
+      title,
+      courseCode,
+      description,
+      forSemester,
+      isEven,
+      courseCredit,
+      courseClassification,
+      courseType
+    } = await req.json();
 
-  const {
-    title,
-    courseCode,
-    description,
-    forSemester,
-    isEven,
-    courseCredit,
-    courseClassification,
-    courseType,
-  } = await req.json();
+    const { error } = courseSchema.validate({
+      title,
+      courseCode,
+      description,
+      forSemester,
+      isEven,
+      courseCredit,
+      courseClassification,
+      courseType
+    });
 
-  const { error } = courseSchema.validate({
-    title,
-    courseCode,
-    description,
-    forSemester,
-    isEven,
-    courseCredit,
-    courseClassification,
-    courseType,
-  });
+    if (error)
+      return NextResponse.json(
+        { error: error.details[0].message },
+        { status: 400 }
+      );
 
-  if (error)
+    const existingCourse = await Course.findOne({ courseCode });
+    if (existingCourse)
+      return NextResponse.json(
+        { error: "Course With Same Course Code Already Exist!" },
+        { status: 400 }
+      );
+
+    const newCourse = new Course({
+      title,
+      courseCode,
+      description,
+      forSemester,
+      isEven,
+      courseCredit,
+      courseClassification,
+      courseType
+    });
+    if (forSemester % 2 == 0) {
+      newCourse.isEven = true;
+    } else {
+      newCourse.isEven = false;
+    }
+    await newCourse.save();
+
     return NextResponse.json(
-      { error: error.details[0].message },
-      { status: 400 }
+      { message: "Course successfully" },
+      { status: 201 }
     );
-
-  const existingCourse = await Course.findOne({ courseCode });
-  if (existingCourse)
+  } catch (error) {
+    console.error("Error creating course:", error);
     return NextResponse.json(
-      { error: "Course With Same Course Code Already Exist!" },
-      { status: 400 }
+      { message: "Failed to create course", error: error.message },
+      { status: 500 }
     );
-
-  const newCourse = new Course({
-    title,
-    courseCode,
-    description,
-    forSemester,
-    isEven,
-    courseCredit,
-    courseClassification,
-    courseType,
-  });
-  if (forSemester % 2 == 0) {
-    newCourse.isEven = true;
-  } else {
-    newCourse.isEven = false;
   }
-  await newCourse.save();
-
-  return NextResponse.json({ message: "Course successfully" }, { status: 201 });
 }
 
 export async function GET() {
   await connect();
   const course = await Course.find({});
+
   // const course = await Course.find({courseCode});
 
   return NextResponse.json({ course }, { status: 200 });
