@@ -1,6 +1,6 @@
 import { connect } from "@/app/helper/dbConfig";
 import { Course } from "@/lib/dbModels/dbModels";
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function POST(req) {
   const { isEven } = await req.json();
@@ -17,10 +17,7 @@ export async function POST(req) {
 
     const courses = await Course.find({ isEven });
 
-    return NextResponse.json(
-      { courses },
-      { status: 200 }
-    );
+    return NextResponse.json({ courses }, { status: 200 });
   } catch (error) {
     console.error("Error retrieving courses:", error);
     return NextResponse.json(

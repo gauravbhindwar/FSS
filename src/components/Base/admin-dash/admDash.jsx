@@ -1,7 +1,7 @@
-'use client';
-import React from 'react';
-import { FiUsers, FiBook, FiFileText } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+"use client";
+import React from "react";
+import { FiUsers, FiBook, FiFileText } from "react-icons/fi";
+import { motion } from "framer-motion";
 
 // DashboardCard Component with Framer Motion
 const DashboardCard = ({ icon, title, count, color, index }) => {
@@ -11,13 +11,13 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
       animate={{ opacity: 1, scale: 1, y: 0, zIndex: 1 }}
       transition={{
         duration: 0.6,
-        type: 'spring',
+
+        type: "spring",
         delay: index * 0.1, // Stagger delay
         bounce: 0.3
       }}
       whileHover={{ scale: 1.05, rotate: 2, transition: { duration: 0.3 } }}
-      className={`${color} rounded-lg shadow-md p-4 md:p-6 lg:p-8 hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer`}
-    >
+      className={`${color} rounded-lg shadow-md p-4 md:p-6 lg:p-8 hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer`}>
       <div className="flex items-center space-x-3 md:space-x-4 mb-3 md:mb-4">
         <div className="p-2 md:p-3 rounded-full bg-white">{icon}</div>
         <h3 className="text-sm md:text-lg lg:text-xl font-semibold">{title}</h3>
@@ -32,7 +32,9 @@ const AdminDashboard = () => {
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
       <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 md:mb-8 lg:mb-10">Admin Dashboard</h1>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 md:mb-8 lg:mb-10">
+          Admin Dashboard
+        </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-4 lg:gap-10">
           {[
             {

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      h1 {
+        color: #333;
+      }
+      p {
+        margin: 5px 0;
+      }
+      .course-list {
+        list-style-type: none;
+        padding: 0;
+      }
+      .course-list li {
+        margin: 5px 0;
+      }
+    </style>
+  </head>
+  <body>
+    {{#each forms}}
+    <h1>Report for {{name}}</h1>
+    <p><strong>MUJid:</strong> {{mujid}}</p>
+    <p><strong>Email:</strong> {{email}}</p>
+    <p><strong>All Selected Courses:</strong></p>
+    <ul class="course-list">
+      {{#each allSelectedCourses}}
+      <li>
+        <strong>{{@key}}:</strong> Lab Courses: {{this.labCourses}}, Theory
+        Courses: {{this.theoryCourses}}
+      </li>
+      {{/each}}
+    </ul>
+    <p><strong>Is Even:</strong> {{isEven}}</p>
+    {{/each}}
+  </body>
+</html>
