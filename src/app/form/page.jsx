@@ -100,6 +100,9 @@ const FormPage = () => {
         allSelectedCourses,
         isEven: isSemesterEven,
       });
+
+      // setMessage("FormSubmitted Successfully");
+      <Loader />;
       router.push("/dashboard");
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -160,10 +163,7 @@ const FormPage = () => {
         </Tabs>
 
         <AlertDialog>
-          <AlertDialogTrigger
-            type="submit"
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-          >
+          <AlertDialogTrigger className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
             Submit All Courses
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -179,7 +179,10 @@ const FormPage = () => {
               <AlertDialogCancel className=" bg-red-600 text-white rounded">
                 Cancel
               </AlertDialogCancel>
-              <AlertDialogAction className=" bg-green-500 text-white rounded">
+              <AlertDialogAction
+                className=" bg-green-500 text-white rounded"
+                onClick={handleSubmit}
+              >
                 Submit
               </AlertDialogAction>
             </AlertDialogFooter>
