@@ -1,6 +1,6 @@
-import { connect } from "@/app/helper/dbConfig";
-import { User } from "@/lib/dbModels/dbModels";
-import { NextResponse } from "next/server";
+import { connect } from "../../../helper/dbConfig";
+import { User } from "../../../../lib/dbModels/dbModels";
+import { NextResponse, NextRequest } from "next/server";
 import Joi from "joi";
 
 const userSchema = Joi.object({
@@ -11,81 +11,104 @@ const userSchema = Joi.object({
   password: Joi.string().min(6).optional(),
 });
 
-export async function POST(req) {
-  await connect();
+// Utility function to handle errors
+const createErrorResponse = (message, statusCode = 400) => {
+  return NextResponse.json({ error: message }, { status: statusCode });
+};
 
-  const { email, name, isAdmin, mujid } = await req.json();
+export async function POST(NextRequest) {
+  try {
+    await connect();
 
-  const adminStatus = isAdmin;
+    // Parse request body
+    let requestBody;
+    try {
+      requestBody = await NextRequest.json();
+    } catch (err) {
+      return createErrorResponse("Invalid JSON input");
+    }
 
-  const { error } = userSchema.validate({
-    email,
-    name,
-    mujid,
-  });
-  if (error)
-    return NextResponse.json(
-      { error: error.details[0].message },
-      { status: 400 }
-    );
+    const { email, name, isAdmin, mujid } = requestBody;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser)
-    return NextResponse.json(
-      { error: "Can't use same email or mujid ! User already exists" },
-      { status: 400 }
-    );
+    const { error } = userSchema.validate({ email, name, mujid, isAdmin });
+    if (error) {
+      return createErrorResponse(error.details[0].message);
+    }
 
-  const newAdmin = new User({
-    email,
-    name,
-    isAdmin,
-    mujid,
-  });
+    // Check if the user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return createErrorResponse("Can't use same email or mujid! User already exists");
+    }
 
-  await newAdmin.save();
+    const newUser = await new User({
+      email,
+      name,
+      isAdmin,
+      mujid,
+    });
 
-  if (adminStatus) {
-    return NextResponse.json(
-      { message: "Admin Added successfully" },
-      { status: 201 }
-    );
-  } else {
-    return NextResponse.json(
-      { message: "User Added successfully" },
-      { status: 201 }
-    );
+    try {
+      await newUser.save();
+    } catch (error) {
+      console.error("Error saving new user:", error);
+      return createErrorResponse("Error saving new user", 500);
+    }
+
+    const message = isAdmin
+      ? "Admin Added successfully"
+      : "User Added successfully";
+
+    return NextResponse.json({ message }, { status: 201 });
+
+  } catch (error) {
+    // Catch any unexpected errors and return a generic message
+    console.error(error);
+    return createErrorResponse("Something went wrong on the server", 500);
   }
 }
 
 export async function GET() {
-  await connect();
-
-  const users = await User.find({});
-
-  return NextResponse.json({ users }, { status: 200 });
+  try {
+    await connect();
+    const users = await User.find({});
+    return NextResponse.json({ users }, { status: 200 });
+  } catch (error) {
+    console.error(error);
+    return createErrorResponse("Failed to fetch users", 500);
+  }
 }
 
 export async function DELETE(req) {
-  await connect();
+  try {
+    await connect();
 
-  const { email } = await req.json();
+    // Parse request body
+    let requestBody;
+    try {
+      requestBody = await req.json();
+    } catch (err) {
+      return createErrorResponse("Invalid JSON input");
+    }
 
-  const deletedUser = await User.findOneAndDelete({ email });
+    const { email } = requestBody;
 
-  return NextResponse.json({ deletedUser }, { status: 200 });
+    // Ensure email is provided
+    if (!email) {
+      return createErrorResponse("Email is required for deletion");
+    }
+
+    // Delete the user
+    const deletedUser = await User.findOneAndDelete({ email });
+
+    if (!deletedUser) {
+      return createErrorResponse("User not found", 404);
+    }
+
+    return NextResponse.json({ deletedUser }, { status: 200 });
+
+  } catch (error) {
+    console.error(error);
+    return createErrorResponse("Failed to delete user", 500);
+  }
 }
-
-// export async function PUT(req) {
-//   await connect();
-
-//   const { email } = await req.json();
-
-//   const updatedUser = await User.findOneAndUpdate(
-//     { email },
-//     { isAdmin: true },
-//     { new: true }
-//   );
-
-//   return NextResponse.json({ updatedUser }, { status: 200 });
-// }

@@ -1,3 +1,4 @@
+import { required } from "joi";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -37,33 +38,27 @@ const userSchema = new Schema(
         message: (props) => "The specified email address is already in use",
       },
     },
+    phone: {
+      type: String,
+      unique: false,
+      sparse: true, // This allows multiple documents with null values for the phone field
+    },
     password: {
       type: String,
+      required: false,
+      default: null,
     },
     ext: {
       type: String,
       required: false,
     },
-    phone: {
-      type: String,
-      required: false,
-      unique: true,
-      validate: {
-        validator: async function (value) {
-          const user = await this.constructor.findOne({ phone: value });
-          if (user && user.id !== this.id) {
-            throw new Error("phone already exists");
-          }
-          return true;
-        },
-        message: (props) => "The specified phone number is already in use",
-      },
-    },
     designation: {
       type: String,
+      required: false,
     },
     isAdmin: {
       type: Boolean,
+      required: false,
       default: false,
     },
     lastLogin: {
@@ -76,7 +71,7 @@ const userSchema = new Schema(
     },
     isFormFilled: {
       type: Boolean,
-      required: true,
+      required: false,
       default: false, // need to reset this every time when admin enable option to fill form (from false to true)
     },
     jwtSecretKey: {

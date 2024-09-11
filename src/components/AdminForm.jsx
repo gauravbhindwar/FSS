@@ -17,15 +17,36 @@ export default function AdminForm() {
   const handleSubmit = async (e) => {
     setLoader(true);
     e.preventDefault();
-    const res = await fetch("/api/admin/manageUser", {
-      method: "POST",
-      body: JSON.stringify({ email, name, mujid, isAdmin }),
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
-    setLoader(false);
-    setMessage(data.message || data.error);
+  
+    try {
+      const res = await fetch("/api/admin/manageUser", {
+        method: "POST",
+        body: JSON.stringify({ email, name, mujid, isAdmin }),
+        headers: { "Content-Type": "application/json" },
+      });
+  
+      // Check if the response is OK and has content
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+  
+      // Try to parse the response as JSON
+      const data = await res.json();
+  
+      // Check if the response contains a message or error
+      if (data.message || data.error) {
+        setMessage(data.message || data.error);
+      } else {
+        setMessage("Unexpected response from the server.");
+      }
+    } catch (error) {
+      console.error("Error in API call:", error);
+      setMessage("An error occurred. Please try again.");
+    } finally {
+      setLoader(false);
+    }
   };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4"
