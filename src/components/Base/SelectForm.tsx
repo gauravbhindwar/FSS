@@ -49,8 +49,8 @@ const SelectForm: React.FC<SelectFormProps> = ({
           <h3 className="font-bold text-lg">Lab Courses</h3>
           {labCourses.length > 0 ? (
             labCourses.map((course) => (
-              <Label htmlFor={`theory-${course.title}`} className="">
-                <div className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.labCourses === course.title ? "bg-green-500 hover:bg-green-600" : "bg-slate-100 hover:bg-slate-200"}`} key={course.title}>
+              <Label htmlFor={`theory-${course.title}`} className="" key={course.title}>
+                <div className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.labCourses === course.title ? "bg-green-500 hover:bg-green-600" : "bg-slate-100 hover:bg-slate-200"}`} >
                   <RadioGroupItem value={course.title} id={`theory-${course.title}`} />
                   <div className="cursor-pointer w-[80vw]">
                   <h1 className="font-bold text-zinc-800 text-2xl inline-block">{course.title}</h1> <h2 className="inline-block text-xl text-zinc-700 font-semibold">({course?.courseType})</h2>
@@ -73,8 +73,8 @@ const SelectForm: React.FC<SelectFormProps> = ({
           <h3 className="font-bold text-lg">Theory Courses</h3>
           {theoryCourses.length > 0 ? (
             theoryCourses.map((course) => (
-              <Label htmlFor={`theory-${course.title}`} className="">
-                <div className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.theoryCourses === course.title ? "bg-green-500 hover:bg-green-600" : "bg-slate-100 hover:bg-slate-200"}`} key={course.title}>
+              <Label htmlFor={`theory-${course.title}`} className="" key={course.title}>
+                <div className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.theoryCourses === course.title ? "bg-green-500 hover:bg-green-600" : "bg-slate-100 hover:bg-slate-200"}`} >
                   <RadioGroupItem value={course.title} id={`theory-${course.title}`} />
                   <div className="cursor-pointer w-[80vw]">
                   <h1 className="font-bold text-zinc-800 text-2xl inline-block">{course.title}</h1> <h2 className="inline-block text-xl text-zinc-700 font-semibold">({course?.courseType})</h2>

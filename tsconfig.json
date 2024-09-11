@@ -42,7 +42,7 @@
     "src/app/api/admin/admin",
     "src/app/api/admin/binarouteke",
     "src/app/form/page.jsx"
-  ],
+, "src/app/admin/layout.jsx", "src/components/Base/admin-dash/admDash.jsx"  ],
   "exclude": [
     "node_modules"
   ],

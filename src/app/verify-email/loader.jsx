@@ -4,9 +4,9 @@ import { FaCode, FaRobot, FaDatabase } from 'react-icons/fa';
 
 const SVGShuffle = () => {
   const svgs = [
-    <FaCode className="text-6xl text-blue-500" />,
-    <FaRobot className="text-6xl text-green-500" />,
-    <FaDatabase className="text-6xl text-red-500" />
+    <FaCode key={1} className="text-6xl text-blue-500" />,
+    <FaRobot key={2} className="text-6xl text-green-500" />,
+    <FaDatabase key={3} className="text-6xl text-red-500" />
   ];
 
   const [currentSvgIndex, setCurrentSvgIndex] = useState(0);

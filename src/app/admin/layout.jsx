@@ -8,7 +8,7 @@ import axios from 'axios';
 
 const AdminDashboard = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [textVisible, setTextVisible] = useState(true);
+  const [textVisible, setTextVisible] = useState(false);
 
   const sidebarAnimation = useAnimation();
 
@@ -17,7 +17,6 @@ const AdminDashboard = ({ children }) => {
   };
 
   async function handleLogout(){
-    // Add your logout logic here
     try{
       const res = await axios.post('/api/admin/adminLogout');
       if (res.data.success) {
@@ -58,7 +57,7 @@ const AdminDashboard = ({ children }) => {
   };
 
   return (
-    <div className="flex h-screen w-screen">
+    <div className="flex h-[fit-content] overflow-hidden w-screen ">
       {/* Sidebar */}
       {isSidebarOpen && (
         <motion.div
@@ -69,8 +68,9 @@ const AdminDashboard = ({ children }) => {
           exit={{ opacity: 0 }}
         />
       )}
+      <div className={`w-[5rem] min-h-screen h-[100%] hidden max-md:${isSidebarOpen && `inline-block`} max-md:${textVisible && `inline-block`}`}></div>
       <motion.div
-        className={`bg-white shadow-lg max-md:z-[11] max-md:${textVisible && `absolute`} max-md:min-h-screen`}
+        className={`bg-white shadow-lg max-md:z-[11] max-md:${isSidebarOpen && `absolute`} max-md:${textVisible && `absolute`} max-md:min-h-screen`}
         animate={sidebarAnimation}
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => closeSidebar()}
@@ -105,6 +105,7 @@ const AdminDashboard = ({ children }) => {
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <TbLayoutDashboard className='mr-3 '/>
@@ -115,6 +116,7 @@ const AdminDashboard = ({ children }) => {
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <FiUser className="mr-3" />
@@ -125,16 +127,18 @@ const AdminDashboard = ({ children }) => {
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <FiBook className="mr-3" />
               {textVisible && <span>Manage Course</span>}
             </motion.div>
           </Link>
-          <Link href="#">
+          <Link href="/admin/formStatus">
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <FiFileText className="mr-3" />
@@ -145,6 +149,7 @@ const AdminDashboard = ({ children }) => {
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
             >
               <FiPrinter className="mr-3" />
@@ -155,6 +160,7 @@ const AdminDashboard = ({ children }) => {
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
               transition={{ type: 'spring', stiffness: 300 }}
               onClick={handleLogout}
             >

@@ -1,5 +1,5 @@
 import { connect } from "@/app/helper/dbConfig";
-import { Courses } from "@/lib/dbModels/dbModels";
+import { Course } from "@/lib/dbModels/dbModels";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req) {
@@ -15,7 +15,7 @@ export async function POST(req) {
   try {
     await connect();
 
-    const courses = await Courses.find({ isEven });
+    const courses = await Course.find({ isEven });
 
     return NextResponse.json(
       { courses },
