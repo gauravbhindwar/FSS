@@ -165,9 +165,9 @@ const CourseForm = () => {
                       onChange={handleChange}
                       required>
                       <option value="">Select Semester</option>
-                      <option value="3">3</option>
-                      <option value="5">5</option>
-                      <option value="7">7</option>
+                      <option value="3">Semester 3</option>
+                      <option value="5">Semester 5</option>
+                      <option value="7">Semester 7</option>
                     </select>
                   </div>
                 </div>

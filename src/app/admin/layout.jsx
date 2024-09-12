@@ -7,7 +7,8 @@ import {
   FiMenu,
   FiUser,
   FiPrinter,
-  FiLogOut
+  FiLogOut,
+  FiCalendar
 } from "react-icons/fi";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { motion, useAnimation } from "framer-motion";
@@ -75,7 +76,7 @@ const AdminDashboard = ({ children }) => {
 
   const closeSidebar = () => {
     setTextVisible(false);
-    let timer = setTimeout(() => setIsSidebarOpen(false), 100);
+    let timer = setTimeout(() => setIsSidebarOpen(false), 200);
     return () => clearTimeout(timer);
   };
 
@@ -85,20 +86,20 @@ const AdminDashboard = ({ children }) => {
       {isSidebarOpen && (
         <motion.div
           className="fixed inset-0 bg-gray-800 bg-opacity-50 z-10 md:hidden"
-          onClick={closeSidebar}
+          onClick={toggleSidebar}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         />
       )}
       <div
-        className={`w-[5rem] min-h-screen h-[100%] hidden max-md:${
-          isSidebarOpen && `inline-block`
-        } max-md:${textVisible && `inline-block`}`}></div>
+        className={`w-[5rem] min-h-screen h-[100%] hidden ${
+          isSidebarOpen ? `max-md:!inline-block` : ''
+        } ${textVisible ? `max-md:!inline-block` : ''}`}></div>
       <motion.div
-        className={`bg-white shadow-lg max-md:z-[11] max-md:${
-          isSidebarOpen && `absolute`
-        } max-md:${textVisible && `absolute`} max-md:min-h-screen`}
+        className={`bg-white shadow-lg max-md:z-[11] ${
+          isSidebarOpen ? `max-md:absolute` : ''
+        } ${textVisible ? `max-md:absolute` : ''} max-md:min-h-screen`}
         animate={sidebarAnimation}
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => closeSidebar()}>
@@ -140,7 +141,7 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <TbLayoutDashboard className="mr-3 " />
-              {textVisible && <span>Dashboard</span>}
+              {textVisible && isSidebarOpen && <span>Dashboard</span>}
             </motion.div>
           </Link>
           <Link href="/admin/manageUser">
@@ -150,7 +151,7 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <FiUser className="mr-3" />
-              {textVisible && <span>Manage User</span>}
+              {textVisible && isSidebarOpen && <span>Manage User</span>}
             </motion.div>
           </Link>
           <Link href="/admin/manageCourse">
@@ -160,7 +161,7 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <FiBook className="mr-3" />
-              {textVisible && <span>Manage Course</span>}
+              {textVisible && isSidebarOpen && <span>Manage Course</span>}
             </motion.div>
           </Link>
           <Link href="/admin/formStatus">
@@ -170,7 +171,7 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <FiFileText className="mr-3" />
-              {textVisible && <span>Form Status</span>}
+              {textVisible && isSidebarOpen && <span>Form Status</span>}
             </motion.div>
           </Link>
           <Link href="#">
@@ -180,20 +181,20 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <FiPrinter className="mr-3" />
-              {textVisible && <span>Print Form</span>}
+              {textVisible && isSidebarOpen && <span>Print Form</span>}
             </motion.div>
           </Link>
-          {/* <Link href="#">
+          <Link href="/admin/setSemester">
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
-              onClick={handleSetSemester}>
-              <FiLogOut className="mr-3" />
-              {textVisible && <span>Set Semester</span>}
+              >
+              <FiCalendar className="mr-3" />
+              {textVisible && isSidebarOpen && <span>Set Semester</span>}
             </motion.div>
-          </Link> */}
+          </Link>
           <Link href="/">
             <motion.div
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
@@ -201,8 +202,8 @@ const AdminDashboard = ({ children }) => {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
               onClick={handleLogout}>
-              <FiLogOut className="mr-3" />
-              {textVisible && <span>Logout</span>}
+              <FiLogOut className="mro-3" />
+              {textVisible && isSidebarOpen && <span>Logout</span>}
             </motion.div>
           </Link>
         </nav>
