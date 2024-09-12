@@ -17,12 +17,14 @@ const SemesterSelection = () => {
   };
 
   const handleSet = () => {
+    console.log(selectedSemester);
     if (selectedSemester) {
       setShowConfirmation(true);
     }
   };
 
   const confirmSet = () => {
+    console.log(selectedSemester);
     setCurrentSemester(selectedSemester);
     setShowConfirmation(false);
   };

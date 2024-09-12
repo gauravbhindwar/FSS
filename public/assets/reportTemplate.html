@@ -6,37 +6,107 @@
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        border-top: #555 2px solid;
+        border-bottom: #555 2px solid;
+      }
+      .container {
+        background-color: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 900px;
+        width: 100%;
       }
       h1 {
+        font-size: 28px;
         color: #333;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
       }
       p {
-        margin: 5px 0;
+        font-size: 16px;
+        color: #555;
+        margin: 10px 0;
+      }
+      .section-title {
+        font-size: 20px;
+        color: #333;
+        margin: 20px 0 10px 0;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+      }
+      .key-details, .next-steps, .blockers, .support-needed {
+        margin-bottom: 30px;
+      }
+      .block {
+        background-color: #4bff69;
+        width: 80px;
+        display: inline-block;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 30%;
+      }
+      ul {
+        padding-left: 20px;
+      }
+      li {
+        margin: 10px 0;
       }
       .course-list {
         list-style-type: none;
         padding: 0;
+        margin: 20px 0;
       }
       .course-list li {
-        margin: 5px 0;
+        margin: 10px 0;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+      }
+      .footer {
+        /* border-top: 1px solid #ccc; */
+        padding-top: 10px;
+        font-size: 14px;
+        color: #888;
+        text-align: right;
       }
     </style>
   </head>
   <body>
-    {{#each forms}}
-    <h1>Report for {{name}}</h1>
-    <p><strong>MUJid:</strong> {{mujid}}</p>
-    <p><strong>Email:</strong> {{email}}</p>
-    <p><strong>All Selected Courses:</strong></p>
-    <ul class="course-list">
-      {{#each allSelectedCourses}}
-      <li>
-        <strong>{{@key}}:</strong> Lab Courses: {{this.labCourses}}, Theory
-        Courses: {{this.theoryCourses}}
-      </li>
+    <div class="container">
+      {{#each forms}}
+      <h1>Report for {{name}}</h1>
+      <div class="key-details">
+        <p><strong>MUJid:</strong> {{mujid}}</p>
+        <p><strong>Email:</strong> {{email}}</p>
+      </div>
+
+      <div class="course-section">
+        <p class="section-title"><strong>All Selected Courses:</strong></p>
+        <ul class="course-list">
+          {{#each allSelectedCourses}}
+          <li>
+            <strong>{{@key}}:</strong> Lab Courses: {{this.labCourses}}, Theory
+            Courses: {{this.theoryCourses}}
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+
+      <div class="blockers">
+        <p class="section-title !mb-0 !border-0"><strong>For Term: {{#if isEven}}Even{{else}}Odd{{/if}}</strong></p>
+      </div>
       {{/each}}
-    </ul>
-    <p><strong>Is Even:</strong> {{isEven}}</p>
-    {{/each}}
+      <div class="footer">
+        <p>Manipal University Jaipur</p>
+      </div>
+    </div>
   </body>
 </html>
