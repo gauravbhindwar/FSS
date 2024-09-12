@@ -8,7 +8,7 @@ import {
   FiUser,
   FiPrinter,
   FiLogOut,
-  FiCalendar
+  FiCalendar,
 } from "react-icons/fi";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { motion, useAnimation } from "framer-motion";
@@ -94,12 +94,12 @@ const AdminDashboard = ({ children }) => {
       )}
       <div
         className={`w-[5rem] min-h-screen h-[100%] hidden ${
-          isSidebarOpen ? `max-md:!inline-block` : ''
-        } ${textVisible ? `max-md:!inline-block` : ''}`}></div>
+          isSidebarOpen ? `max-md:!inline-block` : ""
+        } ${textVisible ? `max-md:!inline-block` : ""}`}></div>
       <motion.div
         className={`bg-white shadow-lg max-md:z-[11] ${
-          isSidebarOpen ? `max-md:absolute` : ''
-        } ${textVisible ? `max-md:absolute` : ''} max-md:min-h-screen`}
+          isSidebarOpen ? `max-md:absolute` : ""
+        } ${textVisible ? `max-md:absolute` : ""} max-md:min-h-screen`}
         animate={sidebarAnimation}
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => closeSidebar()}>
@@ -189,8 +189,7 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiCalendar className="mr-3" />
               {textVisible && isSidebarOpen && <span>Set Semester</span>}
             </motion.div>

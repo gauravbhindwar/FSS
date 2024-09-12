@@ -38,7 +38,9 @@ export async function POST(NextRequest) {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return createErrorResponse("Can't use same email or mujid! User already exists");
+      return createErrorResponse(
+        "Can't use same email or mujid! User already exists"
+      );
     }
 
     const newUser = await new User({
@@ -51,7 +53,7 @@ export async function POST(NextRequest) {
     try {
       await newUser.save();
     } catch (error) {
-      console.error("Error saving new user:", error);
+      // console.error("Error saving new user:", error);
       return createErrorResponse("Error saving new user", 500);
     }
 
@@ -60,10 +62,9 @@ export async function POST(NextRequest) {
       : "User Added successfully";
 
     return NextResponse.json({ message }, { status: 201 });
-
   } catch (error) {
     // Catch any unexpected errors and return a generic message
-    console.error(error);
+    // console.error(error);
     return createErrorResponse("Something went wrong on the server", 500);
   }
 }
@@ -74,7 +75,7 @@ export async function GET() {
     const users = await User.find({});
     return NextResponse.json({ users }, { status: 200 });
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return createErrorResponse("Failed to fetch users", 500);
   }
 }
@@ -106,9 +107,8 @@ export async function DELETE(req) {
     }
 
     return NextResponse.json({ deletedUser }, { status: 200 });
-
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return createErrorResponse("Failed to delete user", 500);
   }
 }

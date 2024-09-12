@@ -1,3 +1,4 @@
+import { timeStamp } from "console";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -16,11 +17,11 @@ const userSchema = new Schema(
           }
           return true;
         },
-        message: (props) => "The specified mujid is already in use"
-      }
+        message: (props) => "The specified mujid is already in use",
+      },
     },
     name: {
-      type: String
+      type: String,
     },
     email: {
       type: String,
@@ -34,106 +35,96 @@ const userSchema = new Schema(
           }
           return true;
         },
-        message: (props) => "The specified email address is already in use"
-      }
+        message: (props) => "The specified email address is already in use",
+      },
     },
     phone: {
       type: String,
       unique: false,
-      sparse: true // This allows multiple documents with null values for the phone field
+      sparse: true, // This allows multiple documents with null values for the phone field
     },
     password: {
       type: String,
       required: false,
-      default: null
+      default: null,
     },
     ext: {
       type: String,
-      required: false
+      required: false,
     },
     designation: {
       type: String,
-      required: false
+      required: false,
     },
     isAdmin: {
       type: Boolean,
       required: false,
-      default: false
+      default: false,
     },
     lastLogin: {
       type: Date,
-      default: Date.now
+      default: Date.now,
     },
     isVerfied: {
       type: Boolean,
-      default: false
+      default: false,
     },
     isFormFilled: {
       type: Boolean,
       required: false,
-      default: false // need to reset this every time when admin enable option to fill form (from false to true)
+      default: false, // need to reset this every time when admin enable option to fill form (from false to true)
     },
     jwtSecretKey: {
-      type: String
+      type: String,
     },
     tokenUsed: { type: Boolean, default: false },
     tokenExpiry: { type: Date },
-    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }]
+    courses: [{ type: Schema.Types.ObjectId, ref: "Course" }],
   },
   { timestamps: true }
 );
 
 const User = mongoose.models.User || mongoose.model("User", userSchema);
-
-const Admin =
-  mongoose.models.Admin ||
-  User.discriminator(
-    "Admin",
-    new Schema({
-      // Admin specific fields
-    })
-  );
-
 const courseSchema = new Schema(
   {
     title: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
       required: true,
-      default: "Description Not Added"
+      default: "Description Not Added",
     },
     forSemester: {
       type: String,
-      required: true
+      required: true,
     },
     isEven: {
-      type: Boolean
+      type: Boolean,
     },
     courseClassification: {
       type: String,
       enum: ["THEORY", "LAB"],
-      required: true
+      required: true,
     },
     courseCode: {
       type: String,
-      required: true
+      required: true,
     },
     courseCredit: {
       type: String,
-      required: true
+      required: true,
     },
     courseType: {
       type: String,
       enum: ["CORE", "ELECTIVE"],
-      required: true
+      required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "User"
-    }
+      ref: "User",
+    },
   },
   { timestamps: true }
 );
@@ -146,9 +137,9 @@ const formSchema = new Schema(
       type: Map,
       of: {
         labCourses: String,
-        theoryCourses: String
+        theoryCourses: String,
       },
-      required: true
+      required: true,
     },
     // allSelectedCourses: {
     //   type: Map,
@@ -158,25 +149,40 @@ const formSchema = new Schema(
     Name: {
       type: String,
       required: true,
-      default: "Name Not Added"
+      default: "Name Not Added",
     },
     mujid: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      required: true
+      required: true,
     },
     isEven: {
       type: Boolean,
       required: true,
-      default: false
-    }
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
 const Form = mongoose.models.Form || mongoose.model("Form", formSchema);
 
-export { User, Admin, Course, Form };
+const termSchema = new Schema(
+  {
+    forTerm: {
+      type: String,
+      required: true,
+    },
+    semestersInCurrentTerm: {
+      type: [Number],
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
+const Term = mongoose.models.Term || mongoose.model("Term", termSchema);
+
+export { User, Term, Course, Form };
