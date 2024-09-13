@@ -9,6 +9,36 @@ export async function POST(req) {
     const body = await req.json();
     const { token, password } = body;
 
+    if(token && !password) {
+      try{
+        const decoded = jwt.decode(token);
+        if (!decoded || !decoded.email) {
+          return NextResponse.json(
+            { message: "Invalid or expired token" },
+            { status: 400 }
+          );
+        }
+        const { email } = decoded;
+        const user = await User.findOne({ email });
+        const tokenUsed = user.tokenUsed;
+        if (tokenUsed) {
+          return NextResponse.json({ message: "token_used" }, { status: 400 });
+        }
+        else{
+          return NextResponse.json(
+            { message: "token_not_used" },
+            { status: 200 }
+          );
+        }
+      }
+      catch(error){
+        return NextResponse.json(
+          { message: "Invalid or expired token" },
+          { status: 400 }
+        );
+      }
+    }
+
     if (!token || !password) {
       return NextResponse.json(
         { message: "Token and password are required" },
