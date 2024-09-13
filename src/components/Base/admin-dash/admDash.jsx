@@ -1,7 +1,9 @@
 "use client";
-import React from "react";
-import { FiUsers, FiBook, FiFileText } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiUsers, FiBook, FiFileText, FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
+import CountUp from "react-countup";
+import axios from "axios";
 
 // DashboardCard Component with Framer Motion
 const DashboardCard = ({ icon, title, count, color, index }) => {
@@ -11,10 +13,9 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
       animate={{ opacity: 1, scale: 1, y: 0, zIndex: 1 }}
       transition={{
         duration: 0.6,
-
         type: "spring",
         delay: index * 0.1, // Stagger delay
-        bounce: 0.3
+        bounce: 0.3,
       }}
       whileHover={{ scale: 1.05, rotate: 2, transition: { duration: 0.3 } }}
       className={`${color} rounded-lg shadow-md p-4 md:p-6 lg:p-8 hover:shadow-lg transition-shadow duration-300 ease-in-out cursor-pointer`}>
@@ -22,13 +23,68 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
         <div className="p-2 md:p-3 rounded-full bg-white">{icon}</div>
         <h3 className="text-sm md:text-lg lg:text-xl font-semibold">{title}</h3>
       </div>
-      <p className="text-xl md:text-2xl lg:text-3xl font-bold">{count}</p>
+      {Array.isArray(count) ? (
+        <p className="text-lg md:text-2xl lg:text-md font-bold">
+          Semesters:{" "}
+          {count.flatMap((c, idx) => {
+            if (idx === count.length - 1) {
+              return c;
+            }
+            return `${c}, `;
+          })}
+        </p>
+      ) : (
+        <p className="text-xl md:text-2xl lg:text-3xl font-bold">
+          <CountUp end={count} duration={3} />
+        </p>
+      )}
+      {/* <p className="text-xl md:text-2xl lg:text-3xl font-bold">{count}</p> */}
     </motion.div>
   );
 };
 
 // AdminDashboard Component
 const AdminDashboard = () => {
+  const [data, setData] = useState({
+    totalUsers: 0,
+    activeCourses: 0,
+    formSubmissions: 0,
+    forTerm: "",
+    semestersInCurrentTerm: [],
+  });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/admin/manageUser");
+      console.log(response);
+      const {
+        totalUsers,
+        activeCourses,
+        formSubmissions,
+        forTerm,
+        semestersInCurrentTerm,
+      } = response.data;
+      console.log(forTerm);
+      setData({
+        totalUsers,
+        activeCourses,
+        formSubmissions,
+        forTerm,
+        semestersInCurrentTerm,
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
       <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
@@ -40,21 +96,27 @@ const AdminDashboard = () => {
             {
               icon: <FiUsers className="text-blue-500" size={20} />,
               title: "Total Users",
-              count: "1,234",
-              color: "bg-blue-100"
+              count: data.totalUsers,
+              color: "bg-blue-100",
             },
             {
               icon: <FiBook className="text-green-500" size={20} />,
               title: "Active Courses",
-              count: "42",
-              color: "bg-green-100"
+              count: data.activeCourses,
+              color: "bg-green-100",
             },
             {
               icon: <FiFileText className="text-yellow-500" size={20} />,
               title: "Form Submissions",
-              count: "789",
-              color: "bg-yellow-100"
-            }
+              count: data.formSubmissions,
+              color: "bg-yellow-100",
+            },
+            {
+              icon: <FiCalendar className="text-yellow-500" size={20} />,
+              title: `Current Term: ${data.forTerm}`,
+              count: data.semestersInCurrentTerm,
+              color: "bg-yellow-100",
+            },
           ].map((card, index) => (
             <DashboardCard
               key={index}

@@ -1,5 +1,5 @@
 import { connect } from "../../../helper/dbConfig";
-import { User } from "../../../../lib/dbModels/dbModels";
+import { Course, Form, Term, User } from "../../../../lib/dbModels/dbModels";
 import { NextResponse, NextRequest } from "next/server";
 import Joi from "joi";
 
@@ -70,13 +70,41 @@ export async function POST(NextRequest) {
 }
 
 export async function GET() {
+  await connect();
   try {
-    await connect();
-    const users = await User.find({});
-    return NextResponse.json({ users }, { status: 200 });
+    const totalUsers = await User.countDocuments();
+    const activeCourses = await Course.countDocuments();
+    const formSubmissions = await Form.countDocuments();
+    const currentTerm = await Term.findOne({});
+    const currentAdmin = await User.findOne({
+      isAdmin: true,
+    });
+    const adminName = currentAdmin.name;
+    console.log(adminName);
+
+    // console.log(currentTerm.forTerm);
+    const forTerm = currentTerm.forTerm;
+    const semestersInCurrentTerm = currentTerm.semestersInCurrentTerm;
+    console.log(
+      totalUsers,
+      activeCourses,
+      formSubmissions,
+      forTerm,
+      semestersInCurrentTerm
+    );
+    return NextResponse.json(
+      {
+        totalUsers,
+        activeCourses,
+        formSubmissions,
+        forTerm,
+        semestersInCurrentTerm,
+        adminName,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    // console.error(error);
-    return createErrorResponse("Failed to fetch users", 500);
+    return NextResponse.json("Failed to fetch user", 500);
   }
 }
 
