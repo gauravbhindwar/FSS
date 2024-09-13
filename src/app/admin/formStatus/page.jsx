@@ -78,74 +78,6 @@ const UserManagementDashboard = () => {
     }
   };
 
-  // const getReportPrint = async (selectedUser) => {
-  //   try {
-  //     // Fetch the template from assets
-  //     const templateResponse = await axios.get("/assets/reportTemplate.html");
-  //     const template = templateResponse.data;
-
-  //     // Use the selectedUserForms state for the report data
-  //     const reportData = selectedUser;
-
-  //     // Fetch the report data for the specific user from the API
-  //     const reportResponse = await axios.post("/api/form/generateReport", {
-  //       mujid: reportData.mujid,
-  //     });
-  //     const userReportData = reportResponse.data;
-
-  //     // Compile the template using Handlebars
-  //     const compiledTemplate = Handlebars.compile(template);
-
-  //     // Generate the report by replacing placeholders in the template with actual data
-  //     const reportHtml = compiledTemplate({ forms: [userReportData] });
-
-  //     // Create a temporary element to hold the HTML content
-  //     const tempElement = document.createElement("div");
-  //     tempElement.innerHTML = reportHtml;
-
-  //     // Use html2pdf to generate and download the PDF
-  //     // Add a line on top and bottom of the page
-  //     const style = document.createElement("style");
-  //     style.innerHTML = `
-  //       @page {
-  //         size: letter;
-  //         margin: 1in;
-  //       }
-  //       @media print {
-  //         .page-break {
-  //           display: block;
-  //           page-break-before: always;
-  //         }
-  //       }
-  //     `;
-  //     tempElement.appendChild(style);
-
-  //     html2pdf()
-  //       .from(tempElement)
-  //       .set({
-  //         margin: 0,
-  //         filename: `${selectedUser.Name} Form Report.pdf`,
-  //         image: { type: "jpeg", quality: 0.98 },
-  //         html2canvas: { scale: 2 },
-  //         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-  //       })
-  //       .save();
-  //   } catch (error) {
-  //     // console.error("Error generating report:", error);
-  //   }
-  // };
-  //     };
-  //     link.href = URL.createObjectURL(
-  //       new Blob([reportHtml], { type: "text/html" })
-  //     );
-  //     link.download = `${selectedUser.name}.pdf`;
-  //     link.click();
-  //     URL.revokeObjectURL(link.href);
-  //   } catch (error) {
-  // console.error("Error Printing Form:", error);
-  //   }
-  // };
-
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedUser(null);
@@ -158,10 +90,10 @@ const UserManagementDashboard = () => {
 
   return (
     <>
-    {loading ? (
-      <SVGShuffle />
-    ) : (
-      <div className="min-h-screen bg-gray-100 p-4 sm:p-8 md:p-10">
+      {loading ? (
+        <SVGShuffle />
+      ) : (
+        <div className="min-h-screen bg-gray-100 p-4 sm:p-8 md:p-10">
           <h1 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-gray-800">
             User Management Dashboard
           </h1>
@@ -479,9 +411,7 @@ const UserManagementDashboard = () => {
             )}
           </AnimatePresence>
         </div>
-    )
-        
-    }
+      )}
     </>
   );
 };

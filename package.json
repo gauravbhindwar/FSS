@@ -15,6 +15,7 @@
     "@radix-ui/react-radio-group": "^1.2.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-tabs": "^1.1.0",
+    "@react-pdf/renderer": "^3.4.4",
     "@react-three/fiber": "^8.17.6",
     "@tabler/icons-react": "^3.14.0",
     "@tailwindui/react": "^0.1.1",
