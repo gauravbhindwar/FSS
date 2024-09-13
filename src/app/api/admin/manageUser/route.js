@@ -91,21 +91,20 @@ export async function DELETE(req) {
       return createErrorResponse("Invalid JSON input");
     }
 
-    const { email } = requestBody;
+    const { mujid } = requestBody;
 
-    // Ensure email is provided
-    if (!email) {
-      return createErrorResponse("Email is required for deletion");
+    if (!mujid) {
+      return createErrorResponse("mujid is required for deletion");
     }
 
     // Delete the user
-    const deletedUser = await User.findOneAndDelete({ email });
+    const deletedUser = await User.findOneAndDelete({ mujid });
 
     if (!deletedUser) {
       return createErrorResponse("User not found", 404);
     }
 
-    return NextResponse.json({ deletedUser }, { status: 200 });
+    return NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
 
   } catch (error) {
     console.error(error);

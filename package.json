@@ -28,7 +28,6 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "framer-motion": "^11.5.4",
-    "handlebars": "^4.7.8",
     "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.10.2",
     "joi": "^17.13.3",
@@ -61,6 +60,8 @@
     "daisyui": "^4.12.10",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
+    "handlebars": "^4.7.8",
+    "handlebars-loader": "^1.7.3",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
