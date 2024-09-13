@@ -4,6 +4,7 @@ import { FiUsers, FiBook, FiFileText, FiCalendar } from "react-icons/fi";
 import { motion } from "framer-motion";
 import CountUp from "react-countup";
 import axios from "axios";
+import SVGShuffle from "@/app/verify-email/loader";
 
 // DashboardCard Component with Framer Motion
 const DashboardCard = ({ icon, title, count, color, index }) => {
@@ -45,6 +46,7 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
 
 // AdminDashboard Component
 const AdminDashboard = () => {
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     totalUsers: 0,
     activeCourses: 0,
@@ -63,6 +65,7 @@ const AdminDashboard = () => {
 
   const fetchData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get("/api/admin/manageUser");
       console.log(response);
       const {
@@ -82,54 +85,62 @@ const AdminDashboard = () => {
       });
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
-      <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
-        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 md:mb-8 lg:mb-10">
-          Admin Dashboard
-        </h1>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-4 lg:gap-10">
-          {[
-            {
-              icon: <FiUsers className="text-blue-500" size={20} />,
-              title: "Total Users",
-              count: data.totalUsers,
-              color: "bg-blue-100",
-            },
-            {
-              icon: <FiBook className="text-green-500" size={20} />,
-              title: "Active Courses",
-              count: data.activeCourses,
-              color: "bg-green-100",
-            },
-            {
-              icon: <FiFileText className="text-yellow-500" size={20} />,
-              title: "Form Submissions",
-              count: data.formSubmissions,
-              color: "bg-yellow-100",
-            },
-            {
-              icon: <FiCalendar className="text-yellow-500" size={20} />,
-              title: `Current Term: ${data.forTerm}`,
-              count: data.semestersInCurrentTerm,
-              color: "bg-yellow-100",
-            },
-          ].map((card, index) => (
-            <DashboardCard
-              key={index}
-              icon={card.icon}
-              title={card.title}
-              count={card.count}
-              color={card.color}
-              index={index}
-            />
-          ))}
+    <>
+      {loading ? (
+        <SVGShuffle />
+      ) : (
+        <div className="flex min-h-screen bg-gradient-to-br from-purple-500 to-blue-500">
+          <div className="flex-1 p-4 md:p-8 lg:p-10 overflow-y-auto">
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 md:mb-8 lg:mb-10">
+              Admin Dashboard
+            </h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-4 lg:gap-10">
+              {[
+                {
+                  icon: <FiUsers className="text-blue-500" size={20} />,
+                  title: "Total Users",
+                  count: data.totalUsers,
+                  color: "bg-blue-100",
+                },
+                {
+                  icon: <FiBook className="text-green-500" size={20} />,
+                  title: "Active Courses",
+                  count: data.activeCourses,
+                  color: "bg-green-100",
+                },
+                {
+                  icon: <FiFileText className="text-yellow-500" size={20} />,
+                  title: "Form Submissions",
+                  count: data.formSubmissions,
+                  color: "bg-yellow-100",
+                },
+                {
+                  icon: <FiCalendar className="text-yellow-500" size={20} />,
+                  title: `Current Term: ${data.forTerm}`,
+                  count: data.semestersInCurrentTerm,
+                  color: "bg-yellow-100",
+                },
+              ].map((card, index) => (
+                <DashboardCard
+                  key={index}
+                  icon={card.icon}
+                  title={card.title}
+                  count={card.count}
+                  color={card.color}
+                  index={index}
+                />
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

@@ -33,7 +33,7 @@ export async function POST(req) {
       mujid: MUJid,
       Name: user.name,
       email: user.email,
-      isEven
+      isEven,
     });
 
     await formEntry.save();
