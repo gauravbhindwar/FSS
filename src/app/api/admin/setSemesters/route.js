@@ -2,6 +2,18 @@ import { connect } from "../../../helper/dbConfig";
 import { Term } from "../../../../lib/dbModels/dbModels";
 import { NextRequest, NextResponse } from "next/server";
 
+
+export async function GET(req) {
+  try {
+    await connect();
+    const terms = await Term.findOne({});
+    const  forTerm  = terms.forTerm;
+    return NextResponse.json({ forTerm }, { status: 200 });
+  } catch (error) {
+    // console.error("Error fetching terms:", error);
+    return createErrorResponse("Error fetching terms", 500);
+  }
+}
 export async function POST(req) {
   const { semestersInCurrentTerm = [] } = await req.json();
 
@@ -55,20 +67,10 @@ export async function POST(req) {
   }
 }
 
-export async function GET() {
-  await connect();
 
-  const currentTerm = await Term.findOne({});
-
-  if (!currentTerm) {
-    return NextResponse.json({
-      status: 404,
-      message: "No term found",
-    });
-  } else {
-    return NextResponse.json({
-      status: 200,
-      forTerm: currentTerm.forTerm,
-    });
-  }
+export function createErrorResponse(message, status) {
+  return NextResponse.json({
+    status,
+    message,
+  });
 }

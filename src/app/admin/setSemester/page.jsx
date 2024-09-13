@@ -1,7 +1,8 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaChevronDown, FaCheck } from 'react-icons/fa';
+import axios from 'axios';
 
 const SemesterSelection = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,6 +14,7 @@ const SemesterSelection = () => {
 
   const handleSelect = (semester) => {
     setSelectedSemester(semester);
+    console.log(semester);
     setIsOpen(false);
   };
 
@@ -23,17 +25,58 @@ const SemesterSelection = () => {
     }
   };
 
-  const confirmSet = () => {
-    console.log(selectedSemester);
-    
+  const confirmSet = async() => {
+    let isEven;
+    if(selectedSemester === 'Even'){
+      isEven = true;
+    }
+    else{
+      isEven = false;
+    }
+    try{
+      const request = await axios.post('/api/admin/getSemesters', {isEven});
+
+      console.log(request.data.semesters);
+      
+        const semestersInCurrentTerm = request.data.semesters;
+        const res = await axios.post('/api/admin/setSemesters', {
+          semestersInCurrentTerm
+        });
+        if(res.status === 200){
+          console.log(res);
+          setCurrentSemester(selectedSemester);
+        }
+        else{
+          console.log(`error: ${res.data.message}`);
+        }
+      
+    }catch{
+
+    }
     setCurrentSemester(selectedSemester);
+
+    console.log(selectedSemester);
     setShowConfirmation(false);
   };
 
   const cancelSet = () => {
     setShowConfirmation(false);
   };
-
+  useEffect(() => {
+    const getSemester = async () => {
+      try {
+        const response = await axios.get('/api/admin/setSemesters');
+        const { forTerm } = response.data;
+        // console.log(response.data);
+        if (forTerm) {
+          setCurrentSemester(forTerm);
+        }
+      } catch (error) {
+        console.error("Error fetching current semester:", error);
+      }
+    };
+    getSemester();
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-indigo-200 flex items-center justify-center p-4">
       <motion.div
