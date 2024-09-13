@@ -133,8 +133,10 @@ export async function DELETE(req) {
       return createErrorResponse("User not found", 404);
     }
 
-    return NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
-
+    return NextResponse.json(
+      { message: "User deleted successfully", deletedUser },
+      { status: 200 }
+    );
   } catch (error) {
     // console.error(error);
     return createErrorResponse("Failed to delete user", 500);

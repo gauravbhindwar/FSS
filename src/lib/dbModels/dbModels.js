@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
@@ -76,6 +75,11 @@ const userSchema = new Schema(
     },
     jwtSecretKey: {
       type: String,
+    },
+    token: {
+      type: String,
+      required: false,
+      default: null,
     },
     tokenUsed: { type: Boolean, default: false },
     tokenExpiry: { type: Date },

@@ -36,6 +36,7 @@ export async function POST(req) {
 
     // Store the secret key and set tokenUsed flag to false
     user.jwtSecretKey = userSecretKey;
+    user.token = verificationToken;
     user.tokenUsed = false;
     await user.save();
 

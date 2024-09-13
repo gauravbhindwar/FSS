@@ -15,6 +15,8 @@ export default function VerifyEmail() {
   const [showMessage, setShowMessage] = useState(false);
   const router = useRouter();
 
+  // console.log(token);
+
   useEffect(() => {
     const tokenCheck = async () => {
       if (!token) {
@@ -34,19 +36,25 @@ export default function VerifyEmail() {
         });
 
         const data = await response.json();
-
-        if (data.message === "token_used") {
+        if (data.status === 407) {
+          const redirectUrl = new URL("/", window.location.href);
+          redirectUrl.searchParams.set("tokenAlert", "true");
+          router.push(redirectUrl.href); // Redirect to homepage with tokenAlert
+        } else if (data.message === "token_used") {
           setTokenUsed(true);
           const redirectUrl = new URL("/", window.location.href);
           redirectUrl.searchParams.set("tokenAlert", "true");
           router.push(redirectUrl.href); // Redirect to homepage with tokenAlert
-        } else {
-          setMessage("Token is valid"); // Handle valid token scenario
+        } else if (data.message === "token_not_used") {
           setTokenUsed(false);
+          setMessage("Token is valid"); // Handle valid token scenario
         }
       } catch (error) {
         console.error("Error during API call:", error);
         setMessage("Error verifying token");
+        const redirectUrl = new URL("/", window.location.href);
+        redirectUrl.searchParams.set("tokenAlert", "true");
+        router.push(redirectUrl.href); // Redirect to homepage with tokenAlert
       } finally {
         setLoading(false);
       }
@@ -130,8 +138,7 @@ export default function VerifyEmail() {
     return (
       <div
         className="flex items-center justify-center h-screen bg-cover bg-center relative"
-        style={{ backgroundImage: "url('/MUJ-homeCover.jpg')" }}
-      >
+        style={{ backgroundImage: "url('/MUJ-homeCover.jpg')" }}>
         <div className="bg-white p-8 rounded-lg shadow-lg w-80">
           <h1 className="text-2xl font-bold mb-4 text-center">Set Password</h1>
 
@@ -159,8 +166,7 @@ export default function VerifyEmail() {
 
             <button
               type="submit"
-              className="bg-blue-500 text-white p-2 rounded hover:bg-orange-500 active:bg-orange-800"
-            >
+              className="bg-blue-500 text-white p-2 rounded hover:bg-orange-500 active:bg-orange-800">
               Set Password
             </button>
           </form>
@@ -170,8 +176,7 @@ export default function VerifyEmail() {
               showMessage
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 -translate-y-4"
-            }`}
-          >
+            }`}>
             {message}
           </div>
         </div>
