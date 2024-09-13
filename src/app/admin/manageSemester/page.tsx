@@ -7,7 +7,7 @@ const ManageSemester = () => {
       const response = await axios.post("/api/admin/getSemesters", {
         isEven: true,
       });
-      console.log("Response:", response.data);
+      // console.log("Response:", response.data);
     } catch (error) {
       console.error("Error posting data:", error);
     }

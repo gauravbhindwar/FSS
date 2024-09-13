@@ -1,5 +1,5 @@
 import { connect } from "../../../helper/dbConfig";
-import { User } from "../../../../lib/dbModels/dbModels";
+import { Course, Form, Term, User } from "../../../../lib/dbModels/dbModels";
 import { NextResponse, NextRequest } from "next/server";
 import Joi from "joi";
 
@@ -38,7 +38,9 @@ export async function POST(NextRequest) {
     // Check if the user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return createErrorResponse("Can't use same email or mujid! User already exists");
+      return createErrorResponse(
+        "Can't use same email or mujid! User already exists"
+      );
     }
 
     const newUser = await new User({
@@ -51,7 +53,7 @@ export async function POST(NextRequest) {
     try {
       await newUser.save();
     } catch (error) {
-      console.error("Error saving new user:", error);
+      // console.error("Error saving new user:", error);
       return createErrorResponse("Error saving new user", 500);
     }
 
@@ -60,22 +62,49 @@ export async function POST(NextRequest) {
       : "User Added successfully";
 
     return NextResponse.json({ message }, { status: 201 });
-
   } catch (error) {
     // Catch any unexpected errors and return a generic message
-    console.error(error);
+    // console.error(error);
     return createErrorResponse("Something went wrong on the server", 500);
   }
 }
 
 export async function GET() {
+  await connect();
   try {
-    await connect();
-    const users = await User.find({});
-    return NextResponse.json({ users }, { status: 200 });
+    const totalUsers = await User.countDocuments();
+    const activeCourses = await Course.countDocuments();
+    const formSubmissions = await Form.countDocuments();
+    const currentTerm = await Term.findOne({});
+    const currentAdmin = await User.findOne({
+      isAdmin: true,
+    });
+    const adminName = currentAdmin.name;
+    console.log(adminName);
+
+    // console.log(currentTerm.forTerm);
+    const forTerm = currentTerm.forTerm;
+    const semestersInCurrentTerm = currentTerm.semestersInCurrentTerm;
+    console.log(
+      totalUsers,
+      activeCourses,
+      formSubmissions,
+      forTerm,
+      semestersInCurrentTerm
+    );
+    return NextResponse.json(
+      {
+        totalUsers,
+        activeCourses,
+        formSubmissions,
+        forTerm,
+        semestersInCurrentTerm,
+        adminName,
+      },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error(error);
-    return createErrorResponse("Failed to fetch users", 500);
+    return NextResponse.json("Failed to fetch user", 500);
   }
 }
 
@@ -107,7 +136,7 @@ export async function DELETE(req) {
     return NextResponse.json({ message: "User deleted successfully", deletedUser }, { status: 200 });
 
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return createErrorResponse("Failed to delete user", 500);
   }
 }

@@ -49,7 +49,7 @@ export async function POST(req) {
       { status: 201 } // Created
     );
   } catch (error) {
-    console.error("Error adding courses:", error); // Log error details
+    // console.error("Error adding courses:", error); // Log error details
     return NextResponse.json(
       { message: "Failed to add courses", error: error.message },
       { status: 500 } // Internal Server Error
@@ -113,7 +113,7 @@ export async function PUT(req) {
 
     return NextResponse.json(results, { status: 200 });
   } catch (error) {
-    console.error("Error updating courses:", error); // Log error details
+    // console.error("Error updating courses:", error); // Log error details
     return NextResponse.json(
       { message: "Failed to update courses", error: error.message },
       { status: 500 } // Internal Server Error
@@ -154,7 +154,7 @@ export async function DELETE(req) {
 
     return NextResponse.json(results, { status: 200 });
   } catch (error) {
-    console.error("Error deleting courses:", error); // Log error details
+    // console.error("Error deleting courses:", error); // Log error details
     return NextResponse.json(
       { message: "Failed to delete courses", error: error.message },
       { status: 500 } // Internal Server Error

@@ -11,7 +11,7 @@ const courseSchema = Joi.object({
   isEven: Joi.boolean().default(false),
   courseCredit: Joi.string().required(),
   courseClassification: Joi.string().required(), //LAB OR THEORY
-  courseType: Joi.string().required() //CORE OR ELECTIVE
+  courseType: Joi.string().required(), //CORE OR ELECTIVE
 });
 
 export async function POST(req) {
@@ -25,7 +25,7 @@ export async function POST(req) {
       isEven,
       courseCredit,
       courseClassification,
-      courseType
+      courseType,
     } = await req.json();
 
     const { error } = courseSchema.validate({
@@ -36,7 +36,7 @@ export async function POST(req) {
       isEven,
       courseCredit,
       courseClassification,
-      courseType
+      courseType,
     });
 
     if (error)
@@ -60,7 +60,7 @@ export async function POST(req) {
       isEven,
       courseCredit,
       courseClassification,
-      courseType
+      courseType,
     });
     if (forSemester % 2 == 0) {
       newCourse.isEven = true;
@@ -93,10 +93,30 @@ export async function GET() {
 
 export async function DELETE(req) {
   await connect();
-
   const { courseCode } = await req.json();
+  if (!courseCode) {
+    return NextResponse.json(
+      { message: "Course Code is required" },
+      { status: 406 }
+    );
+  }
+  try {
+    const deletedCourse = await Course.findOneAndDelete({ courseCode });
 
-  const deletedCourse = await Course.findOneAndDelete({ courseCode });
-
-  return NextResponse.json({ deletedCourse }, { status: 200 });
+    if (!deletedCourse) {
+      return NextResponse.json(
+        { message: "Failed To deleted Course With Code" + courseCode },
+        { status: 406 }
+      );
+    }
+    return NextResponse.json(
+      { message: "Course deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 505 }
+    );
+  }
 }

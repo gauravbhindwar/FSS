@@ -8,7 +8,7 @@ import {
   FiUser,
   FiPrinter,
   FiLogOut,
-  FiCalendar
+  FiCalendar,
 } from "react-icons/fi";
 import { TbLayoutDashboard } from "react-icons/tb";
 import { motion, useAnimation } from "framer-motion";
@@ -18,6 +18,7 @@ import axios from "axios";
 const AdminDashboard = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [textVisible, setTextVisible] = useState(false);
+  const [currentAdmin, setCurrentAdmin] = useState("");
 
   const sidebarAnimation = useAnimation();
 
@@ -37,29 +38,26 @@ const AdminDashboard = ({ children }) => {
     }
   }
 
-  // async function handleSetSemester() {
-  //   try {
-  //     const res = await axios.post("/api/admin/setSemester");
-  //     if (res.data.success) {
-  //       console.log("Semester Set Successfully");
-  //     }
-  //     console.log(res.data);
-  //     console.log(res.data.message);
-  //     console.log(res.data.error);
-  //   } catch (error) {
-  //     console.log("Error In Setting Semester");
-  //   }
-  // }
+  const fetchCurrentAdmin = async () => {
+    try {
+      const response = await axios.get("/api/admin/manageUser");
+      setCurrentAdmin(response.data.adminName);
+    } catch (error) {
+      console.error("Error fetching current admin:", error);
+    }
+  };
 
-  // Helper function to get the initials from the user's name
+  useEffect(() => {
+    fetchCurrentAdmin();
+  }, []);
+
+  const userName = currentAdmin || "Guest Admin";
+  const userRole = "Administrator";
   const getInitials = (name) => {
     const names = name.split(" ");
     const initials = names.map((n) => n[0]).join("");
     return initials.toUpperCase();
   };
-
-  const userName = "Shivank Goel";
-  const userRole = "Administrator";
 
   useEffect(() => {
     let timer;
@@ -94,12 +92,12 @@ const AdminDashboard = ({ children }) => {
       )}
       <div
         className={`w-[5rem] min-h-screen h-[100%] hidden ${
-          isSidebarOpen ? `max-md:!inline-block` : ''
-        } ${textVisible ? `max-md:!inline-block` : ''}`}></div>
+          isSidebarOpen ? `max-md:!inline-block` : ""
+        } ${textVisible ? `max-md:!inline-block` : ""}`}></div>
       <motion.div
         className={`bg-white shadow-lg max-md:z-[11] ${
-          isSidebarOpen ? `max-md:absolute` : ''
-        } ${textVisible ? `max-md:absolute` : ''} max-md:min-h-screen`}
+          isSidebarOpen ? `max-md:absolute` : ""
+        } ${textVisible ? `max-md:absolute` : ""} max-md:min-h-screen`}
         animate={sidebarAnimation}
         onMouseEnter={() => setIsSidebarOpen(true)}
         onMouseLeave={() => closeSidebar()}>
@@ -189,10 +187,9 @@ const AdminDashboard = ({ children }) => {
               className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-              >
+              transition={{ type: "spring", stiffness: 300 }}>
               <FiCalendar className="mr-3" />
-              {textVisible && isSidebarOpen && <span>Set Semester</span>}
+              {textVisible && isSidebarOpen && <span>Set Term</span>}
             </motion.div>
           </Link>
           <Link href="/">

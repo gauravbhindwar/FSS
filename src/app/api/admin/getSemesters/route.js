@@ -11,7 +11,6 @@ export async function POST(req) {
       { status: 400 }
     );
   }
-
   try {
     await connect();
 
@@ -21,7 +20,7 @@ export async function POST(req) {
 
     return NextResponse.json({ semesters }, { status: 200 });
   } catch (error) {
-    console.error("Error retrieving courses:", error);
+    // console.error("Error retrieving courses:", error);
     return NextResponse.json(
       { message: "Error retrieving courses" },
       { status: 500 }
