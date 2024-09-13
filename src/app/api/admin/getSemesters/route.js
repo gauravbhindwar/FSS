@@ -3,6 +3,10 @@ import { Course } from "../../../../lib/dbModels/dbModels";
 import { NextResponse, NextRequest } from "next/server";
 
 export async function POST(req) {
+  // const admin = req.cookies.get("admin")?.value;
+  // const MUJid = req.cookies.get("MUJid")?.value;
+  // console.log("admin:", admin);
+  // console.log("MUJid:", MUJid);
   const { isEven } = await req.json();
 
   if (typeof isEven !== "boolean") {

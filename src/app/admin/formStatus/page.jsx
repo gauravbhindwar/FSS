@@ -37,6 +37,7 @@ const UserManagementDashboard = () => {
       setLoading(false);
     }
   };
+  console.log("Cookies:", document.cookie);
 
   // Debounced search
   useEffect(() => {
