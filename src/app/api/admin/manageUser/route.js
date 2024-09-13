@@ -9,6 +9,7 @@ const userSchema = Joi.object({
   mujid: Joi.string().required(),
   isAdmin: Joi.boolean().optional(),
   password: Joi.string().min(6).optional(),
+  token: Joi.string().optional(),
 });
 
 // Utility function to handle errors

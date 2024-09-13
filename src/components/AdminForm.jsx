@@ -26,7 +26,7 @@ export default function AdminForm() {
       const res = await fetch("/api/admin/manageUser", {
         method: "DELETE",
         body: JSON.stringify({ mujid }),
-        headers: { "Content-Type": "application/json" },
+        // headers: { "Content-Type": "application/json" },
       });
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
