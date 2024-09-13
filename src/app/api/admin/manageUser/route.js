@@ -73,6 +73,7 @@ export async function POST(NextRequest) {
 export async function GET() {
   await connect();
   try {
+    const users = await User.find({});
     const totalUsers = await User.countDocuments();
     const activeCourses = await Course.countDocuments();
     const formSubmissions = await Form.countDocuments();
@@ -95,6 +96,7 @@ export async function GET() {
     );
     return NextResponse.json(
       {
+        users,
         totalUsers,
         activeCourses,
         formSubmissions,

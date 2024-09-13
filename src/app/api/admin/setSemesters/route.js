@@ -68,7 +68,7 @@ export async function POST(req) {
 }
 
 
-export function createErrorResponse(message, status) {
+function createErrorResponse(message, status) {
   return NextResponse.json({
     status,
     message,
