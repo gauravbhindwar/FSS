@@ -2,21 +2,16 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  FaUser,
-  FaEnvelope,
-  FaIdCard,
-  FaUserShield,
-  FaUserMinus,
-} from "react-icons/fa";
-import Image from "next/image";
-import { set } from "mongoose";
+import { FaUser, FaEnvelope, FaIdCard, FaUserShield, FaUserMinus, FaPhone, FaBriefcase } from "react-icons/fa";
+
 
 export default function AdminForm() {
   const [loader, setLoader] = useState(false);
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [mujid, setMujid] = useState("");
+  const [phone, setPhone] = useState(null); // New state for phone
+  const [designation, setDesignation] = useState(null); // New state for designation
   const [deletePop, setDeletePop] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [message, setMessage] = useState("");
@@ -53,13 +48,13 @@ export default function AdminForm() {
     try {
       const res = await fetch("/api/admin/manageUser", {
         method: "POST",
-        body: JSON.stringify({ email, name, mujid, isAdmin }),
+        body: JSON.stringify({ email, name, mujid, phone, designation, isAdmin }), // Added phone and designation
         headers: { "Content-Type": "application/json" },
       });
 
       // Check if the response is OK and has content
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        setMessage(res.message);
       }
 
       // Try to parse the response as JSON
@@ -132,11 +127,40 @@ export default function AdminForm() {
               className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative"
+          >
+            <FaPhone className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative"
+          >
+            <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Designation"
+              value={designation}
+              onChange={(e) => setDesignation(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </motion.div>
           <label htmlFor="isAdmin" className="flex items-center cursor-pointer">
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-3">
+              className="flex items-center space-x-3"
+            >
               <input
                 type="checkbox"
                 checked={isAdmin}
@@ -144,7 +168,6 @@ export default function AdminForm() {
                 id="isAdmin"
                 className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
               />
-
               <FaUserShield className="text-indigo-600 mr-2" />
               <span>Is Admin</span>
             </motion.div>
@@ -154,14 +177,14 @@ export default function AdminForm() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300">
-            {loader ? (
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300"
+          >
+            {loader ? 
               <div className="flex justify-center items-center">
                 <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
-              </div>
-            ) : (
-              "Submit"
-            )}
+              </div> : 
+              'Submit'
+            }
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -223,11 +246,7 @@ export default function AdminForm() {
               </button>
             </div>
 
-            <form
-              onSubmit={() => {
-                handleDelete(mujid);
-              }}
-              className="space-y-6">
+            <form onSubmit={() => { handleDelete(mujid); }} className="space-y-6">
               <div>
                 <label
                   htmlFor="mujid"
@@ -261,13 +280,14 @@ export default function AdminForm() {
                 <button
                   type="button"
                   className="mr-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                  onClick={() => setDeletePop(false)}>
+                  onClick={() => setDeletePop(false)}
+                >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="bg-red-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                  onClick={() => {}}>
+                >
                   Delete User
                 </button>
               </div>
