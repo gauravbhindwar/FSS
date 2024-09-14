@@ -9,10 +9,10 @@ import {
   FaGraduationCap,
 } from "react-icons/fa";
 import { animate, motion } from "framer-motion";
-import { Button } from "./ui/button";
+import { Button } from "../../ui/button";
 import axios from "axios";
 
-const CourseForm = () => {
+const CourseForm = (props) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
