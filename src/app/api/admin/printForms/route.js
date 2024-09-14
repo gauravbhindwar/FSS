@@ -1,8 +1,10 @@
 import { connect } from "../../../helper/dbConfig";
 import { NextResponse } from "next/server";
 import { Form, User } from "../../../../lib/dbModels/dbModels";
+import { cookies } from "next/headers";
 
 export async function GET() {
+  const cookieStore = cookies();
   try {
     // Ensure DB connection
     await connect();

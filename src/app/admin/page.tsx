@@ -1,8 +1,10 @@
-import AdminDash from "@/components/Base/admin-dash/admDash";
+import AdminDashboard from "@/components/admin-base/admin-dash/admDash";
+import { cookies } from "next/headers";
 function AdminPage() {
+  const cookieStore = cookies();
   return (
     <div className="">
-      <AdminDash />
+      <AdminDashboard cookies={cookieStore} />
     </div>
   );
 }

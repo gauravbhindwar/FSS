@@ -93,7 +93,7 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
 };
 
 // AdminDashboard Component
-const AdminDashboard = () => {
+const AdminDashboard = (props) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     totalUsers: 0,
