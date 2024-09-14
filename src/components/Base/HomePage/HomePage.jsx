@@ -45,8 +45,7 @@ const PasswordInput = ({
       <button
         type="button"
         className="absolute inset-y-1 h-0 w-2 right-2 text-gray-500"
-        onClick={toggleShowPassword}
-      >
+        onClick={toggleShowPassword}>
         {showPassword ? <EyeOff /> : <Eye />}
       </button>
     </div>
@@ -57,8 +56,7 @@ const LoadingButton = ({ isLoading, onClick, children }) => (
   <button
     className="bg-blue-700 max-lg:bg-[#f06543] rounded-xl p-2"
     onClick={onClick}
-    disabled={isLoading}
-  >
+    disabled={isLoading}>
     {isLoading ? (
       <div className="flex justify-center items-center">
         <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
@@ -76,8 +74,7 @@ const Popup = ({ title, message, onClose }) => (
       <p className="text-gray-700 mb-6">{message}</p>
       <button
         onClick={onClose}
-        className="bg-blue-500 max-lg:bg-[#f06543] text-white px-4 py-2 rounded hover:bg-blue-600 transition"
-      >
+        className="bg-blue-500 max-lg:bg-[#f06543] text-white px-4 py-2 rounded hover:bg-blue-600 transition">
         Close
       </button>
     </div>
@@ -108,7 +105,6 @@ const HomePage = () => {
   const toggleShowPassword = () => {
     setShowPassword((prev) => !prev);
   };
-
   const closePopup = () => {
     setLoginPop(false);
     setTokenPop(false);
@@ -122,7 +118,7 @@ const HomePage = () => {
       });
       setMessage(response.data.message);
     } catch (error) {
-      console.log("Error sending email verification:", error);
+      // console.log("Error sending email verification:", error);
       setMessage("Error sending email verification");
     }
   };
@@ -259,8 +255,7 @@ const HomePage = () => {
         <p
           className={`absolute bg-white text-slate-700 border bottom-4 left-[50%] translate-x-[-50%] text-2xl shadow-lg shadow-red-500 rounded-lg px-4 py-2 transition-opacity duration-1000 ${
             errorVisible ? "opacity-100" : "opacity-0"
-          }`}
-        >
+          }`}>
           {message}
         </p>
       )}

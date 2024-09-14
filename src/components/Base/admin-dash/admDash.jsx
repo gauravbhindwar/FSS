@@ -127,8 +127,14 @@ const AdminDashboard = () => {
                 },
                 {
                   icon: <FiFileText className="text-yellow-600" size={20} />,
-                  title: "Form Submissions",
+                  title: "Total Submissions",
                   count: data.formSubmissions,
+                  color: "bg-yellow-100",
+                },
+                {
+                  icon: <FiCalendar className="text-yellow-500" size={20} />,
+                  title: `Current Term: ${data.forTerm}`,
+                  count: data.semestersInCurrentTerm,
                   color: "bg-yellow-100",
                 },
               ].map((card, index) => (
