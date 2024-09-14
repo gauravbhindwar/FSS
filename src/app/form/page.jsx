@@ -40,7 +40,7 @@ const FormPage = () => {
 
   const fetchCourses = async (isEven) => {
     try {
-      const semestersToFetch = isEven ? [2, 4, 6, 8] : [1, 3, 5, 7];
+      const semestersToFetch = isEven ? [4, 6] : [3, 5, 7];
       setSemesters(semestersToFetch);
       setActiveSemester(semestersToFetch[0]);
 
