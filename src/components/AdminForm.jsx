@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaIdCard, FaUserShield, FaUserMinus, FaPhone, FaBriefcase } from "react-icons/fa";
-import { set } from "mongoose";
+
 
 export default function AdminForm() {
   const [loader, setLoader] = useState(false);
@@ -44,8 +44,6 @@ export default function AdminForm() {
   const handleSubmit = async (e) => {
     setLoader(true);
     e.preventDefault();
-    // if(phone === "") setPhone("N/A");
-    // if(designation === "") setDesignation("N/A");
 
     try {
       const res = await fetch("/api/admin/manageUser", {
@@ -54,12 +52,15 @@ export default function AdminForm() {
         headers: { "Content-Type": "application/json" },
       });
 
+      // Check if the response is OK and has content
       if (!res.ok) {
         setMessage(res.message);
       }
 
+      // Try to parse the response as JSON
       const data = await res.json();
 
+      // Check if the response contains a message or error
       if (data.message || data.error) {
         setMessage(data.message || data.error);
       } else {
@@ -74,21 +75,20 @@ export default function AdminForm() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4"
-         style={{ backgroundImage: "url('/path-to-your-image.jpg')" }}>
+    <div className="relative min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-white relative rounded-lg shadow-xl p-8 w-full max-w-md mb-4"
-      >
-        <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">Add User</h2>
+        className="bg-white relative rounded-lg shadow-xl p-8 w-full max-w-md mb-4">
+        <h2 className="text-3xl font-bold text-center text-indigo-700 mb-6">
+          Add User
+        </h2>
         <form onSubmit={handleSubmit} className="space-y-6 relative">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
+            className="relative">
             <FaUser className="absolute top-3 left-3 text-gray-400" />
             <input
               type="text"
@@ -102,8 +102,7 @@ export default function AdminForm() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
+            className="relative">
             <FaEnvelope className="absolute top-3 left-3 text-gray-400" />
             <input
               type="email"
@@ -117,8 +116,7 @@ export default function AdminForm() {
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative"
-          >
+            className="relative">
             <FaIdCard className="absolute top-3 left-3 text-gray-400" />
             <input
               type="text"
@@ -195,8 +193,7 @@ export default function AdminForm() {
             onClick={() => {
               toggleDeletePop();
             }}
-            className="absolute top-[-180px] left-0 w-full mt-4 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300"
-          >
+            className="absolute top-[-180px] left-0 w-full mt-4 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300">
             Delete User
           </motion.button>
         </form>
@@ -205,8 +202,7 @@ export default function AdminForm() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="mt-4 text-center text-sm font-medium text-green-600"
-          >
+            className="mt-4 text-center text-sm font-medium text-green-600">
             {message}
           </motion.p>
         )}
@@ -219,31 +215,42 @@ export default function AdminForm() {
           className="w-full h-full object-cover"
         />
       </div>
-      {deletePop &&
+      {deletePop && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
           <div
             className="bg-white p-8 rounded-lg shadow-xl w-96 max-w-md animate-fade-in-down"
             role="dialog"
             aria-modal="true"
-            aria-labelledby="modal-headline"
-          >
+            aria-labelledby="modal-headline">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-semibold text-gray-900 flex items-center" id="modal-headline">
+              <h3
+                className="text-2xl font-semibold text-gray-900 flex items-center"
+                id="modal-headline">
                 <FaUserMinus className="mr-2 text-red-500" /> Delete User
               </h3>
               <button
                 onClick={() => setDeletePop(false)}
-                className="text-gray-400 hover:text-gray-500 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 rounded"
-              >
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                className="text-gray-400 hover:text-gray-500 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 rounded">
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             <form onSubmit={() => { handleDelete(mujid); }} className="space-y-6">
               <div>
-                <label htmlFor="mujid" className="block text-sm font-medium text-gray-700">
+                <label
+                  htmlFor="mujid"
+                  className="block text-sm font-medium text-gray-700">
                   MUJID
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
@@ -259,7 +266,9 @@ export default function AdminForm() {
                     aria-describedby="mujid-description"
                   />
                 </div>
-                <p className="mt-2 text-sm text-gray-500" id="mujid-description">
+                <p
+                  className="mt-2 text-sm text-gray-500"
+                  id="mujid-description">
                   Enter the MUJID of the user you want to delete.
                 </p>
                 <p className="mt-2 text-sm text-red-500" id="mujid-description">
@@ -285,7 +294,7 @@ export default function AdminForm() {
             </form>
           </div>
         </div>
-      }
+      )}
     </div>
   );
 }

@@ -22,7 +22,7 @@ export async function POST(req) {
       mujid: form.mujid,
       email: form.email,
       allSelectedCourses: form.allSelectedCourses,
-      isEven: form.isEven ? "Yes" : "No"
+      isEven: form.isEven ? "Yes" : "No",
     };
 
     return NextResponse.json(reportData, { status: 200 });

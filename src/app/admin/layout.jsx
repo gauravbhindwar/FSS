@@ -45,7 +45,6 @@ const AdminDashboard = ({ children }) => {
     try {
       const response = await axios.post("/api/admin/manageUser/getAdmin");
       setCurrentAdmin(response.data.adminName);
-      // console.log(mujid, 'yoyo honey singh');
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Error fetching current admin:", error.message);
@@ -58,20 +57,6 @@ const AdminDashboard = ({ children }) => {
   useEffect(() => {
     fetchCurrentAdmin();
   }, []);
-
-  // async function handleSetSemester() {
-  //   try {
-  //     const res = await axios.post("/api/admin/setSemester");
-  //     if (res.data.success) {
-  //       console.log("Semester Set Successfully");
-  //     }
-  //     console.log(res.data);
-  //     console.log(res.data.message);
-  //     console.log(res.data.error);
-  //   } catch (error) {
-  //     console.log("Error In Setting Semester");
-  //   }
-  // }
 
   // Helper function to get the initials from the user's name
 
@@ -171,7 +156,8 @@ const AdminDashboard = ({ children }) => {
           <Link href="/admin/manageUser">
             <motion.div
               className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                pathname === "/admin/manageUser" && "bg-blue-300 hover:!bg-blue-200"
+                pathname === "/admin/manageUser" &&
+                "bg-blue-300 hover:!bg-blue-200"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -183,7 +169,8 @@ const AdminDashboard = ({ children }) => {
           <Link href="/admin/manageCourse">
             <motion.div
               className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                pathname === "/admin/manageCourse" && "bg-blue-300 hover:!bg-blue-200"
+                pathname === "/admin/manageCourse" &&
+                "bg-blue-300 hover:!bg-blue-200"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -195,7 +182,8 @@ const AdminDashboard = ({ children }) => {
           <Link href="/admin/formStatus">
             <motion.div
               className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                pathname === "/admin/formStatus" && "bg-blue-300 hover:!bg-blue-200"
+                pathname === "/admin/formStatus" &&
+                "bg-blue-300 hover:!bg-blue-200"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -219,7 +207,8 @@ const AdminDashboard = ({ children }) => {
           <Link href="/admin/setSemester">
             <motion.div
               className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                pathname === "/admin/setSemester" && "bg-blue-300 hover:!bg-blue-200"
+                pathname === "/admin/setSemester" &&
+                "bg-blue-300 hover:!bg-blue-200"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}

@@ -94,6 +94,7 @@ export async function GET() {
 export async function DELETE(req) {
   await connect();
   const { courseCode } = await req.json();
+  console.log(courseCode);
   if (!courseCode) {
     return NextResponse.json(
       { message: "Course Code is required" },
