@@ -10,8 +10,7 @@ import {
   FiPrinter,
 } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-// import Handlebars from "handlebars";
-// import html2pdf from "html2pdf.js";
+import html2pdf from "html2pdf.js";
 import SVGShuffle from "@/app/verify-email/loader";
 
 const UserManagementDashboard = () => {
@@ -30,14 +29,14 @@ const UserManagementDashboard = () => {
       const response = await axios.get("/api/admin/manageUser");
       setUsers(response.data.users || []);
       setFilteredUsers(response.data.users || []);
-      console.log(response.data.users);
+      // console.log(response.data.users);
     } catch (error) {
       // console.error("Error fetching users:", error);
     } finally {
       setLoading(false);
     }
   };
-  console.log("Cookies:", document.cookie);
+  // console.log("Cookies:", document.cookie);
 
   // Debounced search
   useEffect(() => {
@@ -82,6 +81,194 @@ const UserManagementDashboard = () => {
   const closePopup = () => {
     setIsPopupOpen(false);
     setSelectedUser(null);
+  };
+  const handlePrint = () => {
+    if (selectedUser) {
+      const content = document.createElement("div");
+      content.innerHTML = `
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: #333;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background-color: #3498db;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    h2 {
+      color: #2980b9;
+      margin-top: 30px;
+      font-size: 22px;
+      border-bottom: 2px solid #3498db;
+      padding-bottom: 10px;
+    }
+
+    h3 {
+      color: #34495e;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f8f9fa;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    tr:hover {
+      background-color: #e1e1e1;
+    }
+
+    .user-info {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+    }
+
+    .user-info-item {
+      flex: 1;
+      background-color: #ecf0f1;
+      padding: 15px;
+      margin: 0 10px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .user-info-item h3 {
+      margin-top: 0;
+      color: #3498db;
+    }
+
+    .courses-container {
+      margin-top: 30px;
+    }
+
+    .semester-title {
+      font-weight: bold;
+      color: #2c3e50;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .user-info {
+        flex-direction: column;
+      }
+
+      .user-info-item {
+        margin: 0 0 10px 0;
+      }
+    }
+  </style>
+
+  <div class="container">
+    <div class="header">
+      <h1>${selectedUser.Name || "User"} Details</h1>
+    </div>
+    
+    <div class="user-info">
+      <div class="user-info-item">
+        <h3>Personal Info</h3>
+        <p><strong>Name:</strong> ${selectedUser.Name || "N/A"}</p>
+        <p><strong>Email:</strong> ${selectedUser.email || "N/A"}</p>
+        <p><strong>Phone:</strong> ${selectedUser.phone || "N/A"}</p>
+      </div>
+      <div class="user-info-item">
+        <h3>Academic Info</h3>
+        <p><strong>MUJId:</strong> ${selectedUser.mujid || "N/A"}</p>
+        <p><strong>Term:</strong> ${selectedUser.isEven ? "Even" : "Odd"}</p>
+        ${Object.entries(selectedUser)
+          .filter(
+            ([key, value]) =>
+              ![
+                "Name",
+                "email",
+                "mujid",
+                "isEven",
+                "allSelectedCourses",
+                "createdAt",
+              ].includes(key) && typeof value !== "object"
+          )
+          .map(([key, value]) => ``)
+          .join("")}
+      </div>
+    </div>
+
+    <div class="courses-container">
+      <h2>Selected Courses</h2>
+      ${Object.entries(selectedUser.allSelectedCourses || {})
+        .map(
+          ([semester, courses]) => `
+          <h3 class="semester-title">Semester: ${semester}</h3>
+          <table>
+            <tr>
+              <th>Course Type</th>
+              <th>Course</th>
+            </tr>
+            <tr>
+              <td>Lab Course</td>
+              <td>${courses.labCourses || "No lab course selected"}</td>
+            </tr>
+            <tr>
+              <td>Theory Course</td>
+              <td>${courses.theoryCourses || "No theory course selected"}</td>
+            </tr>
+          </table>
+        `
+        )
+        .join("")}
+    </div>
+  </div>
+`;
+
+      const opt = {
+        margin: 7,
+        filename: `${selectedUser.Name || "User"}_Form.pdf`,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { scale: 4 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      };
+
+      html2pdf().from(content).set(opt).save();
+    }
   };
 
   const usersWithFormFilled = filteredUsers.filter((user) => user.isFormFilled);
@@ -398,9 +585,7 @@ const UserManagementDashboard = () => {
                     </motion.button>
                     <motion.button
                       className="px-3 py-2 text-sm flex items-center font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
-                      onClick={() => {
-                        console.log("Print button clicked");
-                      }}
+                      onClick={handlePrint}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}>
                       <FiPrinter className="mr-2" />

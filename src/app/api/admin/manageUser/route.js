@@ -17,14 +17,14 @@ const createErrorResponse = (message, statusCode = 400) => {
   return NextResponse.json({ error: message }, { status: statusCode });
 };
 
-export async function POST(NextRequest) {
+export async function POST(req) {
   try {
     await connect();
 
     // Parse request body
     let requestBody;
     try {
-      requestBody = await NextRequest.json();
+      requestBody = await req.json();
     } catch (err) {
       return createErrorResponse("Invalid JSON input");
     }
@@ -44,7 +44,7 @@ export async function POST(NextRequest) {
       );
     }
 
-    const newUser = await new User({
+    const newUser = new User({
       email,
       name,
       isAdmin,
@@ -54,7 +54,6 @@ export async function POST(NextRequest) {
     try {
       await newUser.save();
     } catch (error) {
-      // console.error("Error saving new user:", error);
       return createErrorResponse("Error saving new user", 500);
     }
 
@@ -64,8 +63,6 @@ export async function POST(NextRequest) {
 
     return NextResponse.json({ message }, { status: 201 });
   } catch (error) {
-    // Catch any unexpected errors and return a generic message
-    // console.error(error);
     return createErrorResponse("Something went wrong on the server", 500);
   }
 }
@@ -82,18 +79,10 @@ export async function GET() {
       isAdmin: true,
     });
     const adminName = currentAdmin.name;
-    console.log(adminName);
 
-    // console.log(currentTerm.forTerm);
     const forTerm = currentTerm.forTerm;
     const semestersInCurrentTerm = currentTerm.semestersInCurrentTerm;
-    console.log(
-      totalUsers,
-      activeCourses,
-      formSubmissions,
-      forTerm,
-      semestersInCurrentTerm
-    );
+
     return NextResponse.json(
       {
         users,
@@ -107,7 +96,7 @@ export async function GET() {
       { status: 200 }
     );
   } catch (error) {
-    return NextResponse.json("Failed to fetch user", 500);
+    return createErrorResponse("Failed to fetch user", 500);
   }
 }
 
@@ -141,7 +130,6 @@ export async function DELETE(req) {
       { status: 200 }
     );
   } catch (error) {
-    // console.error(error);
     return createErrorResponse("Failed to delete user", 500);
   }
 }
