@@ -9,10 +9,11 @@ export async function POST(req) {
     await connect();
     const user = await User.findOne({ email });
     if (user) {
-      return NextResponse.json(
-        { isPasswordEmpty: !user.password },
-        { status: 200 }
-      );
+      if (!user.password) {
+        return NextResponse.json({ isPasswordEmpty: true }, { status: 200 });
+      } else {
+        return NextResponse.json({ isPasswordEmpty: false }, { status: 200 });
+      }
     } else {
       return NextResponse.json({ message: "User not found" }, { status: 404 });
     }

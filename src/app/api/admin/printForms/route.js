@@ -23,8 +23,8 @@ export async function GET() {
       const courses = Object.entries(allSelectedCourses)
         // .sort(([a], [b]) => parseInt(a) - parseInt(b))
         .map(([semester, courseData]) => [
-          `Semester ${semester} Lab: ${courseData.labCourses}`,
-          `Semester ${semester} Theory: ${courseData.theoryCourses}`,
+          `${courseData.labCourses}`,
+          `${courseData.theoryCourses}`,
         ]);
 
       return {

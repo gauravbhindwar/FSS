@@ -18,7 +18,10 @@ export async function POST(req) {
           { status: 404 }
         );
       } else {
-        return NextResponse.json({ adminName: user.name }, { status: 200 });
+        return NextResponse.json(
+          { adminName: user.name, isFormFilled: user.isFormFilled },
+          { status: 200 }
+        );
       }
     } catch (error) {
       return NextResponse.json(

@@ -128,9 +128,9 @@ const CourseForm = () => {
   return (
     <>
       <div className="min-h-screen overflow-hidden bg-[#E2E8F0] py-6 flex flex-col justify-center sm:py-12">
-        <div className="items-center justify-center ml-10">
+        <div className="items-center justify-center mx-auto mb-8 w-[260px]">
           <Button
-            className="bg-red-700 hover:bg-red-950"
+            className="bg-red-700 hover:bg-red-950 w-full"
             onClick={handlecourseDelete}>
             Delete Course
           </Button>
