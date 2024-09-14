@@ -29,15 +29,11 @@ const FormPage = (props) => {
   const [allSelectedCourses, setAllSelectedCourses] = useState({});
 
   const fetchIsSemesterEven = async () => {
-    try {
-      const response = await axios.get("/api/form/isSemesterEven");
-      const isEven = response.data.forTerm === "EVEN";
-      setIsSemesterEven(isEven);
-      return isEven;
-    } catch (error) {
-      console.error("Error fetching semester type:", error);
-      return true; // Default to even semester if there's an error
-    }
+    const response = await fetch("/api/form/isSemesterEven");
+    const data = await response.json();
+    const isEven = data.forTerm === "EVEN";
+    setIsSemesterEven(isEven);
+    return isEven;
   };
 
   const fetchCourses = async (isEven) => {
@@ -136,7 +132,7 @@ const FormPage = (props) => {
   if (loading) {
     console.log(admin.value);
     if (admin?.value || user?.value) {
-    //   router.push("/");
+      //   router.push("/");
     }
     return <Loader />;
   }
