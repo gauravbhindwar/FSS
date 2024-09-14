@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaUser, FaEnvelope, FaIdCard, FaUserShield, FaUserMinus } from "react-icons/fa";
-import Image from "next/image";
+import { FaUser, FaEnvelope, FaIdCard, FaUserShield, FaUserMinus, FaPhone, FaBriefcase } from "react-icons/fa";
 import { set } from "mongoose";
 
 export default function AdminForm() {
@@ -11,14 +10,15 @@ export default function AdminForm() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [mujid, setMujid] = useState("");
+  const [phone, setPhone] = useState(null); // New state for phone
+  const [designation, setDesignation] = useState(null); // New state for designation
   const [deletePop, setDeletePop] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [message, setMessage] = useState("");
 
   const toggleDeletePop = () => {
     setDeletePop(!deletePop);
-  }
-  
+  };
 
   const handleDelete = async (mujid) => {
     setLoader(true);
@@ -30,8 +30,7 @@ export default function AdminForm() {
       });
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      else{
+      } else {
         setDeletePop(false);
       }
     } catch (error) {
@@ -40,29 +39,27 @@ export default function AdminForm() {
     } finally {
       setLoader(false);
     }
-    }
-
+  };
 
   const handleSubmit = async (e) => {
     setLoader(true);
     e.preventDefault();
-  
+    // if(phone === "") setPhone("N/A");
+    // if(designation === "") setDesignation("N/A");
+
     try {
       const res = await fetch("/api/admin/manageUser", {
         method: "POST",
-        body: JSON.stringify({ email, name, mujid, isAdmin }),
+        body: JSON.stringify({ email, name, mujid, phone, designation, isAdmin }), // Added phone and designation
         headers: { "Content-Type": "application/json" },
       });
-  
-      // Check if the response is OK and has content
+
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        setMessage(res.message);
       }
-  
-      // Try to parse the response as JSON
+
       const data = await res.json();
-  
-      // Check if the response contains a message or error
+
       if (data.message || data.error) {
         setMessage(data.message || data.error);
       } else {
@@ -75,11 +72,10 @@ export default function AdminForm() {
       setLoader(false);
     }
   };
-  
 
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4"
-    style={{ backgroundImage: "url('/path-to-your-image.jpg')" }}>
+         style={{ backgroundImage: "url('/path-to-your-image.jpg')" }}>
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -133,23 +129,50 @@ export default function AdminForm() {
               className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </motion.div>
-          <label htmlFor="isAdmin" className="flex items-center cursor-pointer">
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="flex items-center space-x-3"
+            className="relative"
           >
+            <FaPhone className="absolute top-3 left-3 text-gray-400" />
             <input
-              type="checkbox"
-              checked={isAdmin}
-              onChange={(e) => setIsAdmin(e.target.checked)}
-              id="isAdmin"
-              className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+              type="text"
+              placeholder="Phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
-            
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="relative"
+          >
+            <FaBriefcase className="absolute top-3 left-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Designation"
+              value={designation}
+              onChange={(e) => setDesignation(e.target.value)}
+              className="w-full pl-10 pr-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </motion.div>
+          <label htmlFor="isAdmin" className="flex items-center cursor-pointer">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="flex items-center space-x-3"
+            >
+              <input
+                type="checkbox"
+                checked={isAdmin}
+                onChange={(e) => setIsAdmin(e.target.checked)}
+                id="isAdmin"
+                className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+              />
               <FaUserShield className="text-indigo-600 mr-2" />
               <span>Is Admin</span>
-          </motion.div>
+            </motion.div>
           </label>
 
           <motion.button
@@ -158,22 +181,23 @@ export default function AdminForm() {
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-300"
           >
-            { loader ? 
-            <div className="flex justify-center items-center">
-              <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
-            </div> : 
-            'Submit'}
+            {loader ? 
+              <div className="flex justify-center items-center">
+                <div className="animate-spin rounded-full h-6 w-6 border-t-4 border-blue-500 border-opacity-50"></div>
+              </div> : 
+              'Submit'
+            }
           </motion.button>
           <motion.button
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          type="button"
-          onClick={()=>{
-            toggleDeletePop();
-          }}
-          className="absolute top-[-180px] left-0 w-full mt-4 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            type="button"
+            onClick={() => {
+              toggleDeletePop();
+            }}
+            className="absolute top-[-180px] left-0 w-full mt-4 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-300"
           >
-          Delete User
+            Delete User
           </motion.button>
         </form>
         {message && (
@@ -186,9 +210,8 @@ export default function AdminForm() {
             {message}
           </motion.p>
         )}
-         
       </motion.div>
-       
+
       <div className="absolute top-0 left-0 w-[100vw] h-screen opacity-50 z-[-1]">
         <img
           src="/MUJ-homeCover.jpg"
@@ -196,8 +219,7 @@ export default function AdminForm() {
           className="w-full h-full object-cover"
         />
       </div>
-      {
-        deletePop &&
+      {deletePop &&
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
           <div
             className="bg-white p-8 rounded-lg shadow-xl w-96 max-w-md animate-fade-in-down"
@@ -219,10 +241,7 @@ export default function AdminForm() {
               </button>
             </div>
 
-            <form onSubmit={()=>{
-              handleDelete(mujid);
-            } 
-            } className="space-y-6">
+            <form onSubmit={() => { handleDelete(mujid); }} className="space-y-6">
               <div>
                 <label htmlFor="mujid" className="block text-sm font-medium text-gray-700">
                   MUJID
@@ -252,16 +271,13 @@ export default function AdminForm() {
                 <button
                   type="button"
                   className="mr-3 bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                  onClick={() => setDeletePop(false)}                  
+                  onClick={() => setDeletePop(false)}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   className="bg-red-600 border border-transparent rounded-md shadow-sm py-2 px-4 inline-flex justify-center text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition duration-150 ease-in-out"
-                  onClick={() => {
-
-                  }}
                 >
                   Delete User
                 </button>

@@ -53,6 +53,7 @@ const userSchema = new Schema(
     },
     designation: {
       type: String,
+      unique: false,
       required: false,
     },
     isAdmin: {
@@ -158,6 +159,16 @@ const formSchema = new Schema(
     mujid: {
       type: String,
       required: true,
+    },
+    Phone: {
+      type: String,
+      unique: false,
+      sparse: true, // This allows multiple documents with null values for the phone field
+    },
+    Designation: {
+      type: String,
+      unique: false,
+      sparse: true,
     },
     email: {
       type: String,

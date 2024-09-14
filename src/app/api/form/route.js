@@ -1,6 +1,7 @@
 import { connect } from "../../helper/dbConfig";
 import { Form, User } from "../../../lib/dbModels/dbModels";
 import { NextResponse } from "next/server";
+import { Phone } from "lucide-react";
 
 export async function POST(req) {
   const { allSelectedCourses, isEven } = await req.json();
@@ -33,6 +34,8 @@ export async function POST(req) {
       mujid: MUJid,
       Name: user.name,
       email: user.email,
+      Phone: user.phone,
+      Designation: user.designation,
       isEven,
     });
 

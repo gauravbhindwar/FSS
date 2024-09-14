@@ -204,16 +204,16 @@ const AdminDashboard = ({ children }) => {
               {textVisible && isSidebarOpen && <span>Form Status</span>}
             </motion.div>
           </Link>
-          <Link href="#">
+          <Link href="/admin/printForms">
             <motion.div
               className={`flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 ${
-                pathname === "/admin/print" && "bg-blue-300 hover:!bg-blue-200"
+                pathname === "/admin/printForms" && "bg-blue-300 hover:!bg-blue-200"
               }`}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}>
               <FiPrinter className="mr-3" />
-              {textVisible && isSidebarOpen && <span>Print Form</span>}
+              {textVisible && isSidebarOpen && <span>Print Forms</span>}
             </motion.div>
           </Link>
           <Link href="/admin/setSemester">

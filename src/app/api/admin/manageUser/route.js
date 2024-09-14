@@ -8,6 +8,8 @@ const userSchema = Joi.object({
   name: Joi.string().required(),
   mujid: Joi.string().required(),
   isAdmin: Joi.boolean().optional(),
+  phone: Joi.string().optional(),
+  designation: Joi.string().optional(),
   password: Joi.string().min(6).optional(),
   token: Joi.string().optional(),
 });
@@ -29,9 +31,14 @@ export async function POST(NextRequest) {
       return createErrorResponse("Invalid JSON input");
     }
 
-    const { email, name, isAdmin, mujid } = requestBody;
+    const { email, name, isAdmin, mujid, phone, designation } = requestBody;
 
-    const { error } = userSchema.validate({ email, name, mujid, isAdmin });
+    const { error } = userSchema.validate({
+      email,
+      name,
+      mujid,
+      isAdmin,
+    });
     if (error) {
       return createErrorResponse(error.details[0].message);
     }
@@ -44,12 +51,33 @@ export async function POST(NextRequest) {
       );
     }
 
-    const newUser = await new User({
-      email,
-      name,
-      isAdmin,
-      mujid,
-    });
+    let newUser;
+    if (!phone) {
+      newUser = await new User({
+        email,
+        name,
+        isAdmin,
+        mujid,
+        designation,
+      });
+    } else if (!designation) {
+      newUser = await new User({
+        email,
+        name,
+        isAdmin,
+        mujid,
+        phone,
+      });
+    } else {
+      newUser = await new User({
+        email,
+        name,
+        isAdmin,
+        mujid,
+        phone,
+        designation,
+      });
+    }
 
     try {
       await newUser.save();
