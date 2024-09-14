@@ -45,8 +45,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
     <div>
       <RadioGroup
         value={selectedCourses.labCourses}
-        onValueChange={(value) => handleCourseChange("labCourses", value)}
-      >
+        onValueChange={(value) => handleCourseChange("labCourses", value)}>
         <div className="">
           <h3 className="font-bold text-lg">Lab Courses</h3>
           {labCourses.length > 0 ? (
@@ -54,15 +53,13 @@ const SelectForm: React.FC<SelectFormProps> = ({
               <Label
                 htmlFor={`theory-${course.title}`}
                 className=""
-                key={course.title}
-              >
+                key={course.title}>
                 <div
                   className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${
                     selectedCourses.labCourses === course.title
                       ? "bg-green-500 hover:bg-green-600"
                       : "bg-slate-100 hover:bg-slate-200"
-                  }`}
-                >
+                  }`}>
                   <RadioGroupItem
                     value={course.title}
                     id={`theory-${course.title}`}
@@ -89,8 +86,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
 
       <RadioGroup
         value={selectedCourses.theoryCourses}
-        onValueChange={(value) => handleCourseChange("theoryCourses", value)}
-      >
+        onValueChange={(value) => handleCourseChange("theoryCourses", value)}>
         <div className="space-y-4">
           <h3 className="font-bold text-lg">Theory Courses</h3>
           {theoryCourses.length > 0 ? (
@@ -98,15 +94,13 @@ const SelectForm: React.FC<SelectFormProps> = ({
               <Label
                 htmlFor={`theory-${course.title}`}
                 className=""
-                key={course.title}
-              >
+                key={course.title}>
                 <div
                   className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${
                     selectedCourses.theoryCourses === course.title
                       ? "bg-green-500 hover:bg-green-600"
                       : "bg-slate-100 hover:bg-slate-200"
-                  }`}
-                >
+                  }`}>
                   <RadioGroupItem
                     value={course.title}
                     id={`theory-${course.title}`}

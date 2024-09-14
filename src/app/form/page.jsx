@@ -21,23 +21,31 @@ const FormPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [isSemesterEven, setIsSemesterEven] = useState(true);
-  const [allCourses, setAllCourses] = useState({
-    3: { labCourses: [], theoryCourses: [] },
-    5: { labCourses: [], theoryCourses: [] },
-    7: { labCourses: [], theoryCourses: [] },
-  });
-  const [allSelectedCourses, setAllSelectedCourses] = useState({
-    3: { labCourses: "", theoryCourses: "" },
-    5: { labCourses: "", theoryCourses: "" },
-    7: { labCourses: "", theoryCourses: "" },
-  });
-  const [activeSemester, setActiveSemester] = useState(3);
+  const [activeSemester, setActiveSemester] = useState(2);
+  const [semesters, setSemesters] = useState([]);
+  const [allCourses, setAllCourses] = useState({});
+  const [allSelectedCourses, setAllSelectedCourses] = useState({});
 
-  const fetchCourses = async () => {
+  const fetchIsSemesterEven = async () => {
     try {
-      const semesters = [3, 5, 7];
+      const response = await axios.get("/api/form/isSemesterEven");
+      const isEven = response.data.forTerm === "EVEN";
+      setIsSemesterEven(isEven);
+      return isEven;
+    } catch (error) {
+      console.error("Error fetching semester type:", error);
+      return true; // Default to even semester if there's an error
+    }
+  };
+
+  const fetchCourses = async (isEven) => {
+    try {
+      const semestersToFetch = isEven ? [2, 4, 6, 8] : [1, 3, 5, 7];
+      setSemesters(semestersToFetch);
+      setActiveSemester(semestersToFetch[0]);
+
       const courseData = await Promise.all(
-        semesters.flatMap((semester) => [
+        semestersToFetch.flatMap((semester) => [
           axios.post("/api/courses/getCourse", {
             courseClassification: "LAB",
             forSemester: semester,
@@ -48,31 +56,45 @@ const FormPage = () => {
           }),
         ])
       );
-      if (semesters[0] % 2 === 0) {
-        setIsSemesterEven(true);
-      } else {
-        setIsSemesterEven(false);
-      }
 
-      const coursesBySemester = semesters.reduce((acc, semester, index) => {
-        const labCourses = courseData[index * 2]?.data?.courses || [];
-        const theoryCourses = courseData[index * 2 + 1]?.data?.courses || [];
-        acc[semester] = {
-          labCourses,
-          theoryCourses,
-        };
-        setLoading(false);
-        return acc;
-      }, {});
+      const coursesBySemester = semestersToFetch.reduce(
+        (acc, semester, index) => {
+          const labCourses = courseData[index * 2]?.data?.courses || [];
+          const theoryCourses = courseData[index * 2 + 1]?.data?.courses || [];
+          acc[semester] = {
+            labCourses,
+            theoryCourses,
+          };
+          return acc;
+        },
+        {}
+      );
 
       setAllCourses(coursesBySemester);
+
+      // Initialize allSelectedCourses
+      const initialSelectedCourses = semestersToFetch.reduce(
+        (acc, semester) => {
+          acc[semester] = { labCourses: "", theoryCourses: "" };
+          return acc;
+        },
+        {}
+      );
+      setAllSelectedCourses(initialSelectedCourses);
+
+      setLoading(false);
     } catch (error) {
       console.error("Error fetching courses:", error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCourses();
+    const initializeData = async () => {
+      const isEven = await fetchIsSemesterEven();
+      await fetchCourses(isEven);
+    };
+    initializeData();
   }, []);
 
   const handleCourseChange = (semester, selectedCourses) => {
@@ -99,9 +121,9 @@ const FormPage = () => {
       const response = await axios.post("/api/form", {
         allSelectedCourses,
         isEven: isSemesterEven,
+        activeSemester,
       });
 
-      // setMessage("FormSubmitted Successfully");
       <Loader />;
       router.push("/dashboard");
     } catch (error) {
@@ -117,49 +139,35 @@ const FormPage = () => {
     <div className="sm:p-10 bg-slate-400 w-[100vw] h-[100%]">
       <form onSubmit={handleSubmit}>
         <Tabs
-          defaultValue="3rd Semester"
+          defaultValue={`${semesters[0]} Semester`}
           className="w-[100%] bg-slate-300 p-4 rounded-lg"
           onValueChange={(value) => {
             const semester = parseInt(value.split(" ")[0], 10);
             setActiveSemester(semester);
-          }}
-        >
+          }}>
           <TabsList className="w-[100%]">
-            <TabsTrigger value="3rd Semester" className="w-1/3">
-              3rd Semester
-            </TabsTrigger>
-            <TabsTrigger value="5th Semester" className="w-1/3">
-              5th Semester
-            </TabsTrigger>
-            <TabsTrigger value="7th Semester" className="w-1/3">
-              7th Semester
-            </TabsTrigger>
+            {semesters.map((semester) => (
+              <TabsTrigger
+                key={semester}
+                value={`${semester} Semester`}
+                className="w-1/4">
+                {semester} Semester
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="3rd Semester">
-            <SelectForm
-              semester={3}
-              courses={allCourses[3] || { labCourses: [], theoryCourses: [] }}
-              selectedCourses={allSelectedCourses[3]}
-              onCourseChange={handleCourseChange}
-            />
-          </TabsContent>
-          <TabsContent value="5th Semester">
-            <SelectForm
-              semester={5}
-              courses={allCourses[5] || { labCourses: [], theoryCourses: [] }}
-              selectedCourses={allSelectedCourses[5]}
-              onCourseChange={handleCourseChange}
-            />
-          </TabsContent>
-          <TabsContent value="7th Semester">
-            <SelectForm
-              semester={7}
-              courses={allCourses[7] || { labCourses: [], theoryCourses: [] }}
-              selectedCourses={allSelectedCourses[7]}
-              onCourseChange={handleCourseChange}
-            />
-          </TabsContent>
+          {semesters.map((semester) => (
+            <TabsContent key={semester} value={`${semester} Semester`}>
+              <SelectForm
+                semester={semester}
+                courses={
+                  allCourses[semester] || { labCourses: [], theoryCourses: [] }
+                }
+                selectedCourses={allSelectedCourses[semester]}
+                onCourseChange={handleCourseChange}
+              />
+            </TabsContent>
+          ))}
         </Tabs>
 
         <AlertDialog>
@@ -181,8 +189,7 @@ const FormPage = () => {
               </AlertDialogCancel>
               <AlertDialogAction
                 className=" bg-green-500 text-white rounded"
-                onClick={handleSubmit}
-              >
+                onClick={handleSubmit}>
                 Submit
               </AlertDialogAction>
             </AlertDialogFooter>

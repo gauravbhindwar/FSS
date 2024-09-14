@@ -44,7 +44,7 @@ const PasswordInput = ({
       <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
       <button
         type="button"
-        className="absolute inset-y-1 h-0 w-2 right-2 text-gray-500"
+        className="absolute inset-y-1 w-2 right-2 hover:bg-transparent bg-transparent text-gray-500 pl-6"
         onClick={toggleShowPassword}>
         {showPassword ? <EyeOff /> : <Eye />}
       </button>
