@@ -31,7 +31,7 @@ export async function POST(req) {
 
     const formEntry = new Form({
       allSelectedCourses,
-      mujid: MUJid,
+      mujid: MUJid, //from cookies
       Name: user.name,
       email: user.email,
       Phone: user.phone,
