@@ -45,7 +45,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: false,
-      // default: null,
     },
     ext: {
       type: String,

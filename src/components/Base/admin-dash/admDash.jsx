@@ -50,7 +50,7 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
       whileTap={{ scale: 0.90 }} 
       transition={{ type: "spring", stiffness: 400, damping: 10 }}
       className={`bg-indigo-500 text-white rounded-3xl px-6 py-2 active:bg-indigo-600 ${isFormFilled ? "cursor-not-allowed pointer-events-none !bg-slate-400" : "cursor-pointer"}`} 
-      onClick={() => window.location.href = '/form'}>{!isFormFilled ? "Fill Form" : "Already Filled"} </motion.button> : <>
+      onClick={() => window.location.href = '/form'}>{!isFormFilled ? "Fill Form" : "Already Filled"}</motion.button> : <>
       {Array.isArray(count) ? (
         <p className="text-lg md:text-2xl lg:text-md font-bold">
           Semesters:{" "}
