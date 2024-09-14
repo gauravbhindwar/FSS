@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 import FormPage from "@/components/Base/formPage/form";
-import { Form } from "@/lib/dbModels/dbModels";
 
 export default function Page() {
   const cookieStore = cookies();

@@ -88,7 +88,7 @@ const AdminDashboard = ({ children }) => {
   };
 
   return (
-    <div className="flex h-[fit-content] overflow-hidden w-screen ">
+    <div className="flex h-[fit-content] overflow-hidden w-screen " suppressHydrationWarning>
       {/* Sidebar */}
       {isSidebarOpen && (
         <motion.div
@@ -230,7 +230,7 @@ const AdminDashboard = ({ children }) => {
           </Link>
         </nav>
       </motion.div>
-      <main className="w-full">{children}</main>
+      <main className="w-full" suppressHydrationWarning>{children}</main>1
     </div>
   );
 };
