@@ -230,7 +230,7 @@ const AdminDashboard = ({ children }) => {
           </Link>
         </nav>
       </motion.div>
-      <main className="w-full" suppressHydrationWarning>{children}</main>1
+      <main className="w-full" suppressHydrationWarning>{children}</main>
     </div>
   );
 };

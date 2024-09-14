@@ -22,7 +22,7 @@ const SVGShuffle = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [svgs.length]);
 
   return (
     <div className="flex justify-center items-center h-screen">

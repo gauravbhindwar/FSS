@@ -13,6 +13,7 @@ export function middleware(req) {
   if (pathname.startsWith("/api")) {
     const allowedPaths = [
       "/api/users/send-verification",
+      "/api/users/set-password",
       "/api/users/check-password",
       "/api/users/check-admin",
       "/api/users/login",
@@ -22,7 +23,7 @@ export function middleware(req) {
     }
 
     if (!isLoggedIn || !isAdmin) {
-      if (req.method === "POST" || allowedPaths.includes(pathname)) {
+      if (req.method === "POST" && allowedPaths.includes(pathname)) {
         return NextResponse.next();
       }
 

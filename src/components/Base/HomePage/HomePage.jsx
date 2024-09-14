@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import "./Homepage.css";
 import { Input } from "@/components/ui/input";
@@ -111,7 +111,7 @@ const HomePage = () => {
     router.replace("/");
   };
 
-  const sendEmailVerification = async () => {
+  const sendEmailVerification = useCallback(async () => {
     try {
       const response = await axios.post("/api/users/send-verification", {
         email,
@@ -121,7 +121,7 @@ const HomePage = () => {
       // console.log("Error sending email verification:", error);
       setMessage("Error sending email verification");
     }
-  };
+  }, [email]);
 
   useEffect(() => {
     if (searchParams.get("loginAlert") === "true") {
@@ -140,7 +140,7 @@ const HomePage = () => {
     return () => clearTimeout(timer);
   }, [message]);
 
-  const handleContinue = async () => {
+  const handleContinue = useCallback(async () => {
     setIsLoading(true);
 
     try {
@@ -154,9 +154,9 @@ const HomePage = () => {
     }
 
     setIsLoading(false);
-  };
+  }, [email, sendEmailVerification]);
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = useCallback(async (event) => {
     event.preventDefault();
     setIsLoading(true);
 
@@ -182,7 +182,7 @@ const HomePage = () => {
     }
 
     setIsLoading(false);
-  };
+  }, [email, password, router]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -199,7 +199,7 @@ const HomePage = () => {
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [email, password, isPasswordEmpty]);
+  }, [email, password, isPasswordEmpty, handleContinue, handleSubmit]);
 
   return (
     <div className="Body overflow-hidden">

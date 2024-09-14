@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { FaUser, FaEnvelope, FaIdCard, FaUserShield, FaUserMinus, FaPhone, FaBriefcase } from "react-icons/fa";
 
@@ -75,7 +76,7 @@ export default function AdminForm() {
   };
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-blue-100 to-indigo-200 flex items-center justify-center p-4">
+    <div className="relative min-h-screen bg-transparent flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -209,10 +210,12 @@ export default function AdminForm() {
       </motion.div>
 
       <div className="absolute top-0 left-0 w-[100vw] h-screen opacity-50 z-[-1]">
-        <img
+        <Image
           src="/MUJ-homeCover.jpg"
           alt="image-muj"
           className="w-full h-full object-cover"
+          width={500}
+          height={300}
         />
       </div>
       {deletePop && (
