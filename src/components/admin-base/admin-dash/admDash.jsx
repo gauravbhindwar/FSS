@@ -115,7 +115,7 @@ const AdminDashboard = (props) => {
     try {
       setLoading(true);
       const response = await axios.get("/api/admin/manageUser");
-      console.log(response);
+      // console.log(response);
       const {
         totalUsers,
         activeCourses,
@@ -123,7 +123,7 @@ const AdminDashboard = (props) => {
         forTerm,
         semestersInCurrentTerm,
       } = response.data;
-      console.log(forTerm);
+      // console.log(forTerm);
       setData({
         totalUsers,
         activeCourses,

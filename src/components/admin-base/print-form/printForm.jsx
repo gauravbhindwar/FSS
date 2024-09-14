@@ -16,7 +16,7 @@ const FormDownloadPage = (props) => {
       const response = await axios.get("/api/admin/printForms");
 
       // Log the entire response for debugging
-      console.log("API Response:", response.data);
+      // console.log("API Response:", response.data);
 
       const { formArray } = response.data;
 
@@ -77,7 +77,7 @@ const FormDownloadPage = (props) => {
         window.URL.revokeObjectURL(link.href);
       }
 
-      console.log("Download completed");
+      // console.log("Download completed");
     } catch (error) {
       console.error("Error downloading data:", error);
       alert("There was an error while downloading the data. Please try again.");
@@ -90,7 +90,7 @@ const FormDownloadPage = (props) => {
     const getFormSubmissions = async () => {
       try {
         const response = await axios.get("/api/admin/manageUser");
-        console.log("Form submissions response:", response.data);
+        // console.log("Form submissions response:", response.data);
         const { formSubmissions } = response.data;
         setFormCount(formSubmissions || 0); // Set formCount or default to 0 if undefined
       } catch (error) {

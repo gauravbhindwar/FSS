@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 export async function GET(req) {
   const admin = cookies().get("admin")?.value;
-  console.log(admin);
+  // console.log(admin);
   try {
     await connect();
     // const term = await Term.find().exec();

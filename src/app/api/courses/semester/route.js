@@ -1,8 +1,10 @@
 import { connect } from "../../../helper/dbConfig";
 import { Course } from "../../../../lib/dbModels/dbModels";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export async function GET() {
+  const cookieStore = cookies();
   try {
     await connect();
     const evenSemesterSet = new Set();

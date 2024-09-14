@@ -35,7 +35,7 @@ export async function POST(req) {
               { status: 400 }
             );
           }
-          console.log(user1.token);
+          // console.log(user1.token);
           user1.token = null;
           await user1.save();
           if (!decoded || !decoded.email) {

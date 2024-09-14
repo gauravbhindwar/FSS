@@ -8,13 +8,13 @@ export async function GET() {
   try {
     // Ensure DB connection
     await connect();
-    console.log("Database connected successfully");
+    // console.log("Database connected successfully");
 
     const users = await User.find({}).lean();
-    console.log("Users fetched from database:", users);
+    // console.log("Users fetched from database:", users);
 
     const forms = await Form.find({}).lean();
-    console.log("Forms fetched from database:", forms);
+    // console.log("Forms fetched from database:", forms);
 
     const formArray = forms.map((form) => {
       const { Name, mujid, allSelectedCourses, email, Phone, Designation } =

@@ -130,7 +130,7 @@ const FormPage = (props) => {
   };
 
   if (loading) {
-    console.log(admin.value);
+    // console.log(admin.value);
     if (admin?.value || user?.value) {
       //   router.push("/");
     }

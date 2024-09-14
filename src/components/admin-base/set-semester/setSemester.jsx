@@ -15,12 +15,12 @@ const SemesterSelection = (props) => {
 
   const handleSelect = (semester) => {
     setSelectedSemester(semester);
-    console.log(semester);
+    // console.log(semester);
     setIsOpen(false);
   };
 
   const handleSet = () => {
-    console.log(selectedSemester);
+    // console.log(selectedSemester);
     if (selectedSemester) {
       setShowConfirmation(true);
     }
@@ -37,14 +37,14 @@ const SemesterSelection = (props) => {
     try{
       const request = await axios.post('/api/admin/getSemesters', {isEven});
 
-      console.log(request.data.semesters);
+      // console.log(request.data.semesters);
       
         const semestersInCurrentTerm = request.data.semesters;
         const res = await axios.post('/api/admin/setSemesters', {
           semestersInCurrentTerm
         });
         if(res.status === 200){
-          console.log(res);
+          // console.log(res);
           setCurrentSemester(selectedSemester);
         }
         else{
@@ -56,7 +56,7 @@ const SemesterSelection = (props) => {
     }
     setCurrentSemester(selectedSemester);
 
-    console.log(selectedSemester);
+    // console.log(selectedSemester);
     setShowConfirmation(false);
   };
 

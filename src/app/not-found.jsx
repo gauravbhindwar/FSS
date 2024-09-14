@@ -15,7 +15,7 @@ export default function NotFound() {
         The page you’re looking for doesn’t exist.
       </p>
       <Link href="/" legacyBehavior>
-        <a className="mt-6 px-6 py-3 bg-[#0fe8bf] text-black rounded-full text-lg shadow-lg hover:bg-[#0fe8bf]/90 transition duration-300 select-none">
+        <a className="mt-6 px-6 py-3 bg-[#0fe8bf]/80 text-white rounded-full text-lg font-bold shadow-lg hover:bg-[#0fe8bf]/50 hover:scale-125 active:scale-90 active:bg-[#0fe8bf] transition duration-300 select-none">
           Go Back Home
         </a>
       </Link>

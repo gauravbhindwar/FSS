@@ -87,7 +87,7 @@ const CourseForm = (props) => {
       // Handle response
       if (response.ok) {
         const result = await response.json();
-        console.log("Course successfully created:", result);
+        // console.log("Course successfully created:", result);
 
         // Redirect to another page (optional)
         Router.push("/admin");
@@ -109,7 +109,7 @@ const CourseForm = (props) => {
     }
     // Handle delete logic here (API call or other actions)
     try {
-      console.log(courseCode);
+      // console.log(courseCode);
       const res = await axios.delete("/api/admin/manageCourse", {
         data: { courseCode },
       });
