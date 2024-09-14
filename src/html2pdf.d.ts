@@ -1,1 +1,1 @@
-declare module 'react-json-to-excel';
+declare module 'html2pdf.js';
