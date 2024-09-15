@@ -51,6 +51,11 @@ export function middleware(req) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
+  // Redirect non-admins who are trying to access admin routes to the home page
+  if (!isAdmin && pathname.startsWith("/admin")) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
   // Redirect admins who are trying to access non-admin routes to the admin page
   if (isAdmin && pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/admin", req.url));

@@ -10,7 +10,7 @@ import {
   FaEnvelope,
   FaBook,
 } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { motion, useForceUpdate } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -59,51 +59,57 @@ const UserDashboard = (props) => {
     return initials.toUpperCase();
   };
 
+  const userFormStatus = useCallback(async () => {
+    try {
+      const response = await axios.post("/api/users/getUser", {
+        mujid,
+      });
+      setIsFormFilled(response.data.isFormFilled); // Only set the state once you receive new info
+      console.log("Form status:", response.data.isFormFilled);
+    } catch (error) {
+      console.error("Error fetching form status:", error);
+    }
+  }, [mujid]);
+
+  const formData = useCallback(async () => {
+    try {
+      const response = await axios.get("/api/form", {
+        params: { mujid },
+      });
+      setSelectedUser(response.data.forms);
+    } catch (error) {
+      console.error("Error fetching form details:", error);
+    }
+  }, [mujid]);
+
   useEffect(() => {
-    const initializeUser = async () => {
+    const initializeDashboard = async () => {
       try {
-        const user = await fetchUser();
-        user.initials = getInitials(user.name);
-        return user;
+        // Fetch user form status first
+        await Promise.all([
+          await userFormStatus(), // Fetch user form status
+          formData(),       // Fetch form data
+        ]);
+  
+
+        // Fetch and set user data
+        const fetchedUser = await fetchUser();
+        fetchedUser.initials = getInitials(fetchedUser.name);
+        setUser(fetchedUser);
       } catch (error) {
-        console.error("Error initializing user:", error);
-        return {
+        console.error("Error during initialization:", error);
+
+        // Fallback user data in case of error
+        setUser({
           name: "Unknown",
           designation: "Unknown",
           initials: "U",
-        };
-      }
-    };
-
-    const userFormStatus = async () => {
-      try {
-        const response = await axios.get("/api/users/getUser", {
-          params: { mujid },
         });
-        setIsFormFilled(response.data.isFormFilled);
-      } catch (error) {
-        console.error("Error fetching form status:", error);
       }
     };
 
-    const formData = async () => {
-      try {
-        const response = await axios.get("/api/form", {
-          params: { mujid },
-        });
-        setSelectedUser(response.data.forms);
-      } catch (error) {
-        console.error("Error fetching form details:", error);
-      }
-    };
-
-    userFormStatus();
-    formData();
-
-    initializeUser().then((user) => {
-      setUser(user);
-    });
-  }, [mujid]);
+    initializeDashboard();
+  }, [mujid, formData, userFormStatus]); // Only depend on `mujid` to fetch data once
 
   const websiteFeatures = [
     {
@@ -146,8 +152,8 @@ const UserDashboard = (props) => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-yellow-400 via-orange-400 to-green-200 p-8">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <div className="flex items-center mb-6">
+        <div className="bg-white rounded-lg shadow-md sm:p-6 mb-8">
+          <div className="flex items-center mb-6 max-sm:p-4">
             <div className="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center text-white text-2xl font-bold mr-4">
               {user.initials}
             </div>
@@ -157,14 +163,43 @@ const UserDashboard = (props) => {
             </div>
           </div>
           <motion.div
-            className="bg-orange-200 p-4 rounded-lg cursor-pointer hover:bg-orange-300 flex items-center justify-between"
+            className={`bg-orange-200 sm:p-4 ${isFormFilled && 'pointer-events-none'} rounded-lg cursor-pointer hover:bg-orange-300 flex items-center justify-between`}
             onClick={() => {
               router.push("/form");
             }}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             transition={{ type: "spring", stiffness: 300 }}>
-            {isFormFilled ? (
+            {isFormFilled === true ? (
+              <motion.div
+              className="bg-white w-[100%] p-6 rounded-lg shadow-lg"
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}>
+              <h2 className="text-xl font-bold mb-4">Selected Courses</h2>
+              <div className="space-y-4">
+                {selectedUser?.allSelectedCourses &&
+                  Object.entries(selectedUser.allSelectedCourses).map(
+                    ([semester, courses], index) => (
+                      <div
+                        key={index}
+                        className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+                        <h3 className="text-lg font-semibold mb-2">
+                          Course {index + 1}
+                        </h3>
+                        <p className="text-gray-800 mb-1">
+                          <strong>Theory Course:</strong>{" "}
+                          {courses.theoryCourses}
+                        </p>
+                        <p className="text-gray-800">
+                          <strong>Lab Course:</strong> {courses.labCourses}
+                        </p>
+                      </div>
+                    )
+                  )}
+              </div>
+            </motion.div> 
+            ) : (
               <>
                 <div className="flex items-center w-[fit-content]">
                   <FaArrowRight className="hidden md:block text-2xl text-orange-500 mr-4" />
@@ -180,35 +215,6 @@ const UserDashboard = (props) => {
                 </div>
                 <FaArrowRight className="text-2xl text-orange-500 md:hidden w-[20px]" />
               </>
-            ) : (
-              <motion.div
-                className="bg-white p-6 rounded-lg shadow-lg"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}>
-                <h2 className="text-xl font-bold mb-4">Selected Courses</h2>
-                <div className="space-y-4">
-                  {selectedUser?.allSelectedCourses &&
-                    Object.entries(selectedUser.allSelectedCourses).map(
-                      ([semester, courses], index) => (
-                        <div
-                          key={index}
-                          className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-                          <h3 className="text-lg font-semibold mb-2">
-                            Course {index + 1}
-                          </h3>
-                          <p className="text-gray-800 mb-1">
-                            <strong>Theory Course:</strong>{" "}
-                            {courses.theoryCourses}
-                          </p>
-                          <p className="text-gray-800">
-                            <strong>Lab Course:</strong> {courses.labCourses}
-                          </p>
-                        </div>
-                      )
-                    )}
-                </div>
-              </motion.div>
             )}
           </motion.div>
         </div>

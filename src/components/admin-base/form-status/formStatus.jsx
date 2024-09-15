@@ -196,7 +196,8 @@ const UserManagementDashboard = (props) => {
       if (response.status === 200) {
         setSelectedUser(null);
         setIsPopupOpen(false);
-        alert("Deleted Successfully");
+        // alert("Deleted Successfully");
+        fetchUsers();
       }
     } catch (error) {
       console.log(error);
@@ -224,10 +225,10 @@ const UserManagementDashboard = (props) => {
           <div className="mb-6 sm:mb-8 relative">
             <input
               type="text"
-              placeholder="Search by MUJid or Email"
+              placeholder="Search by Name"
               value={searchTerm}
               onChange={handleSearch}
-              className="w-full p-3 sm:p-4 pl-10 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm sm:text-base"
+              className="w-full p-3 sm:p-4 !pl-10 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm sm:text-base"
               aria-label="Search users by MUJid or Email"
             />
             <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm sm:text-base" />
@@ -540,7 +541,7 @@ const UserManagementDashboard = (props) => {
               </motion.div>
             )}
 
-            //Confir POP
+            {/* Confirmation Popup */}
             {showPopup && (
           <motion.div
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"

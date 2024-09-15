@@ -59,7 +59,7 @@ const DashboardCard = ({ icon, title, count, color, index }) => {
           whileHover={{ scale: 1.11 }}
           whileTap={{ scale: 0.9 }}
           transition={{ type: "spring", stiffness: 400, damping: 10 }}
-          className={`bg-indigo-500 text-white rounded-3xl px-6 py-2 active:bg-indigo-600 ${
+          className={`bg-indigo-500 w-[100%] text-white rounded-3xl px-6 py-2 active:bg-indigo-600 ${
             isFormFilled
               ? "cursor-not-allowed pointer-events-none !bg-slate-400"
               : "cursor-pointer"
