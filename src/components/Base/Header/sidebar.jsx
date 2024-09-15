@@ -7,6 +7,8 @@ import {
   FaSignOutAlt,
   FaArrowRight,
   FaQuestionCircle,
+  FaEnvelope,
+  FaBook,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";
@@ -110,16 +112,17 @@ const UserDashboard = (props) => {
       icon: <FaChartBar className="text-3xl mb-4 text-orange-500" />,
     },
     {
-      title: "User Profile",
+      title: "Course Details",
       description:
-        "Efficient system for managing user accounts and permissions",
-      icon: <FaUser className="text-3xl mb-4 text-orange-500" />,
+        "Get detailed information about your courses, including credits, types, and more.",
+      icon: <FaBook className="text-3xl mb-4 text-orange-500" />,
+      href: "https://jaipur.manipal.edu/foe/b-tech-computer-science-engineering.php#Course-Structure",
     },
     {
-      title: "Advanced Settings",
+      title: "Contact Admin",
       description:
-        "Customize your experience with our advanced configuration options",
-      icon: <FaCog className="text-3xl mb-4 text-orange-500" />,
+        "Have any issues? Please reach out to the admin team for assistance.",
+      icon: <FaEnvelope className="text-3xl mb-4 text-orange-500" />,
     },
   ];
 
