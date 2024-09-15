@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 
 // This function runs on every request to handle authentication and authorization
 export function middleware(req) {
-  // Extract pathname from the request URL
   const { pathname } = req.nextUrl;
 
+  // Retrieve cookies for user authentication status
   // Retrieve cookies for user authentication status
   const isLoggedIn = req.cookies.get("user");
   const isAdmin = req.cookies.get("admin");
 
-  // Check if the request method is GET and apply restrictions
+  // Check if the request method is GET and apply restrictions for API routes
   if (pathname.startsWith("/api")) {
     const allowedPaths = [
       "/api/users/send-verification",
@@ -38,13 +38,6 @@ export function middleware(req) {
     return NextResponse.next();
   }
 
-  // Allow access to the form page if the user is logged in or is an admin
-  if (pathname === "/form") {
-    if (isAdmin || isLoggedIn) {
-      return NextResponse.next();
-    }
-  }
-
   // Redirect users to the login page if they are not logged in and are trying to access a restricted page
   if (!isAdmin && !isLoggedIn && pathname !== "/") {
     const loginUrl = new URL("/", req.url);
@@ -59,22 +52,14 @@ export function middleware(req) {
   }
 
   // Redirect admins who are trying to access non-admin routes to the admin page
-  if (isAdmin && !pathname.startsWith("/admin")) {
+  if (isAdmin && pathname === "/dashboard") {
     return NextResponse.redirect(new URL("/admin", req.url));
   }
 
-  // Allow all other requests to proceed
   return NextResponse.next();
 }
 
 // Define which routes should be processed by the middleware
-// export const config = {
-//   matcher: [
-//     "/((?!api|_next/static|_next/image|favicon.ico|.*\\.css|.*\\.js|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg).*)",
-//   ],
-// };
-
-// restrict api route
 export const config = {
   matcher: [
     "/((?!_next/static|_next/image|favicon.ico|.*\\.css|.*\\.js|.*\\.png|.*\\.jpg|.*\\.jpeg|.*\\.svg).*)",
