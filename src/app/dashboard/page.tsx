@@ -6,7 +6,7 @@ const page = () => {
   const cookieStore = cookies();
   return (
     <div className="w-[100vw] h-[100vh]">
-      <UserDashboard />
+      <UserDashboard cookies={cookieStore} />
     </div>
   );
 };

@@ -5,6 +5,7 @@ type Course = {
   title: string;
   description?: string;
   courseType?: string;
+  courseCredit?: string;
 };
 
 type SemesterCourses = {
@@ -31,7 +32,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
   onCourseChange,
 }) => {
   const { labCourses = [], theoryCourses = [] } = courses; // Default empty arrays
-
+  console.log(labCourses, theoryCourses);
   const handleCourseChange = (
     type: "labCourses" | "theoryCourses",
     value: string
@@ -41,6 +42,7 @@ const SelectForm: React.FC<SelectFormProps> = ({
       [type]: value,
     });
   };
+
   return (
     <div>
       <RadioGroup
@@ -51,27 +53,26 @@ const SelectForm: React.FC<SelectFormProps> = ({
           {labCourses.length > 0 ? (
             labCourses.map((course) => (
               <Label
-                htmlFor={`theory-${course.title}`}
+                htmlFor={`lab-${course.title}`}
                 className=""
                 key={course.title}>
                 <div
-                  className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${
-                    selectedCourses.labCourses === course.title
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-slate-100 hover:bg-slate-200"
-                  }`}>
+                  className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.labCourses === course.title
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-slate-100 hover:bg-slate-200"
+                    }`}>
                   <RadioGroupItem
                     value={course.title}
-                    id={`theory-${course.title}`}
+                    id={`lab-${course.title}`}
                   />
-                  <div className="cursor-pointer w-[80vw]">
-                    <h1 className="font-bold text-zinc-800 text-2xl inline-block">
+                  <div className="cursor-pointer w-[90%]">
+                    <h1 className="font-bold text-zinc-800 text-lg max-md:text-base inline-block">
                       {course.title}
                     </h1>{" "}
-                    <h2 className="inline-block text-xl text-zinc-700 font-semibold">
-                      ({course?.courseType})
+                    <h2 className="inline-block text-base max-md:text-sm text-zinc-700 font-semibold">
+                      ({course?.courseType}) Course Credit: {course?.courseCredit}
                     </h2>
-                    <p className="text-zinc-700 text-md">
+                    <p className="text-zinc-700 text-sm max-md:text-xs">
                       {course?.description}
                     </p>
                   </div>
@@ -96,23 +97,22 @@ const SelectForm: React.FC<SelectFormProps> = ({
                 className=""
                 key={course.title}>
                 <div
-                  className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${
-                    selectedCourses.theoryCourses === course.title
-                      ? "bg-green-500 hover:bg-green-600"
-                      : "bg-slate-100 hover:bg-slate-200"
-                  }`}>
+                  className={`flex items-center space-x-2 rounded-xl cursor-pointer p-4 my-2 ${selectedCourses.theoryCourses === course.title
+                    ? "bg-green-500 hover:bg-green-600"
+                    : "bg-slate-100 hover:bg-slate-200"
+                    }`}>
                   <RadioGroupItem
                     value={course.title}
                     id={`theory-${course.title}`}
                   />
-                  <div className="cursor-pointer w-[80vw]">
-                    <h1 className="font-bold text-zinc-800 text-2xl inline-block">
+                  <div className="cursor-pointer w-[90%]">
+                    <h1 className="font-bold text-zinc-800 text-lg max-md:text-base inline-block">
                       {course.title}
                     </h1>{" "}
-                    <h2 className="inline-block text-xl text-zinc-700 font-semibold">
-                      ({course?.courseType})
+                    <h2 className="inline-block text-base max-md:text-sm text-zinc-700 font-semibold">
+                      ({course?.courseType}) Course Credit: {course?.courseCredit}
                     </h2>
-                    <p className="text-zinc-700 text-md">
+                    <p className="text-zinc-700 text-sm max-md:text-xs">
                       {course?.description}
                     </p>
                   </div>

@@ -81,7 +81,8 @@ const Popup = ({ title, message, onClose }) => (
   </div>
 );
 
-const HomePage = () => {
+const HomePage = (props) => {
+  const cookies = props.cookies;
   const [errorVisible, setErrorVisible] = useState(false);
   const [loginPop, setLoginPop] = useState(false);
   const [tokenPop, setTokenPop] = useState(false);

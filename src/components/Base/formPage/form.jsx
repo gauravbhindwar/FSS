@@ -5,17 +5,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SelectForm from "@/components/Base/SelectForm";
 import Loader from "@/app/verify-email/loader";
 import { useRouter } from "next/navigation";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
 
 const FormPage = (props) => {
   const user = props.user;
@@ -55,6 +44,8 @@ const FormPage = (props) => {
         ])
       );
 
+      // console.log("Course data fetched:", courseData);
+
       const coursesBySemester = semestersToFetch.reduce(
         (acc, semester, index) => {
           const labCourses = courseData[index * 2]?.data?.courses || [];
@@ -70,7 +61,6 @@ const FormPage = (props) => {
 
       setAllCourses(coursesBySemester);
 
-      // Initialize allSelectedCourses
       const initialSelectedCourses = semestersToFetch.reduce(
         (acc, semester) => {
           acc[semester] = { labCourses: "", theoryCourses: "" };
@@ -105,7 +95,6 @@ const FormPage = (props) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Check if all required fields are filled for all semesters
     const allFieldsFilled = Object.values(allSelectedCourses).every(
       (courses) => courses.labCourses !== "" && courses.theoryCourses !== ""
     );
@@ -129,30 +118,45 @@ const FormPage = (props) => {
     }
   };
 
+  const goToPreviousSemester = () => {
+    const currentIndex = semesters.indexOf(activeSemester);
+    if (currentIndex > 0) {
+      setActiveSemester(semesters[currentIndex - 1]);
+    }
+  };
+
+  const goToNextSemester = () => {
+    const currentIndex = semesters.indexOf(activeSemester);
+    if (currentIndex < semesters.length - 1) {
+      setActiveSemester(semesters[currentIndex + 1]);
+    }
+  };
+
   if (loading) {
-    // console.log(admin.value);
     if (admin?.value || user?.value) {
-      //   router.push("/");
     }
     return <Loader />;
   }
 
   return (
-    <div className="sm:p-10 bg-slate-400 w-[100vw] h-[100%]">
+    <div className="p-5 max-sm:p-0 bg-slate-400 max-w-[100vw] h-[100%]">
       <form onSubmit={handleSubmit}>
         <Tabs
           defaultValue={`${semesters[0]} Semester`}
-          className="w-[100%] bg-slate-300 p-4 rounded-lg"
+          className="w-[100%] bg-slate-300 p-4 max-sm:p-2 rounded-lg"
+          value={`${activeSemester} Semester`}
           onValueChange={(value) => {
             const semester = parseInt(value.split(" ")[0], 10);
             setActiveSemester(semester);
-          }}>
-          <TabsList className="w-[100%]">
+          }}
+        >
+          <TabsList className="w-[100%] bg-slate-200 py-1.5 h-[fit-content]">
             {semesters.map((semester) => (
               <TabsTrigger
                 key={semester}
                 value={`${semester} Semester`}
-                className="w-1/4">
+                className="w-1/4"
+              >
                 {semester} Semester
               </TabsTrigger>
             ))}
@@ -172,31 +176,49 @@ const FormPage = (props) => {
           ))}
         </Tabs>
 
-        <AlertDialog>
-          <AlertDialogTrigger className="mt-4 px-4 py-2 bg-blue-500 text-white rounded">
-            Submit All Courses
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>
-                Are you absolutely sure to submit your form?
-              </AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone!
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel className=" bg-red-600 text-white rounded">
-                Cancel
-              </AlertDialogCancel>
-              <AlertDialogAction
-                className=" bg-green-500 text-white rounded"
-                onClick={handleSubmit}>
+        <div className="flex justify-between mt-4 max-md:p-4">
+          {/* Conditionally render "Previous" button except on the first tab */}
+          {activeSemester !== semesters[0] ? (
+            <button
+              type="button"
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:scale-110 transition-all hover:bg-blue-600 active:scale-90 active:bg-blue-700"
+              onClick={goToPreviousSemester}
+            >
+              Previous
+            </button>
+          ) :
+          (
+            <button
+              type="button"
+              className="px-4 py-2 bg-gray-500 text-white rounded hover:scale-110 transition-all hover:bg-gray-600 active:scale-90 active:bg-gray-700"
+              onClick={()=>{
+                router.push("/dashboard")
+              }}
+            >
+              Close
+            </button>
+          ) }
+
+          {/* Conditionally render "Next" button or "Submit" */}
+          <div className="ml-auto">
+            {activeSemester !== semesters[semesters.length - 1] ? (
+              <button
+                type="button"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:scale-110 transition-all hover:bg-blue-600 active:scale-90 active:bg-blue-700"
+                onClick={goToNextSemester}
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:scale-110 transition-all hover:bg-blue-600 active:scale-90 active:bg-blue-700"
+              >
                 Submit
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+              </button>
+            )}
+          </div>
+        </div>
       </form>
     </div>
   );
