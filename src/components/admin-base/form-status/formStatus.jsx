@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {
@@ -9,11 +8,11 @@ import {
   FiX,
   FiPrinter,
 } from "react-icons/fi";
+import { AiFillDelete } from "react-icons/ai";
 import { motion, AnimatePresence } from "framer-motion";
 import SVGShuffle from "@/app/verify-email/loader";
 // import dynamic from "next/dynamic";
 const html2pdf = typeof window !== "undefined" ? require("html2pdf.js") : null;
-
 const UserManagementDashboard = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
@@ -22,7 +21,6 @@ const UserManagementDashboard = (props) => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState("");
-
   // Fetch users from API
   const fetchUsers = async () => {
     try {
@@ -171,6 +169,33 @@ const UserManagementDashboard = (props) => {
   const usersWithoutFormFilled = filteredUsers.filter(
     (user) => !user.isFormFilled
   );
+  const handleFormDelete = async () => {
+    if (!selectedUser) return;
+
+    try {
+      const response = await axios.delete(`/api/form`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        params: {
+          mujid: selectedUser.mujid,
+        },
+      });
+
+      if (response.status === 200) {
+        setSelectedUser(null);
+        setIsPopupOpen(false);
+        alert("Deleted Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.status === 404) {
+        alert("Form not found");
+      } else {
+        alert("An error occurred while deleting the form");
+      }
+    }
+  };
 
   return (
     <>
@@ -472,13 +497,23 @@ const UserManagementDashboard = (props) => {
                   {/* Close and Print Buttons */}
                   <div className="flex justify-around">
                     <motion.button
-                      className="px-3 py-2 text-sm flex items-center font-medium text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                      className="px-3 py-2 text-sm flex items-center font-medium text-white bg-gray-500 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
                       onClick={closePopup}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}>
                       <FiXCircle className="mr-2" />
                       Close
                     </motion.button>
+
+                    <motion.button
+                      className="px-3 py-2 text-sm flex items-center font-medium text-white bg-red-600 rounded-md hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+                      onClick={handleFormDelete}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}>
+                      <AiFillDelete className="mr-2" />
+                      Delete Form
+                    </motion.button>
+
                     <motion.button
                       className="px-3 py-2 text-sm flex items-center font-medium text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
                       onClick={handlePrint}

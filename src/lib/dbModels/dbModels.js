@@ -145,11 +145,6 @@ const formSchema = new Schema(
       },
       required: true,
     },
-    // allSelectedCourses: {
-    //   type: Map,
-    //   of: String,
-    //   required: true,
-    // },
     Name: {
       type: String,
       required: true,
