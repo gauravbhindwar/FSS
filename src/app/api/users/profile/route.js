@@ -5,15 +5,21 @@ import { cookies } from "next/headers";
 
 export async function GET() {
   const cookieStore = cookies();
+  const MUJid = cookieStore.get("MUJid")?.value;
   try {
     await connect();
-    const users = await User.find({});
-    return NextResponse.json({ users });
+    const user = await User.findOne({ mujid: MUJid });
+    if (user) {
+      return NextResponse.json({
+        name: user.name,
+        designation: user.designation,
+        phone: user.phone,
+        email: user.email,
+      });
+    } else {
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
+    }
   } catch (error) {
-    // console.error("Error fetching users:", error);
-    return NextResponse.json(
-      { error: "Error fetching users" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Error fetching user" }, { status: 500 });
   }
 }

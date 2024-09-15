@@ -41,8 +41,7 @@ export const CardSpotlight = ({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      {...props}
-    >
+      {...props}>
       <motion.div
         className="pointer-events-none absolute z-0 -inset-px rounded-md opacity-0 transition duration-300 group-hover/spotlight:opacity-100"
         style={{
@@ -54,8 +53,7 @@ export const CardSpotlight = ({
               transparent 100%
             )
           `,
-        }}
-      >
+        }}>
         {isHovering && (
           <CanvasRevealEffect
             animationSpeed={5}
