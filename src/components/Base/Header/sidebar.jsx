@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUser,
   FaCog,
@@ -7,23 +7,32 @@ import {
   FaSignOutAlt,
   FaArrowRight,
   FaQuestionCircle,
-  FaTimes,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-type SelectedUserProp = any;
-
 const UserDashboard = (props) => {
-  const [user, setUser] = React.useState<any>({});
-  const [isFormFilled, setIsFormFilled] = React.useState(false);
-  const [showLogoutModal, setShowLogoutModal] = React.useState(false);
-  const [selectedUser, setSelectedUser] = React.useState<SelectedUserProp>(null);
-  const mujidCookie = props?.cookies[0];
-  const mujid = mujidCookie[1]?.value;
-  // console.log(mujid);
+  const [user, setUser] = useState({});
+  const [isFormFilled, setIsFormFilled] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
+  // Accessing the cookies from props
+  const { user: user1, mujid } = props.cookies.reduce(
+    (acc, cookie) => {
+      switch (cookie.name) {
+        case "user":
+          return { ...acc, user: JSON.parse(cookie.value) };
+        case "MUJid":
+          return { ...acc, mujid: cookie.value };
+        default:
+          return acc;
+      }
+    },
+    { user: {}, mujid: null }
+  );
+  const isAdmin = user1?.isAdmin || false;
   const router = useRouter();
 
   const fetchUser = async () => {
@@ -41,14 +50,14 @@ const UserDashboard = (props) => {
     }
   };
 
-  const getInitials = (name: String) => {
+  const getInitials = (name) => {
     if (!name) return "";
     const names = name.split(" ");
     const initials = names.map((n) => n[0]).join("");
     return initials.toUpperCase();
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const initializeUser = async () => {
       try {
         const user = await fetchUser();
@@ -63,19 +72,18 @@ const UserDashboard = (props) => {
         };
       }
     };
-    const formFilled = async () => {
+
+    const userFormStatus = async () => {
       try {
-        const response = await axios.post("/api/admin/manageUser/getAdmin");
-        // console.log(response.data);
+        const response = await axios.get("/api/users/getUser", {
+          params: { mujid },
+        });
         setIsFormFilled(response.data.isFormFilled);
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Error fetching current admin:", error.message);
-        } else {
-          console.error("Error fetching current admin:", error);
-        }
+        console.error("Error fetching form status:", error);
       }
-    }
+    };
+
     const formData = async () => {
       try {
         const response = await axios.get("/api/form", {
@@ -85,15 +93,15 @@ const UserDashboard = (props) => {
       } catch (error) {
         console.error("Error fetching form details:", error);
       }
-    }
+    };
 
-    formFilled();
+    userFormStatus();
     formData();
 
     initializeUser().then((user) => {
       setUser(user);
     });
-  }, []);
+  }, [mujid]);
 
   const websiteFeatures = [
     {
@@ -133,7 +141,7 @@ const UserDashboard = (props) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-yellow-400 via-orange-400 to-green-200  p-8">
+    <div className="min-h-screen bg-gradient-to-r from-yellow-400 via-orange-400 to-green-200 p-8">
       <div className="max-w-6xl mx-auto">
         <div className="bg-white rounded-lg shadow-md p-6 mb-8">
           <div className="flex items-center mb-6">
@@ -174,28 +182,31 @@ const UserDashboard = (props) => {
                 className="bg-white p-6 rounded-lg shadow-lg"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                transition={{ duration: 0.5 }}>
                 <h2 className="text-xl font-bold mb-4">Selected Courses</h2>
                 <div className="space-y-4">
-                  {selectedUser?.allSelectedCourses?.map((course, index) => (
-                    <div
-                      key={index}
-                      className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm"
-                    >
-                      <h3 className="text-lg font-semibold mb-2">Course {index + 1}</h3>
-                      <p className="text-gray-800 mb-1">
-                        <strong>Theory Course:</strong> {course.theoryCourses}
-                      </p>
-                      <p className="text-gray-800">
-                        <strong>Lab Course:</strong> {course.labCourses}
-                      </p>
-                    </div>
-                  ))}
+                  {selectedUser?.allSelectedCourses &&
+                    Object.entries(selectedUser.allSelectedCourses).map(
+                      ([semester, courses], index) => (
+                        <div
+                          key={index}
+                          className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+                          <h3 className="text-lg font-semibold mb-2">
+                            Course {index + 1}
+                          </h3>
+                          <p className="text-gray-800 mb-1">
+                            <strong>Theory Course:</strong>{" "}
+                            {courses.theoryCourses}
+                          </p>
+                          <p className="text-gray-800">
+                            <strong>Lab Course:</strong> {courses.labCourses}
+                          </p>
+                        </div>
+                      )
+                    )}
                 </div>
               </motion.div>
             )}
-
           </motion.div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -230,46 +241,35 @@ const UserDashboard = (props) => {
             className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+            exit={{ opacity: 0 }}>
             <motion.div
               className="bg-white rounded-lg shadow-lg p-8 max-w-sm w-full text-center"
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
-              <FaQuestionCircle className="text-4xl text-orange-500 mb-4 mx-auto" />
-              <h2 className="text-2xl font-semibold mb-4">
+              exit={{ scale: 0.8 }}>
+              <FaQuestionCircle className="text-4xl text-orange-500 mb-4" />
+              <h2 className="text-xl font-semibold mb-4">Confirm Logout</h2>
+              <p className="text-gray-600 mb-6">
                 Are you sure you want to log out?
-              </h2>
-              <div className="flex justify-center gap-4">
-                <motion.button
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={handleLogout}
-                >
-                  Yes, Log Out
-                </motion.button>
-                <motion.button
-                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowLogoutModal(false)} // Close modal
-                >
+              </p>
+              <div className="flex justify-between">
+                <button
+                  className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition duration-300"
+                  onClick={() => setShowLogoutModal(false)}>
                   Cancel
-                </motion.button>
+                </button>
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-300"
+                  onClick={handleLogout}>
+                  Logout
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
-
       </div>
     </div>
   );
 };
 
 export default UserDashboard;
-function async() {
-  throw new Error("Function not implemented.");
-}

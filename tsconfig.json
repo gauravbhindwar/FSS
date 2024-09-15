@@ -1,10 +1,6 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
@@ -23,9 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -42,9 +36,12 @@
     "src/components/Base/SelectForm.jsx",
     "src/app/api/admin/admin",
     "src/app/api/admin/binarouteke",
-    "src/app/form/page.jsx"
-, "src/app/admin/layout.jsx", "src/components/Base/admin-dash/admDash.jsx"  ],
-  "exclude": [
-    "node_modules"
+    "src/app/form/page.jsx",
+    "src/app/admin/layout.jsx",
+    "src/components/Base/admin-dash/admDash.jsx",
+    "src/app/api/users/getUser",
+    "src/app/api/admin/manageUser/getUser",
+    "src/components/Base/Header/sidebar.tsx"
   ],
+  "exclude": ["node_modules"]
 }
