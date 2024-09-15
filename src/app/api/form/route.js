@@ -1,8 +1,6 @@
 import { connect } from "../../helper/dbConfig";
 import { Form, User } from "../../../lib/dbModels/dbModels";
 import { NextResponse } from "next/server";
-import { Phone } from "lucide-react";
-
 export async function POST(req) {
   const { allSelectedCourses, isEven } = await req.json();
 
@@ -68,5 +66,46 @@ export async function GET(req) {
   } else {
     const forms = await Form.find({});
     return NextResponse.json({ forms }, { status: 200 });
+  }
+}
+
+export async function DELETE(req) {
+  try {
+    const url = new URL(req.url);
+    const mujid = url.searchParams.get("mujid");
+    console.log(mujid);
+    if (!mujid) {
+      return NextResponse.json(
+        { message: "mujid is required" },
+        { status: 400 }
+      );
+    }
+
+    await connect();
+
+    const form = await Form.findOneAndDelete({ mujid });
+
+    if (!form) {
+      return NextResponse.json({ message: "Form not found" }, { status: 404 });
+    }
+
+    // Update the User schema to set isFormFilled to false
+    const user = await User.findOne({ mujid });
+
+    if (user) {
+      user.isFormFilled = false;
+      await user.save();
+    }
+
+    return NextResponse.json(
+      { message: "Form deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("Error deleting form:", error);
+    return NextResponse.json(
+      { message: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import {
   FaUser,
@@ -136,14 +135,9 @@ const UserDashboard = () => {
           {websiteFeatures.map((feature, index) => (
             <motion.div
               key={index}
-              className="bg-white cursor-pointer rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300"
+              className="bg-white pointer-events-none cursor-pointer rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300"
               whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => {
-                if (feature.title === "User Profile") {
-                  router.push("/users/profile");
-                }
-              }}>
+              whileTap={{ scale: 0.95 }}>
               <div className="flex flex-col items-center text-center">
                 {feature.icon}
                 <h2 className="text-xl font-semibold mb-2">{feature.title}</h2>
