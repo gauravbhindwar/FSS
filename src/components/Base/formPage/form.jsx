@@ -139,7 +139,7 @@ const FormPage = (props) => {
   }
 
   return (
-    <div className="p-5 max-sm:p-0 bg-slate-400 max-w-[100vw] h-[100%]">
+    <div className=" p-5 max-sm:p-0 bg-slate-400 max-w-[100vw] h-[100%]">
       <form onSubmit={handleSubmit}>
         <Tabs
           defaultValue={`${semesters[0]} Semester`}
@@ -176,7 +176,7 @@ const FormPage = (props) => {
           ))}
         </Tabs>
 
-        <div className="flex justify-between mt-4 max-md:p-4">
+        <div className="fixed bottom-0 left-0 w-[100vw] md:w-[99vw] p-[12px] bg-slate-400/40 flex justify-between max-md:p-4">
           {/* Conditionally render "Previous" button except on the first tab */}
           {activeSemester !== semesters[0] ? (
             <button
@@ -200,7 +200,7 @@ const FormPage = (props) => {
           ) }
 
           {/* Conditionally render "Next" button or "Submit" */}
-          <div className="ml-auto">
+          <div className="">
             {activeSemester !== semesters[semesters.length - 1] ? (
               <button
                 type="button"
@@ -212,7 +212,7 @@ const FormPage = (props) => {
             ) : (
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded hover:scale-110 transition-all hover:bg-blue-600 active:scale-90 active:bg-blue-700"
+                className="px-4 py-2 bg-green-500 text-white rounded hover:scale-110 transition-all hover:bg-green-600 active:scale-90 active:bg-green-700"
               >
                 Submit
               </button>

@@ -42,12 +42,11 @@ const PasswordInput = ({
         required
       />
       <LockKeyhole className="absolute inset-y-2 left-2 text-gray-500 pointer-events-none" />
-      <button
-        type="button"
-        className="absolute inset-y-1 w-2 right-2 hover:bg-transparent bg-transparent text-gray-500 pl-6"
+      <div
+        className="absolute bottom-1 w-[fit-content] right-2 bg-transparent text-gray-500 pl-6 cursor-pointer"
         onClick={toggleShowPassword}>
         {showPassword ? <EyeOff /> : <Eye />}
-      </button>
+      </div>
     </div>
   </div>
 );
