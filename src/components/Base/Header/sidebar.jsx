@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   FaUser,
   FaCog,
@@ -88,9 +88,8 @@ const UserDashboard = (props) => {
         // Fetch user form status first
         await Promise.all([
           await userFormStatus(), // Fetch user form status
-          formData(),       // Fetch form data
+          formData(), // Fetch form data
         ]);
-  
 
         // Fetch and set user data
         const fetchedUser = await fetchUser();
@@ -163,7 +162,9 @@ const UserDashboard = (props) => {
             </div>
           </div>
           <motion.div
-            className={`bg-orange-200 sm:p-4 ${isFormFilled && 'pointer-events-none'} rounded-lg cursor-pointer hover:bg-orange-300 flex items-center justify-between`}
+            className={`bg-orange-200 sm:p-4 ${
+              isFormFilled && "pointer-events-none"
+            } rounded-lg cursor-pointer hover:bg-orange-300 flex items-center justify-between`}
             onClick={() => {
               router.push("/form");
             }}
@@ -172,33 +173,33 @@ const UserDashboard = (props) => {
             transition={{ type: "spring", stiffness: 300 }}>
             {isFormFilled === true ? (
               <motion.div
-              className="bg-white w-[100%] p-6 rounded-lg shadow-lg"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}>
-              <h2 className="text-xl font-bold mb-4">Selected Courses</h2>
-              <div className="space-y-4">
-                {selectedUser?.allSelectedCourses &&
-                  Object.entries(selectedUser.allSelectedCourses).map(
-                    ([semester, courses], index) => (
-                      <div
-                        key={index}
-                        className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
-                        <h3 className="text-lg font-semibold mb-2">
-                          Course {index + 1}
-                        </h3>
-                        <p className="text-gray-800 mb-1">
-                          <strong>Theory Course:</strong>{" "}
-                          {courses.theoryCourses}
-                        </p>
-                        <p className="text-gray-800">
-                          <strong>Lab Course:</strong> {courses.labCourses}
-                        </p>
-                      </div>
-                    )
-                  )}
-              </div>
-            </motion.div> 
+                className="bg-white w-[100%] p-6 rounded-lg shadow-lg"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}>
+                <h2 className="text-xl font-bold mb-4">Selected Courses</h2>
+                <div className="space-y-4">
+                  {selectedUser?.allSelectedCourses &&
+                    Object.entries(selectedUser.allSelectedCourses).map(
+                      ([semester, courses], index) => (
+                        <div
+                          key={index}
+                          className="p-4 border border-gray-200 rounded-lg bg-gray-50 shadow-sm">
+                          <h3 className="text-lg font-semibold mb-2">
+                            Course {index + 1}
+                          </h3>
+                          <p className="text-gray-800 mb-1">
+                            <strong>Theory Course:</strong>{" "}
+                            {courses.theoryCourses}
+                          </p>
+                          <p className="text-gray-800">
+                            <strong>Lab Course:</strong> {courses.labCourses}
+                          </p>
+                        </div>
+                      )
+                    )}
+                </div>
+              </motion.div>
             ) : (
               <>
                 <div className="flex items-center w-[fit-content]">
